@@ -286,20 +286,14 @@ export const schedule = {
         `
         <div class="lnb-calendars-item">
           <label>
-          <input type="checkbox" class="tui-full-calendar-checkbox-round" value="${
-            calendar.id
-          }" checked>
-          <span style="border-color: ${
-            calendar.borderColor
-          }; background-color: ${calendar.borderColor};"></span>
+          <input type="checkbox" class="tui-full-calendar-checkbox-round" value="${calendar.id}" checked>
+          <span style="border-color: ${calendar.borderColor}; background-color: ${calendar.borderColor};"></span>
           <span>${calendar.name}</span>
           </label>
           <span class="edit" onclick="APP.scheduleGroupModal(${calendar.id})">
           <i class="mdi mdi-pen"></i>
           </span>
-          <span class="delete" onclick="APP.scheduleGroupDelete(${
-            calendar.id
-          })">
+          <span class="delete" onclick="APP.scheduleGroupDelete(${calendar.id})">
           <i class="mdi mdi-window-close"></i>
           </span>
         </div>
@@ -532,6 +526,7 @@ export const schedule = {
 
           if (!res) return;
 
+          schedule.title = e.schedule.title;
           schedule.isAllDay = e.schedule.isAllDay ? 1 : 0;
           schedule.calendarId = calendarId;
           schedule.color = calendarInfo[0].color;

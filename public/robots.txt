@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+User-agent: Baiduspider
+Disallow: /
+
+Sitemap: https://devhyun.com/sitemap.xml

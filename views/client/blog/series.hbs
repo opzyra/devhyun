@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="블로그 - 데브현" description="블로그에 작성된 다양한 포스트들을 시리즈로 엮어 보았습니다."}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='blog' fix='fix'}}
+
+	<main id="contents" class="blog">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path on">블로그</span>
+					</p>
+				</div>
+			</section>
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						개발과 관련된 다양한 이야기들을
+						<br class="visual_pc">
+						정성을 담아 기록하고 있어요
+					</h2>
+					<div class="count">
+						<ul>
+							<li>
+								<h3>발행 포스트</h3>
+								<p>{{countPostTag.post_count}} <span>건</span></p>
+							</li>
+							<li>
+								<h3>관련 태그</h3>
+								<p>{{countPostTag.tag_count}} <span>개</span></p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<section class="tab">
+				<div>
+					<ul>
+						<li><a href="/blog/post">포스트</a></li>
+						<li><a href="/blog/series" class="on">시리즈</a></li>
+						<li><a href="/blog/tag">태그</a></li>
+					</ul>
+					<div id="searchFilter" class="filter visual_mobile">
+						<i class="mdi mdi-filter"></i>
+					</div>
+					<div class="search">
+						<form>
+							<input type="text" name="query" id="query" placeholder="시리즈 검색">
+							<button type="submit"></button>
+						</form>
+					</div>
+				</div>
+			</section>
+
+			{{#isNotNull series}}
+			<section class="series_list">
+				<div>
+					{{#if queryRow}}
+					<div class="search_count">
+						총 <span class="keyword">{{queryRow}}개</span>의 시리즈를 찾았습니다.
+						<a class="back" href="/blog/series">
+							전체 시리즈
+						</a>
+					</div>
+					{{/if}}
+					<ul>
+						{{#each series}}
+						<li>
+							<a class="thumb" href="/blog/series/{{idx}}">
+								<img src="{{thumbnail}}">
+								<div class="white-mask"></div>
+							</a>
+							<div class="contents">
+								<span>{{parseDate reg 'YYYY.MM.DD'}}</span>
+								<h3><a href="/blog/series/{{idx}}">{{title}}</a></h3>
+								<p class="visual_pc">{{parseMarkdown contents 200}}</p>
+								<p class="visual_mobile">{{parseMarkdown contents 80}}</p>
+								<div>
+									{{post_count}}개의 포스트가 있습니다.
+								</div>
+							</div>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</section>
+			<section class="page">
+				<div>
+					<ul id="page" class="pagination"></ul>
+				</div>
+			</section>
+			{{else}}
+			<section class="series_none">
+				<div>
+					<div class="not">
+						검색하신 '<span id="inQuery" class="keyword"></span>' 키워드에 해당하는 시리즈를 찾을 수 없습니다.<br>
+						오탈자를 확인하시고 재 검색해주세요.
+					</div>
+					<a class="back" href="/blog/series">
+						전체 목록 보기
+					</a>
+				</div>
+			</section>
+			{{/isNotNull}}
+
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'series')}}
+
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+/* the outermost div */
+.color-select-container{
+	
+}
+
+/* the div containing an optgroup */
+.color-select-container .color-select-optgroup{
+	display: block;
+}
+
+/* div representing an option. the background-color of this is set via javascript */
+.color-select-container .color-select-option{
+	height: 20px;
+	width: 20px;
+	margin: 4px;
+	float: left;
+	border-radius: 3px;
+}
+
+
+.color-select-container .color-select-option:hover{
+	height: 24px;
+	width: 24px;
+	margin: 2px;
+}
+
+/* div representing currently selected options */
+.color-select-container .color-select-option-selected, .color-select-container .color-select-option-selected:hover{
+	border: 1px solid black;
+	height: 24px;
+	width: 24px;
+	margin: 1px;
+	
+	-webkit-box-shadow: inset 0px 0px 0px 1px rgba(255,255,255,1);
+	-moz-box-shadow: inset 0px 0px 0px 1px rgba(255,255,255,1);
+	box-shadow: inset 0px 0px 0px 1px rgba(255,255,255,1);
+}
+
+
+/* clearfix */
+.color-select-option:first-child{
+	content: " ";
+	display: block;
+	clear: left;
+}
+

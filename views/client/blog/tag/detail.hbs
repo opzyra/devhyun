@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo 
+		title=(add '#' (add query ' - 데브현')) 
+		description=(add (add '데브현 블로그에 작성된 #' query) '태그를 가지고 있는 모든 포스트입니다.')
+	}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='blog' fix='fix'}}
+
+	<main id="contents" class="blog">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path on">블로그</span>
+					</p>
+				</div>
+			</section>
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						개발과 관련된 다양한 이야기들을
+						<br>
+						정성을 담아 기록하고 있어요
+					</h2>
+					<div class="count">
+						<ul>
+							<li>
+								<h3>발행 포스트</h3>
+								<p>{{countPostTag.post_count}} <span>건</span></p>
+							</li>
+							<li>
+								<h3>관련 태그</h3>
+								<p>{{countPostTag.tag_count}} <span>개</span></p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<section class="tab">
+				<div>
+					<ul>
+						<li><a href="/blog/post">포스트</a></li>
+						<li><a href="/blog/series">시리즈</a></li>
+						<li><a href="/blog/tag" class="on">태그</a></li>
+					</ul>
+					<div id="searchFilter" class="filter visual_mobile">
+						<i class="mdi mdi-filter"></i>
+					</div>
+					<div class="search">
+						<form method="POST" onsubmit="APP.searchTag();">
+							<input type="text" name="query" id="query" placeholder="태그 검색">
+							<button type="submit"></button>
+						</form>
+					</div>
+				</div>
+			</section>
+
+			{{#isNotNull tags}}
+			<section class="post_list">
+				<div>
+					<div class="search_count">
+						# {{query}} <span class="keyword tag">({{queryRow}}개의 포스트)</span>
+						<a class="back" href="/blog/tag">
+							전체 태그
+						</a>
+					</div>
+					<ul>
+						{{#each tags}}
+						<li>
+							<a class="thumb" href="/blog/post/{{idx}}">
+								<img src="{{thumbnail}}">
+								<div class="white-mask"></div>
+							</a>
+							<div class="contents">
+								<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
+								<p>{{parseMarkdown contents 89}}</p>
+								<div>{{parseDate reg_date 'YYYY.MM.DD'}}</div>
+							</div>
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</section>
+			<section class="page">
+				<div>
+					<ul id="page" class="pagination"></ul>
+				</div>
+			</section>
+			{{else}}
+			<section class="post_none">
+				<div>
+					<div class="not">
+						선택하신 '<span class="keyword">#{{query}}</span>' 태그에 해당하는 포스트를 찾을 수 없습니다.<br>
+						다른 태그를 선택해 주세요.
+					</div>
+					<a class="back" href="/blog/tag">
+						전체 태그 보기
+					</a>
+				</div>
+			</section>
+			{{/isNotNull}}
+
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'tagDetail')}}
+
+</body>
+
+</html>

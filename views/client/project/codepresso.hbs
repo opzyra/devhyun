@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="프로젝트 - 데브현" description="개발을 통해 작은 문제를 해결하고 개선한 프로젝트들을 정리 했어요."}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='project' fix='fix'}}
+
+	<main id="contents" class="project_detail codepresso">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path">프로젝트</span>
+						<span class="path on">상세정보</span>
+					</p>
+				</div>
+			</section>
+
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						포트폴리오 홈페이지
+					</h2>
+					<p class="date">2018.12 ~ 2019.01</p>
+					<div class="icon">
+						<img src="/images/responsive.png" alt="반응형" data-tippy-content="반응형">
+					</div>
+					<p class="url">
+						<span><i class="mdi mdi-github-circle"></i></span>
+						<a href="https://github.com/opzyra/Codepresso" target="_blank">https://github.com/opzyra/Codepresso</a>
+					</p>
+				</div>
+			</section>
+
+			<section class="background">
+				<div>코드프레소 대표이미지</div>
+			</section>
+
+			<section class="outline">
+				<div>
+					<h2>프로젝트 개요</h2>
+					<p>코드프레소는 VueJS를 학습하고 개발한 포트폴리오 웹사이트 입니다.</p>
+					<p>처음으로 개발한 JS 프로젝트이며 데브현의 전신으로 개발자 '김현호'를 소개하기 위해 개발하였습니다.</p>
+					<p>현재는 배포를 중단하였으며 깃허브에서 소스코드를 확인할 수 있습니다.</p>
+				</div>
+			</section>
+			<section class="mockup">
+				<div>
+					<img src="/images/concept_codepresso.png" alt="코드프레소 컨셉 이미지">
+				</div>
+			</section>
+			<section class="point">
+				<div>
+					<h2>작업 포인트</h2>
+					<p>'Code' + 'Espresso'를 조합하여 진한 코드를 추구하는 가치를 네이밍에 표현하였습니다.</p>
+					<p>개발 기술별로 포트폴리오를 정리하였고 마크다운 에디터를 도입하여 블로그기능을 추가하였습니다.</p>
+					<p>반응형으로 모바일에서 최적화된 페이지를 확인할 수 있습니다.</p>
+					<br>
+					<p>VueJS·Vue-Router·Vuex로 SPA를 구축하였고 JWT·Sequelize·PassportJS를 활용하여 백엔드를 구축했습니다.</p>
+					<p>배포할때는 Lazy-Loading·Gzip·prerender를 활용하여 SEO 및 최적화 작업을 진행하였습니다.</p>
+					<img src="/images/codepresso_full.png" alt="코드프레소 홈페이지 이미지">
+				</div>
+			</section>
+			<section class="skills">
+				<div>
+					<h2>개발 기술</h2>
+					<p>VueJS·HTML/CSS·Bootstrap·JQuery</p>
+					<p>NodeJS(Express)·ES6·MySQL</p>
+					<p>AWS·Git</p>
+					<a href="/blog/tag/codepresso">
+						개발 이슈 <i class="mdi mdi-chevron-right"></i>
+					</a>
+				</div>
+			</section>
+			<section class="back">
+				<div>
+					<a href="/project?scroll=private">
+						목록으로 가기
+					</a>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'projectDetail')}}
+
+</body>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{APP}} - 관리자</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body>
+  {{>ad-common}}
+
+  {{>ad-header active="schedule"}}
+
+  <main class="schedule">
+    <h1 class="page_title">스케줄</h1>
+    <aside class="aside">
+      <button type="button" class="btn" onclick="APP.scheduleGroupModal();">
+        <i class="mdi mdi-puzzle-outline"></i> 그룹 추가
+      </button>
+      <button id="btn-new-schedule" type="button" class="btn" data-toggle="modal">
+        <i class="mdi mdi-calendar-edit"></i> 스케줄 등록
+      </button>
+    </aside>
+    <section class="lib">
+      <div id="lnb" class="left">
+        <div id="lnb-calendars" class="lnb-calendars">
+          <div>
+            <div class="lnb-calendars-item checkbox-item">
+              <input id="groupAll" class="tui-full-calendar-checkbox-square" type="checkbox" value="all" checked />
+              <label for="groupAll">
+                <span class="all-item">전체보기</span>
+              </label>
+            </div>
+          </div>
+          <div id="calendarList" class="lnb-calendars-d1"></div>
+        </div>
+      </div>
+      <div class="right">
+        <div id="menu" class="menu">
+          <span class="dropdown">
+            <button id="dropdownMenu-calendarType" class="btn dropdown-toggle" type="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="true">
+              <i id="calendarTypeIcon" class="calendar-icon ic_view_month" style="margin-right: 4px;"></i>
+              <span id="calendarTypeName">단위</span>&nbsp;
+              <i class="calendar-icon tui-full-calendar-dropdown-arrow"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu-calendarType">
+              <li role="presentation">
+                <a class="dropdown-menu-title" role="menuitem" data-action="toggle-monthly">
+                  <i class="calendar-icon ic_view_month"></i>월 단위
+                </a>
+              </li>
+              <li role="presentation">
+                <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weeks3">
+                  <i class="calendar-icon ic_view_week"></i>3주 단위
+                </a>
+              </li>
+              <li role="presentation">
+                <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weeks2">
+                  <i class="calendar-icon ic_view_week"></i>2주 단위
+                </a>
+              </li>
+
+              <li role="presentation">
+                <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weekly">
+                  <i class="calendar-icon ic_view_week"></i>1주 단위
+                </a>
+              </li>
+
+              <li role="presentation">
+                <a class="dropdown-menu-title" role="menuitem" data-action="toggle-daily">
+                  <i class="calendar-icon ic_view_day"></i>일 단위
+                </a>
+              </li>
+            </ul>
+          </span>
+          <span id="menu-navi" class="menu-navi">
+            <button type="button" class="btn move-today" data-action="move-today">
+              오늘
+            </button>
+            <button type="button" class="btn move move-day" data-action="move-prev">
+              <i class="calendar-icon ic-arrow-line-left" data-action="move-prev"></i>
+            </button>
+            <button type="button" class="btn move move-day" data-action="move-next">
+              <i class="calendar-icon ic-arrow-line-right" data-action="move-next"></i>
+            </button>
+          </span>
+          <span id="renderRange" class="render_range"></span>
+        </div>
+        <div id="calendar" class="calendar"></div>
+      </div>
+    </section>
+  </main>
+
+  {{>ad-script MODULE=(config 'admin' 'schedule')}}
+
+</body>
+
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="프로젝트 - 데브현" description="개발을 통해 작은 문제를 해결하고 개선한 프로젝트들을 정리 했어요."}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='project' fix='fix'}}
+
+	<main id="contents" class="project">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path on">프로젝트</span>
+					</p>
+				</div>
+			</section>
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						개발을 통해 작은 문제를 해결하고 개선한
+						<br class="visual_pc">
+						프로젝트들을 정리 했어요
+					</h2>
+				</div>
+			</section>
+			<section class="biz" id="biz">
+				<div>
+					<h2>회사 프로젝트</h2>
+					<p>구성원으로서 작은 성과를 냈던 프로젝트 입니다.</p>
+					<p>보안상 간략하게 내용을 담았습니다.</p>
+					<ul class="list-box">
+						<li>
+							<div class="intro">
+								<div class="logo">
+									<img src="/images/lifeplanhd.png" alt="청각장애인생애지원센터 로고">
+								</div>
+								<div class="outline">
+									<h3>청생원 웹시스템</h3>
+									<div>2019.04 ~ 2019.09</div>
+									<div>청각장애인생애지원센터</div>
+								</div>
+							</div>
+							<div class="detail">
+								<ul>
+									<li>NodeJS, HTML/CSS, JQuery, MySQL, AWS</li>
+									<li>회사 소개 및 고객관리 웹 시스템 개발</li>
+									<li>기획·퍼블리싱·백엔드·테스트·배포·유지보수</li>
+									<li>개발 인원 1인</li>
+								</ul>
+							</div>
+							<div class="link">
+								<a href="https://www.lifeplanhd.kr/" target="_blank" class="icon">
+									링크<i class="mdi mdi-chevron-right"></i>
+								</a>
+							</div>
+						</li>
+						<li>
+							<div class="intro">
+								<div class="logo">
+									<img src="/images/datagen.png" alt="데이터젠 로고">
+								</div>
+								<div class="outline">
+									<h3>블록체인 Dapp 서비스</h3>
+									<div>2018.11 ~ 2019.02</div>
+									<div>데이터젠</div>
+								</div>
+							</div>
+							<div class="detail">
+								<ul>
+									<li>Spring, JQuery, MariaDB</li>
+									<li>젠서비스 이벤트 및 토큰 모니터링 시스템 개발</li>
+									<li>기획·백엔드·테스트</li>
+									<li>개발 인원 1~2인</li>
+								</ul>
+							</div>
+							<div class="link">
+								<a href="https://play.google.com/store/apps/details?id=kr.co.datagen.gs.genservice" target="_blank"
+									class="icon">
+									링크<i class="mdi mdi-chevron-right"></i>
+								</a>
+							</div>
+						</li>
+						<li>
+							<div class="intro">
+								<div class="logo">
+									<img src="/images/nuvo.png" alt="누보사이버비지니스 로고">
+								</div>
+								<div class="outline">
+									<h3>일본 연금 프로젝트</h3>
+									<div>2017.12 ~ 2018.04</div>
+									<div>누보사이버비지니스</div>
+								</div>
+							</div>
+							<div class="detail">
+								<ul>
+									<li>Struts2, Spring, JQuery, Oracle</li>
+									<li>일본 연금 시스템 기능 개발</li>
+									<li>설계서 작성·백엔드·테스트</li>
+									<li>개발 인원 3~4인</li>
+								</ul>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</section>
+			<section class="private" id="private">
+				<div>
+					<h2>개인 프로젝트</h2>
+					<p>다양한 기술을 학습하거나 간단한 문제를 해결하기 위한 프로젝트입니다.</p>
+					<p>일부 프로젝트는 배포되어 운영되고 있습니다.</p>
+					<ul>
+						<li>
+							<a href="/project/aboutperiod">
+								<img src="/images/mok_aboutperiod.png" alt="어바웃피리어드 대표이미지">
+								<div class="title">
+									어바웃 피리어드 홈페이지
+								</div>
+								<div class="desc">
+									NodeJS, Bootstrap, JQuery, MySQL, AWS
+									<br>
+									2019.02 ~ 2019.03
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="/project/codepresso">
+								<img src="/images/mok_codepresso.png" alt="어바웃피리어드 대표이미지">
+								<div class="title">
+									포트폴리오 홈페이지
+								</div>
+								<div class="desc">
+									VueJS, NodeJS, Bootstrap, JQuery, MySQL
+									<br>
+									2018.12 ~ 2019.01
+								</div>
+							</a>
+						</li>
+						<li>
+							<a href="/project/jabis">
+								<img src="/images/mok_jabis.png" alt="자비스 대표이미지">
+								<div class="title">
+									학원 관리 프로그램
+								</div>
+								<div class="desc">
+									SpringBoot, Bootstrap, JQuery, MySQL, AWS
+									<br>
+									2018.07 ~ 2018.08
+								</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'project')}}
+
+</body>
+
+</html>

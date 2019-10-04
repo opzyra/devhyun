@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{APP}} - 관리자</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body>
+  {{>ad-common}}
+
+  {{>ad-header active="blog"}}
+
+  <main class="blog">
+    <form method="POST" onsubmit="{{#if series}}APP.updateSeries({{series.idx}});{{else}}APP.insertSeries();{{/if}}">
+      <h1 class="page_title">블로그</h1>
+      <aside class="aside">
+        <button type="submit" class="btn">
+          <i class="mdi mdi-playlist-edit"></i> 시리즈 저장
+        </button>
+        <button type="button" class="btn danger" onclick="APP.cancel();">
+          <i class="mdi mdi-cancel"></i> 취소
+        </button>
+      </aside>
+      <section class="lib">
+        <div class="left">
+          <div class="menu">
+            <div class="all">
+              설정
+            </div>
+          </div>
+          <div class="option">
+            <div class="item thumbnail">
+              <h3>썸네일<span>627x414</span></h3>
+              {{#if series}}
+              <img id="thumbnailImg" src="{{series.thumbnail}}" alt="thumbnail" onclick="APP.thumbnailButton();">
+              <input id="thumbnailHdn" name="thumbnail" type="hidden" value="{{series.thumbnail}}"
+                onclick="APP.thumbnailButton();">
+              {{else}}
+              <img id="thumbnailImg" src="{{add DOMAIN '/images/default_blog.png'}}" alt="thumbnail"
+                onclick="APP.thumbnailButton();">
+              <input id="thumbnailHdn" name="thumbnail" type="hidden" value="{{add DOMAIN '/images/default_blog.png'}}">
+              {{/if}}
+              <input id="thumbnailInpFile" type="file" onchange="APP.thumbnailChange();" style="display:none;">
+            </div>
+            <div class="item posts">
+              <h3>연관 포스트</h3>
+              <div class="search_wrapper">
+                <input id="searchPost" type="text" onkeydown="APP.eventPosts(event);">
+                <div id="searchPostList" class="search_post_list"></div>
+              </div>
+              <ul id="posts">
+                {{#each posts}}
+                <li class="post_item" data-idx="{{idx}}">
+                  <div data-tippy-content="{{title}}">
+                    <span class="name">{{title}}</span>
+                  </div>
+                  <span class="move"><i class="mdi mdi-drag-variant"></i></span>
+                  <span class="delete" onclick="APP.deleteRelatedPost({{idx}});"><i
+                      class="mdi mdi-window-close"></i></span>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+            <div class="item spell">
+              <h3>맞춤법 검사</h3>
+              <ul>
+                <li onclick="APP.spell('pusan')">부산대</li>
+                <li onclick="APP.spell('saramin')">사람인</li>
+                <li onclick="APP.spell('jobkorea')">잡코리아</li>
+              </ul>
+            </div>
+            <div class="item temp">
+              <h3>임시저장</h3>
+              <ul id="temps"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="menu">
+            <span class="title">
+              <input id="title" name="title" type="text" placeholder="제목을 입력해주세요" value="{{series.title}}">
+            </span>
+            {{#if series}}
+            <span class="info">
+              <span class="reg">등록일 {{parseDate series.reg 'YYYY.MM.DD'}}</span>
+            </span>
+            {{/if}}
+          </div>
+          <div class="container">
+            <div id="markdown">
+              {{{series.contents}}}
+            </div>
+          </div>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  {{>ad-script MODULE=(config 'admin' 'seriesEdit')}}
+
+</body>
+
+</html>

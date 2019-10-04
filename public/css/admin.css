@@ -1,0 +1,419 @@
+/* ----- 요소 컴포넌트 ----- */
+
+/* 폰트 */
+@font-face {font-family: 'tui-calendar-font-icon';src: url('../fonts/icon.eot') format('embedded-opentype'),url('../fonts/icon.ttf') format('truetype'),url('../fonts/icon.woff') format('woff'),url('../fonts/icon.svg') format('svg');}
+
+/* 그리드 */
+.row {display: flex;}
+
+/* 버튼 */
+.btn {display:inline-block; border-radius: 16px; border: 1px solid #004abf; color: #004abf; opacity: 0.8; padding: 4px 12px; cursor: pointer;}
+.btn_outline {display:inline-block; border-radius: 16px; border: 1px solid transparent; background:#004abf; color: #fff; opacity: 0.8; padding: 4px 8px;}
+.btn.danger {border: 1px solid #ff5722; color: #ff5722;}
+
+
+/* 체크박스*/
+.cbx {display: none;}
+.cbx + label {display: block; position: relative; width: 16px; height: 16px; margin: 0 auto; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
+.cbx + label::before {content: ''; display: block; width: 16px; height: 16px; border: 1px solid #004abf; border-radius: 2px; position: absolute; left: 0; top: 0; opacity: .7; -webkit-transition: all .1s, border-color .08s; transition: all .1s, border-color .08s;}
+.cbx:checked + label:before {width: 10px; top: -5px; left: 5px; border-radius: 0; opacity: 1; border-color: #004abf; border-top-color: transparent; border-left-color: transparent; -webkit-transform: rotate(45deg); transform: rotate(45deg);}
+
+/* 기타 */
+.separator {margin: 0 8px;}
+.dropdown, .dropup {position: relative;}
+.dropdown .tui-full-calendar-dropdown-arrow  { width: 14px; height: 14px; display: inline-block; vertical-align: middle;}
+.dropdown-menu {position: absolute; top: 100%; left: 0; z-index: 1000; display: none; float: left; min-width: 160px; padding: 5px 0; margin: 2px 0 0; font-size: 14px; text-align: left; list-style: none; background-color: #fff; -webkit-background-clip: padding-box; background-clip: padding-box; border: 1px solid #ccc; border: 1px solid rgba(0,0,0,.15); border-radius: 4px; -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175); box-shadow: 0 6px 12px rgba(0,0,0,.175);}
+.dropdown-menu>li>a {display: block; padding: 3px 20px; clear: both; font-weight: 400; line-height: 1.42857143; color: #333;white-space: nowrap;}
+.show>.dropdown-menu {display: block;}
+
+/* 페이징 */
+.pagination {text-align: center;}
+.pagination .page-item { display: inline-block; position: relative; width: 34px; height: 34px; overflow: hidden; border: 1px solid #d9d9d9; background: #fff; margin: 0 1px;}
+.pagination .page-item a {display:inline-block; width: 100%; height: 100%; font-size: 14px; line-height: 34px;}
+.pagination .page-item.active a {background: #004abf; color: #fff;}
+.pagination .prev {margin-right: 8px;}
+.pagination .next {margin-left: 8px;}
+.pagination .first a , .pagination .last a, .pagination .prev a, .pagination .next a {text-indent: -9999px;}
+.pagination .first a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat;}
+.pagination .last a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -33px;}
+.pagination .prev a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -11px;}
+.pagination .next a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -22px;}
+
+/* 자동 완성*/
+.ui-helper-hidden-accessible {display: none;}
+
+/* ----- 레이아웃 컴포넌트 ----- */
+body {height: auto;}
+header {position: fixed; top:0; left:0; width: 260px; height: 100%; border-right: 1px solid #f5f5f5; box-shadow: 0px 0px 5px 0px #efefef; border: none; display: inline-table;}
+header .logo {margin: 0px 20px; border-bottom: 1px solid #efefef; padding: 12px 0px;}
+header .logo a {display: block;}
+header .logo img {width: 100%;}
+header .logo img.sm {display: none;}
+
+header .profile {position: absolute; bottom:80px; width: 100%; text-align: center;}
+header .profile img {width: 64px; border-radius: 100%; margin-bottom:8px;}
+header .profile h3 {font-size: 16px;}
+header .profile p {font-size: 12px; color: #aaaaaa; margin-bottom: 16px;}
+
+header .lnb {height: 770px;}
+header .lnb ul {margin-top: 12px;}
+header .lnb ul li {display: block; width: 100%; position: relative;}
+header .lnb ul li a {display: block; font-size: 16px; padding:16px 32px;}
+header .lnb ul li.on a {color: #004abf;}
+header .lnb ul li.on a::before {content: ''; position: absolute; top:0; left: 0; width:4px; background-color: #004abf; height: 100%;}
+header .lnb ul li i {margin-right:8px;}
+
+main {margin-left: 260px; background: #fafcfe; padding:40px; min-width: 1160px; position: relative;}
+main aside {position: absolute; top: 48px; right: 40px;}
+main aside .today{font-size: 12px; line-height: 24px; color: #000;}
+main aside .version {margin-left: 4px;}
+main .page_title {margin-bottom: 32px;}
+main .row {margin-bottom: 48px;}
+
+main .lib {position: relative;}
+main .lib .left {width: 320px;}
+main .lib .left label { margin-bottom: 0; cursor: pointer; }
+main .lib .right {width: 100%; margin-left: 30px;}
+
+/* ----- 대시보드 ----- */
+.dashboard .summary {display: inline-block; width: calc(100% - 500px); margin-right: 36px;}
+.dashboard .summary h2 {display: flex; margin-bottom: 24px; color: #004abf;}
+.dashboard .summary ul {font-size: 0px; margin-bottom: 24px;}
+.dashboard .summary ul li {display: inline-block; width: 25%; font-size: initial}
+.dashboard .summary ul li h3 {font-size: 16px; margin-bottom: 8px;}
+.dashboard .summary ul li p {font-size: 24px;}
+.dashboard .summary ul li p span {color: #004abf;}
+.dashboard .summary .home_info {width: 40%; margin-bottom: 12px; font-size: 16px; display: inline-flex; flex-direction: column; min-width: 280px;}
+.dashboard .summary .home_info div:first-child {margin-bottom: 12px; }
+.dashboard .summary .quick_menu {display: inline-flex; flex-direction: column;}
+.dashboard .summary .quick_menu div:first-child {margin-bottom: 8px;}
+.dashboard .summary .quick_menu a { margin-right: 4px; }
+
+.dashboard .sys_info {display: inline-block; width: 460px;}
+.dashboard .sys_info h2 {display: flex; margin-bottom: 24px; color: #004abf;}
+.dashboard .sys_info > div {display: inline-flex; vertical-align: middle; flex-direction: column;}
+.dashboard .sys_info .chart {position: relative;}
+.dashboard .sys_info .chart .percent {position: absolute; top:50%; left:50%; transform: translate(-50%,-50%); font-size:20px;}
+
+.dashboard .sys_info .more {margin-left: 32px;}
+.dashboard .sys_info .more div {margin-bottom: 12px;}
+.dashboard .sys_info .more div:last-child {margin-bottom:0px;}
+.dashboard .sys_info .more h3 {font-size: 16px; margin-bottom: 8px;}
+.dashboard .sys_info .more p {font-size: 24px;}
+
+.dashboard .todo {display: inline-block; width: calc(100% - 500px); margin-right: 36px;}
+.dashboard .todo h2 {display: flex; margin-bottom: 24px; color: #004abf;}
+.dashboard .todo ul li {padding: 12px 20px; margin-bottom: 16px; background: #fff; box-shadow: 2px 2px 2px 2px #efefef; border-left:2px solid #ddd; position: relative;}
+.dashboard .todo ul li.completed::before {content: ''; position: absolute; top:0px; left:0px; width: 100%; height: 100%; background:#ddd; opacity: 0.5;}
+.dashboard .todo ul li .header {display:flex; font-size: 16px; margin-bottom: 12px;}
+.dashboard .todo ul li .header .title {width: 65%;}
+.dashboard .todo ul li .header .start_date {width: 15%; font-size: 14px; line-height: 24px;}
+.dashboard .todo ul li .header .end_date {width: 15%; font-size: 14px; line-height: 24px;}
+.dashboard .todo ul li .header .check {width: 5%; text-align: center;}
+.dashboard .todo ul li .contents {font-size:14px;}
+
+.dashboard .schedule {display: inline-block; width: 460px;}
+.dashboard .schedule h2 {display: flex; margin-bottom: 24px; color: #004abf;}
+.dashboard .schedule ul li {margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #efefef;}
+.dashboard .schedule ul li .date {position: relative;}
+.dashboard .schedule ul li .date .indicator {width: 80px; height: 2px; position: absolute; top: 28px; left: 0px;}
+.dashboard .schedule ul li .date .title { margin-bottom: 16px; font-size: 16px;}
+.dashboard .schedule ul li .period { margin-bottom: 8px;}
+.dashboard .schedule ul li .period i {margin-right: 4px;}
+.dashboard .schedule ul li .location i {margin-right: 4px;}
+
+/* ----- 스케줄 ----- */
+.schedule .aside .btn {margin-right: 4px;}
+.schedule .aside .btn:last-child {margin-right: 0px;}
+.schedule .lib {height: 100%;display: flex;}
+.schedule .lib .right {height: 100vh;}
+.schedule .lib .new-schedule {text-align: center; padding-bottom: 16px; border-bottom: 1px solid #e5e5e5;}
+.schedule .lib .menu {padding: 0px 0px 16px;}
+.schedule .lib .menu .dropdown-menu { top: 25px; padding: 3px 0; border-radius: 2px; border: 1px solid #bbb;}
+.schedule .lib .menu .dropdown-menu > li > a { padding: 9px 12px; cursor: pointer; }
+.schedule .lib .menu .dropdown-menu .dropdown-menu-title .calendar-icon { margin-right: 8px; }
+.schedule .lib .menu .menu-navi button {margin-right: 4px;}
+.schedule .lib .menu .menu-navi button:first-child {margin-left: 4px;}
+.schedule .lib .btn {padding: 0 16px; line-height: 30px;}
+.schedule .lib .btn.move {padding: 8px; line-height: inherit; font-size: 0px;}
+
+.schedule .lib .render_range {padding-left: 12px; font-size: 19px; vertical-align: middle;}
+.schedule .lib .lnb-calendars > div { padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.schedule .lib .lnb-calendars > div:first-child {padding: 8px 16px 24px 16px;}
+.schedule .lib .lnb-calendars .lnb-calendars-item {min-height: 14px; line-height: 14px; padding: 8px 0; position: relative;}
+.schedule .lib .lnb-calendars .lnb-calendars-item.checkbox-item {padding: 0px; font-size: 18px; font-weight: 300;}
+.schedule .lib .lnb-calendars .lnb-calendars-item .tui-full-calendar-checkbox-square {display:none;}
+.schedule .lib .lnb-calendars .lnb-calendars-item label {display: inline;}
+.schedule .lib .lnb-calendars .lnb-calendars-item .edit {position: absolute; top:10px; right: 24px; cursor: pointer;}
+.schedule .lib .lnb-calendars .lnb-calendars-item .delete {position: absolute; top:10px; right: 4px; cursor: pointer;}
+
+.schedule .lib .tui-full-calendar-confirm {background-color: #004abf;}
+
+.schedule .lib .calendar {height: 100%; margin-bottom: 48px;}
+.schedule .lib .calendar .tui-full-calendar-layout {background: transparent !important;}}
+.schedule .lib .calendar .ic-user-b, .schedule .lib .calendar .ic-location-b {display: none;}
+.schedule .lib .calendar-icon {width: 14px; height: 14px; display: inline-block; vertical-align: middle;}
+.schedule .lib .calendar-font-icon { font-family: 'tui-calendar-font-icon';font-size: 10px;font-weight: normal;}
+.schedule .lib .img-bi { background: url('../images/calendar/img-bi.png') no-repeat; width: 215px; height: 16px;}
+.schedule .lib .ic_view_month {background: url('../images/calendar/ic-view-month.png') no-repeat;}
+.schedule .lib .ic_view_week {background: url('../images/calendar/ic-view-week.png') no-repeat;}
+.schedule .lib .ic_view_day {background: url('../images/calendar/ic-view-day.png') no-repeat;}
+.schedule .lib .ic-arrow-line-left {background: url('../images/calendar/ic-arrow-line-left.png') no-repeat;}
+.schedule .lib .ic-arrow-line-right {background: url('../images/calendar/ic-arrow-line-right.png') no-repeat;}
+.schedule .lib .ic-travel-time {background: url('../images/calendar/ic-traveltime-w.png') no-repeat;}
+.schedule .lib .ic-location-b:before {content: '\e900';}
+.schedule .lib .ic-lock-b:before {content: '\e901';}
+.schedule .lib .ic-milestone-b:before {content: '\e902';}
+.schedule .lib .ic-readonly-b:before {content: '\e903';}
+.schedule .lib .ic-repeat-b:before {content: '\e904';}
+.schedule .lib .ic-state-b:before {content: '\e905';}
+.schedule .lib .ic-user-b:before {content: '\e906';}
+
+/* ----- 스케줄 그룹 ----- */
+.schedule_group .aside .btn {margin-right: 4px;}
+.schedule_group .aside .btn:last-child {margin-right: 0px;}
+
+.schedule_group .lib .menu {width: 100%; padding: 0px 0px 16px; border-bottom: 1px solid #e5e5e5;}
+.schedule_group .lib .menu span {padding-right: 12px; font-size: 19px; vertical-align: middle;}
+.schedule_group .lib .btn {padding: 0 16px; line-height: 30px;}
+.schedule_group .lib .group_list .group {padding: 12px 0px; font-size: 16px;}
+.schedule_group .lib .group_list .group .ico {display: inline-block; width: 14px;height: 14px; line-height: 14px; vertical-align: middle; margin-right: 8px; border-radius: 8px; border: solid 2px; background: transparent;}
+
+
+/* ----- 태스크 ----- */
+.task .aside .btn {margin-right: 4px;}
+.task .aside .btn:last-child {margin-right: 0px;}
+.task .lib {display: flex;}
+.task .lib .btn { padding: 0 16px; line-height: 30px;}
+.task .lib .left .menu {padding: 10px 16px 24px 16px; border-bottom: 1px solid #e5e5e5;  position: relative;}
+.task .lib .left .all {min-height: 14px; line-height: 14px; font-size: 18px; font-weight: 300;}
+.task .lib .left .item {min-height: 14px; line-height: 14px; padding: 8px 0px; position: relative;}
+.task .lib .left .item .edit {position: absolute; top:10px; right: 24px; cursor: pointer;}
+.task .lib .left .item .delete {position: absolute; top:10px; right: 4px; cursor: pointer;}
+.task .lib .left .item span.icon {display: inline-block; cursor: pointer; width: 14px; height: 14px; line-height: 14px; vertical-align: middle; margin-right: 8px; border-radius: 8px; border: solid 2px; background: transparent;}
+.task .lib .left .item span {line-height: 14px;}
+.task .lib .left .list { padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.task .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5;}
+
+.task .lib .right .mode {padding: 12px 20px; margin: 16px 0px; background: #fff; box-shadow: 2px 2px 2px 2px #efefef; border-left:2px solid #ddd; position: relative;}
+.task .lib .right .mode .header {display:flex; font-size: 16px; margin-bottom: 12px;}
+.task .lib .right .mode .header .title {width: 65%;}
+.task .lib .right .mode .header .title input {border: 0px;}
+.task .lib .right .mode .header .start_date {width: 15%; font-size: 14px; line-height: 24px;}
+.task .lib .right .mode .header .end_date {width: 15%; font-size: 14px; line-height: 24px;}
+.task .lib .right .mode .header .datepicker {position: relative;}
+.task .lib .right .mode .header .datepicker .tui-datetime-input {width: auto; border: none !important;}
+.task .lib .right .mode .header .datepicker .tui-datetime-input input {border: none; padding:0px; font-size: 14px;}
+.task .lib .right .mode .contents {font-size:14px;}
+.task .lib .right .mode .contents textarea {padding:0px; border:none;}
+.task .lib .right .mode .confirm {position: absolute; top: 0; top: 16px; right: 16px;}
+.task .lib .right .mode .confirm button {margin:4px;}
+
+.task .lib .right .menu .group_title {padding-right: 12px; font-size: 19px; vertical-align: middle;}
+.task .lib .right .menu .search {position: absolute; top:0px; right:0px; float: right; width: 190px;}
+.task .lib .right .menu .search {position: relative;}
+.task .lib .right .menu .search.focus {border-bottom: 1px solid #004abf;}
+.task .lib .right .menu .search input {background: transparent; border: none; text-indent: 0px; padding: 0 12px; box-sizing: border-box; width: 85%; height: 24px; text-align: center; font-size: 16px;}
+.task .lib .right .menu .search button {background: url(../images/search.png) no-repeat center center; background-size: contain; width: 24px; height: 24px; cursor: pointer;}
+
+.task .lib .right .list ul li {padding: 12px 20px; margin: 16px 0px; background: #fff; box-shadow: 2px 2px 2px 2px #efefef; border-left:2px solid #ddd;position: relative;}
+.task .lib .right .list ul li.edit {opacity: 0.5;}
+.task .lib .right .list ul li.edit::before{content: ''; position: absolute; top:0px; left:0px; width: 100%; height: 100%; z-index:100;}
+.task .lib .right .list ul li.completed::before {content: ''; position: absolute; top:0px; left:0px; width: 100%; height: 100%; background:#ddd; opacity: 0.5;}
+.task .lib .right .list ul li .header {display:flex; font-size: 16px; margin-bottom: 12px;}
+.task .lib .right .list ul li .header .title {width: 65%;}
+.task .lib .right .list ul li .header .start_date {width: 15%; font-size: 14px; line-height: 24px;}
+.task .lib .right .list ul li .header .end_date {width: 15%; font-size: 14px; line-height: 24px;}
+.task .lib .right .list ul li .header .check {width: 5%; text-align: center;}
+.task .lib .right .list ul li .contents {font-size:14px;}
+
+.task .lib .right .list .not {font-size: 20px; margin-top: 12px;}
+.task .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
+
+.task .lib .right .page_area {margin-top: 36px;}
+
+/* ----- 노트 ----- */
+.note .aside .btn {margin-right: 4px; vertical-align: middle;}
+.note .aside .btn:last-child {margin-right: 0px;}
+
+.note .lib {display: flex;}
+.note .lib .btn { padding: 0 16px; line-height: 30px;}
+.note .lib .left .menu {padding: 10px 16px 24px 16px; border-bottom: 1px solid #e5e5e5; position: relative;}
+.note .lib .left .all {min-height: 14px; line-height: 14px; font-size: 18px; font-weight: 300;}
+.note .lib .left .item {min-height: 14px; line-height: 14px; padding: 8px 0px; position: relative;}
+.note .lib .left .item .edit {position: absolute; top: 10px; right: 24px; cursor: pointer;}
+.note .lib .left .item .delete {position: absolute; top: 10px; right: 4px; cursor: pointer;}
+.note .lib .left .item span.icon {display: inline-block; cursor: pointer; width: 14px; height: 14px; line-height: 14px; vertical-align: middle; margin-right: 8px; border-radius: 8px; border: solid 2px; background: transparent;}
+.note .lib .left .item span {line-height: 14px;}
+.note .lib .left .item ul {padding-left: 24px; margin-top: 8px;}
+.note .lib .left .item ul li {padding: 4px 0px;}
+.note .lib .left .item .check {position: absolute; top:10px; right: 4px;}
+.note .lib .left .list {padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.note .lib .left .option .item {padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.note .lib .left .option .temp ul {padding: 8px 0px;}
+.note .lib .left .option .temp li {padding: 4px 0px;position: relative;}
+.note .lib .left .option .temp li div {white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 170px; cursor: pointer;}
+.note .lib .left .option .temp li div:hover {color:#004abf;}
+.note .lib .left .option .temp li .delete {position: absolute; top:4px; right: 4px; cursor: pointer;}
+.note .lib .left .option .group select {width: 100%; margin: 8px 0px;}
+.note .lib .left .option .spell ul {padding: 8px 0px;}
+.note .lib .left .option .spell li {padding: 4px 0px;position: relative; cursor: pointer;}
+.note .lib .left .option .spell li:hover {color:#004abf;}
+
+.note .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5; position: relative;}
+.note .lib .right .menu .title {padding-right: 12px; font-size: 19px; vertical-align: middle;}
+.note .lib .right .menu .title input {border:0; height: 24px; font-size: 20px; background: transparent;}
+.note .lib .right .menu .title input::placeholder { font-size: 20px; }
+.note .lib .right .menu .search {position: absolute; top:0px; right:0px; float: right; width: 190px;}
+.note .lib .right .menu .search.focus {border-bottom: 1px solid #004abf;}
+.note .lib .right .menu .search input {background: transparent; border: none; text-indent: 0px; padding: 0 12px; box-sizing: border-box; width: 85%; height: 24px; text-align: center; font-size: 16px;}
+.note .lib .right .menu .search button {background: url(../images/search.png) no-repeat center center; background-size: contain; width: 24px; height: 24px; cursor: pointer;}
+.note .lib .right .menu .info {position: absolute; top:10px; right:0px; float: right;}
+
+.note .lib .right .list {overflow: hidden; margin: 0px -12px;}
+.note .lib .right .list ul {display: flex; flex-wrap: wrap; justify-content: flex-start;}
+.note .lib .right .list ul a {width: calc(33.333% - 24px); margin: 16px 12px; padding: 24px 32px; border:1px solid #dedede; position: relative; background: #fff;}
+.note .lib .right .list ul a > span{content: ""; width: 80px; height: 80px; border: transparent; border-left: 1px solid #dedede; position: absolute; bottom: -40px; right: -40px; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); background: #fff;} 
+.note .lib .right .list ul a h2 {font-weight: 500; margin: 12px 0px; min-height: 54px; position: relative}
+.note .lib .right .list ul a h2 span.bar {position: absolute; height: 2px; width: 40px; top: -4px; left:0px;}
+.note .lib .right .list ul a p {margin-bottom: 8px; min-height: 114px;}
+
+.note .lib .right .list .not {font-size: 20px; margin: 12px;}
+.note .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
+
+.note .lib .right .page_area {margin-top: 36px;}
+
+.note .lib .right .container {margin-top: 12px;}
+.note .lib .right .container .contents {width: 72%; display: inline-block; margin-right: 32px; margin-bottom: 320px;}
+.note .lib .right .container .aside {float: right; width: 280px; margin: 12px 36px 0 0;}
+.note .lib .right .container .aside .sidenav .on {color: #004abf;}
+.note .lib .right .container .aside .sidenav li a {font-size: 16px; position: relative;}
+.note .lib .right .container .aside .sidenav > li {margin: 0 0 8px 0;}
+.note .lib .right .container .aside .sidenav > li > ul {padding:0 0 0 8px;}
+.note .lib .right .container .aside .sidenav > li > ul li a {font-size: 14px;}
+.note .lib .right .container .aside .sidenav > li > ul li:first-child {margin-top: 4px;}
+.note .lib .right .container .aside .sidenav > li > ul li {margin: 0 0 4px 0;}
+.note .lib .right .container .aside .sidenav > li > ul > li > ul {padding:0 0 0 12px;}
+
+/* ----- 블로그 ----- */
+.blog .aside .btn {margin-right: 4px; vertical-align: middle;}
+.blog .aside .btn:last-child {margin-right: 0px;}
+.blog .lib {display: flex;}
+.blog .lib .left .menu {padding: 10px 16px 24px 16px; border-bottom: 1px solid #e5e5e5; position: relative;}
+.blog .lib .left .all {min-height: 14px; line-height: 14px; font-size: 18px; font-weight: 300;}
+.blog .lib .left .list {padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.blog .lib .left .list .item {min-height: 14px; line-height: 14px; padding: 8px 0px; position: relative;}
+.blog .lib .left .list .item a {display: block;}
+.blog .lib .left .list .item i {margin-right: 8px; font-size: 16px;}
+.blog .lib .left .list .item span {vertical-align: text-top;}
+.blog .lib .left .list .item .check {position: absolute; top: 8px; right: 4px;}
+.blog .lib .left .list .item .check i {font-size: 12px;}
+
+.blog .lib .left .option .item {padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.blog .lib .left .option .group select {width: 100%; margin: 8px 0px;}
+
+.blog .lib .left .option .temp ul {padding: 8px 0px;}
+.blog .lib .left .option .temp li {padding: 4px 0px;position: relative;}
+.blog .lib .left .option .temp li div {white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 170px; cursor: pointer;}
+.blog .lib .left .option .temp li div:hover {color:#004abf;}
+.blog .lib .left .option .temp li .delete {position: absolute; top:4px; right: 4px; cursor: pointer;}
+.blog .lib .left .option .spell ul {padding: 8px 0px;}
+.blog .lib .left .option .spell li {padding: 4px 0px;position: relative; cursor: pointer;}
+.blog .lib .left .option .spell li:hover {color:#004abf;}
+
+.blog .lib .left .option .thumbnail h3{margin-bottom: 8px;}
+.blog .lib .left .option .thumbnail h3 span {margin-left: 4px; font-size: 12px;}
+.blog .lib .left .option .thumbnail img{width: 100%; cursor: pointer;}
+
+.blog .lib .left .option .tag h3 {margin-bottom: 8px;}
+.blog .lib .left .option .tag input {padding: 5px;}
+.blog .lib .left .option .tag .tag_list{margin: 8px 0px;}
+.blog .lib .left .option .tag .tag_item {border: 1px solid #ccc; font-size: 10px; display: inline-block; border-radius: 24px; padding: 6px 8px; margin: 0px 4px 8px 0px; cursor: pointer;}
+.blog .lib .left .option .tag .tag_item:hover {border: 1px solid #004abf;}
+
+.blog .lib .left .option .posts h3 {margin-bottom: 8px;}
+.blog .lib .left .option .posts input {padding: 5px;}
+.blog .lib .left .option .posts > ul {padding: 8px 0px;}
+.blog .lib .left .option .posts > ul > li {padding: 4px 0px;position: relative;}
+.blog .lib .left .option .posts > ul > li div {white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 170px; cursor: pointer;}
+.blog .lib .left .option .posts > ul > li div:hover {color:#004abf;}
+.blog .lib .left .option .posts > ul > li .move {position: absolute; top:4px; right: 20px; cursor: pointer;}
+.blog .lib .left .option .posts > ul > li .delete {position: absolute; top:4px; right: 4px; cursor: pointer;}
+
+.blog .lib .left .option .posts .search_wrapper { width: 100%; position: relative;}
+.blog .lib .left .option .posts .search_post_list {position: absolute; z-index: 1000;     width: 100%;}
+.blog .lib .left .option .posts .search_post_list .ui-autocomplete {width: 100% !important; border-right: 1px solid #e5e5e5; border-left: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; height: 200px; overflow-y: scroll;}
+.blog .lib .left .option .posts .search_post_list .ui-autocomplete .ui-menu-item {padding: 8px 4px; background: #fff; cursor: pointer;}
+
+.blog .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5;}
+.blog .lib .right .menu .title {padding-right: 12px; font-size: 19px; vertical-align: middle;}
+.blog .lib .right .menu .title input {border:0; height: 24px; font-size: 20px; background: transparent;}
+.blog .lib .right .menu .title input::placeholder { font-size: 20px; }
+.blog .lib .right .menu .search {position: absolute; top:0px; right:0px; float: right; width: 190px;}
+.blog .lib .right .menu .search.focus {border-bottom: 1px solid #004abf;}
+.blog .lib .right .menu .search input {background: transparent; border: none; text-indent: 0px; padding: 0 12px; box-sizing: border-box; width: 85%; height: 24px; text-align: center; font-size: 16px;}
+.blog .lib .right .menu .search button {background: url(../images/search.png) no-repeat center center; background-size: contain; width: 24px; height: 24px; cursor: pointer;}
+.blog .lib .right .menu .info {position: absolute; top:10px; right:0px; float: right;}
+.blog .lib .right .menu .info .reg {margin-right: 8px;}
+
+.blog .lib .right .list .not {font-size: 20px;}
+.blog .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
+
+.blog .lib .right .post ul {margin: 16px 0px;}
+.blog .lib .right .post ul li {display:inline-block; width: calc(33.25% - 20px); margin: 0px 28px 36px 0;}
+.blog .lib .right .post ul li:nth-child(3n) {margin-right:0px;}
+.blog .lib .right .post ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; border-radius: 5px 5px 0px 0px;}
+.blog .lib .right .post ul li .thumb img {width: 100%; border-radius: 5px 5px 0px 0px;}
+.blog .lib .right .post ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.blog .lib .right .post ul li .thumb:hover .white-mask { opacity: 1;}
+.blog .lib .right .post ul li .contents {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.blog .lib .right .post ul li .contents h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 46px;}
+.blog .lib .right .post ul li .contents h3 a:hover {color:#004abf;}
+.blog .lib .right .post ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .lib .right .post ul li .contents div {margin: 16px 0 0 0;}
+
+.blog .lib .right .series ul {margin: 16px 0px;}
+.blog .lib .right .series ul li {display:flex; width: 100%; margin: 0 0 36px 0;}
+.blog .lib .right .series ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:30%;}
+.blog .lib .right .series ul li .thumb img {width: 100%;}
+.blog .lib .right .series ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.blog .lib .right .series ul li .thumb:hover .white-mask { opacity: 1;}
+.blog .lib .right .series ul li .contents {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .lib .right .series ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .lib .right .series ul li .contents h3 a:hover {color:#004abf;}
+.blog .lib .right .series ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .lib .right .series ul li .contents p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
+.blog .lib .right .series ul li .contents div {font-size: 14px;}
+
+.blog .lib .right .tag {margin: 16px 0px;}
+.blog .lib .right .tag a {border: 1px solid #ccc; font-size: 14px; display: inline-block; padding: 8px 16px; border-radius: 24px; margin: 0px 12px 16px 0px;}
+.blog .lib .right .tag a:hover {border: 1px solid #004abf;}
+.blog .lib .right .tag a .name {font-weight: 500;margin:0 4px;}
+.blog .lib .right .tag a:hover .name {color: #004abf;}
+.blog .lib .right .tag a .count {margin:0 2px;}
+
+.blog .lib .right .container {margin-top: 12px;}
+.blog .lib .right .container .contents {width: 72%; display: inline-block; margin-right: 32px; margin-bottom: 320px;}
+.blog .lib .right .container .contents .thumbnail img {width: 100%;}
+.blog .lib .right .container .contents .tags {padding: 24px 0px 32px 0;}
+.blog .lib .right .container .contents .tags a {background: #fafafa; display: inline-block; border: 1px solid #dee2e6; padding: 6px 8px; border-radius: 6px; margin: 0px 8px 12px 0px;}
+.blog .lib .right .container .contents .tags a:hover {color: #004abf;}
+
+.blog .lib .right .container .contents .posts {padding:0 0 16px 0;}
+.blog .lib .right .container .contents .posts h2 {font-size: 24px;}
+.blog .lib .right .container .contents .posts h2 span {font-size: 16px;}
+.blog .lib .right .container .contents .posts ul {margin: 20px 0;}
+.blog .lib .right .container .contents .posts ul li {margin: 8px 0; font-size: 18px;}
+.blog .lib .right .container .contents .posts ul li a { color: #004abf;}
+
+.blog .lib .right .container .aside {float: right; width: 280px; margin: 12px 36px 0 0;}
+.blog .lib .right .container .aside .icon {margin-bottom: 12px;}
+.blog .lib .right .container .aside .icon img {width: 64px;}
+.blog .lib .right .container .aside .sidenav .on {color: #004abf;}
+.blog .lib .right .container .aside .sidenav li a {font-size: 16px; position: relative;}
+.blog .lib .right .container .aside .sidenav > li {margin: 0 0 8px 0;}
+.blog .lib .right .container .aside .sidenav > li > ul {padding:0 0 0 8px;}
+.blog .lib .right .container .aside .sidenav > li > ul li a {font-size: 14px;}
+.blog .lib .right .container .aside .sidenav > li > ul li:first-child {margin-top: 4px;}
+.blog .lib .right .container .aside .sidenav > li > ul li {margin: 0 0 4px 0;}
+.blog .lib .right .container .aside .sidenav > li > ul > li > ul {padding:0 0 0 12px;}

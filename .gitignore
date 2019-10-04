@@ -1,0 +1,16 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# dotenv environment variables file
+.env
+
+# Uploads
+uploads
+
+# Dependency directories
+node_modules/
+
+# TypeScript v1 declaration files
+typings/

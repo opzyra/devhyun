@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="블로그 - 데브현" description="블로그에 작성된 다양한 포스트들을 태그별로 분류해서 하였습니다."}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='blog' fix='fix'}}
+
+	<main id="contents" class="blog">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path on">블로그</span>
+					</p>
+				</div>
+			</section>
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						개발과 관련된 다양한 이야기들을
+						<br class="visual_pc">
+						정성을 담아 기록하고 있어요
+					</h2>
+					<div class="count">
+						<ul>
+							<li>
+								<h3>발행 포스트</h3>
+								<p>{{countPostTag.post_count}} <span>건</span></p>
+							</li>
+							<li>
+								<h3>관련 태그</h3>
+								<p>{{countPostTag.tag_count}} <span>개</span></p>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</section>
+
+			<section class="tab">
+				<div>
+					<ul>
+						<li><a href="/blog/post">포스트</a></li>
+						<li><a href="/blog/series">시리즈</a></li>
+						<li><a href="/blog/tag" class="on">태그</a></li>
+					</ul>
+					<div id="searchFilter" class="filter visual_mobile">
+						<i class="mdi mdi-filter"></i>
+					</div>
+					<div class="search">
+						<form method="POST" onsubmit="APP.searchTag();">
+							<input type="text" name="query" id="query" placeholder="태그 검색">
+							<button type="submit"></button>
+						</form>
+					</div>
+				</div>
+			</section>
+
+			<section class="tag_list">
+				<div>
+					{{#each tags}}
+					<a href="/blog/tag/{{tag}}">
+						<span class="name">{{tag}}</span>
+						<span class="count">{{count}}</span>
+					</a>
+					{{/each}}
+				</div>
+			</section>
+
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'tag')}}
+
+</body>
+
+</html>

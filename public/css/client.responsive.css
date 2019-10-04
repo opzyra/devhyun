@@ -1,0 +1,309 @@
+@media (max-width: 999px) {
+/* -- 공통 컴포넌트 시작 -- */
+
+/* 헤더 */
+header > div {width: 100%; border-bottom: 1px solid #eee; height: 61px;}
+header h1 {float: left; line-height: 61px; height: 61px;}
+header h1 a {display: inline-block;}
+header h1 img {margin-left: 4px; margin-top: 8px; width: 180px;}
+header button {position: absolute; top: 8px; right: 4px; cursor: pointer; display: inline-block; padding:12px; background: transparent;}
+header button > span {display: block; width: 22px; height: 4px; border-radius: 4px; background: #004abf;}
+header button > span + span {margin-top: 4px;}
+header .lnb {height: 0%;}
+header .lnb.collapse {height: auto; float:none; clear: both; background: #fff;}
+header .lnb.collapse ul {display: block;  opacity: 1;}
+header .lnb ul {display: none; opacity: 0; padding:0 0 16px 0; border-bottom: 1px solid #eee;}
+header .lnb li {display: block;}
+header .lnb li a {line-height: 44px; font-size: 16px;}
+header .lnb.collapse + .overlay {position: absolute; width: 100%; height: 100vh; right: 0;}
+
+/* 페이징 */
+.pagination .first, .pagination .last {display: none;}
+
+/* 레이 아웃 */
+main {padding-top: 62px;}
+main section > div {width: 100%;}
+main > div {padding: 24px 12px;}
+main .location {margin: 0 0 16px 0;}
+
+/* 푸터 */
+footer > div {width: 100%; padding: 28px 16px;}
+footer .footer_links {flex-direction: column;}
+footer .brand {width: 100%; margin-bottom: 12px;}
+footer .brand span::after {display: none;}
+footer .policy {display: block; width: 100%;margin-bottom: 16px;}
+footer .sns {width: 100%; margin-bottom: 8px;}
+footer .info span:first-child {display:block;}
+footer .info span:first-child::after {display:none;}
+footer .info div {margin-top: 4px;}
+
+/* -- 공통 컴포넌트 끝 -- */
+
+/* -- 인덱스 페이지 시작 -- */
+
+/* 비주얼 */
+.index .visual {height: 300px; background-size: cover;}
+.index .visual .slide {padding: 50px 20px 0 20px; font-size:32px;}
+.index .visual .slide p {font-size: 16px;}
+.index .visual img {display: none;}
+.index .visual .txt-type {display: block; margin-top: 8px;}
+
+/* 스킬 */
+.index .skills > div {padding: 60px 16px;}
+.index .skills p {padding: 0px 0px 48px 0px;}
+.index .skills ul h3 {font-size: 14px;}
+.index .skills ul li {display: flex; width: 100%; padding: 0 20px; margin-bottom: 36px; vertical-align: middle; align-items: center;}
+.index .skills ul div {min-width: 64px;}
+.index .skills ul img {width: 56px;}
+.index .skills ul li:last-child {margin: 0px;}
+.index .skills ul p {text-align: left; margin-left: 32px; font-size: 14px;}
+
+/* 프로젝트 */
+.index .projects > div {padding: 32px 16px;}
+.index .projects ul li {width:100%; margin: 0px;}
+.index .projects a {padding: 20px;}
+.index .projects li:first-child a {margin-bottom: 16px;}
+.index .projects li a {background-position: 95% 90% !important; background-size: 14% !important;}
+
+/* 블로그 */
+.index .blog > div {padding: 60px 16px;}
+.index .blog .blog-swiper {width: 100%;}
+
+/* -- 인덱스 페이지 끝 -- */
+
+
+/* -- 소개 페이지 시작 -- */
+
+/* 타이틀 */
+.about .title h2 {font-size: 24px;}
+
+/* 키워드 리스트 */
+.about .keyword {margin: 40px 0 0 0;}
+.about .keyword ul {text-align: center;}
+.about .keyword li {padding:8px; width: 80px; margin: 0 14px 28px 14px;}
+.about .keyword li:first-child {margin: 0 14px 28px 14px;}
+.about .keyword li p {display: none;}
+
+/* 자기소개 */
+.about .introduce {padding: 40px 0;}
+.about .introduce h2 {font-size: 20px;}
+.about .introduce p {font-size: 14px;}
+
+/* 기술스택 소개*/
+.about .skills {padding: 48px 0;}
+.about .skills h2 {font-size: 20px;}
+.about .skills p {font-size: 14px; margin-bottom: 16px;}
+.about .skills .category {flex-direction: column; padding: 0 0 40px;}
+.about .skills .category.first {padding: 40px 0px;}
+.about .skills .detail {width: 100%; margin-bottom: 32px;}
+.about .skills .detail .default {padding: 0px 4px;}
+.about .skills .detail .default img {width: 40px;}
+.about .skills .detail .default h3 {font-size: 16px;}
+.about .skills .detail .default p {font-size: 14px; margin-bottom:0px;}
+.about .skills .list {width: 100%; padding:0px;}
+.about .skills .list ul {padding: 0px 4px;}
+.about .skills .list li {width: 100%; margin: 0 0 20px 0;}
+.about .skills .list li img {margin: 0 16px 0 0; width: 36px;}
+
+/* 브랜드 소개 */
+.about .brand {padding: 48px 0;}
+.about .brand h2 {font-size: 20px;}
+.about .brand p {font-size: 14px; margin-bottom: 16px;}
+.about .brand img {width: 100%;}
+.about .brand .logo_box {flex-direction: column;}
+.about .brand .logo_box p {margin-bottom: 24px;}
+.about .brand .logo_box .bi img {width: 75%;}
+/* -- 소개 페이지 끝 -- */
+
+
+/* -- 프로젝트 페이지 시작 -- */
+
+/* 타이틀 */
+.project .title h2 {font-size: 24px;}
+
+/* 회사 프로젝트 */
+.project .biz {padding: 40px 0;}
+.project .biz h2 {font-size: 20px;}
+.project .biz p {font-size: 14px;}
+.project .biz .list-box > li {flex-direction: column; align-items: start; padding: 0 8px; margin: 32px 0; position: relative;}
+.project .biz .list-box > li:last-child {margin-bottom: 0px;}
+.project .biz .list-box li img {width: 58px;}
+.project .biz .list-box li .logo {margin: 0 20px 0 0;}
+.project .biz .list-box .intro {margin-bottom: 16px;}
+.project .biz .list-box li .outline {margin: 0px; min-width: auto;}
+.project .biz .list-box li .detail {margin: 0px; min-width: auto; margin-bottom: 20px;}
+.project .biz .list-box li .detail ul {margin-left: 12px;}
+.project .biz .list-box li .detail ul li {list-style: disc; margin-left: 20px; margin-bottom:4px}
+.project .biz .list-box li .link {position: absolute; top: 5px; right:8px;}
+.project .biz .list-box li .link a {font-size: 12px; height: 32px; padding: 0 16px; line-height: 32px;}
+
+/* 개인 프로젝트 */
+.project .private {padding: 48px 0 0 0;}
+.project .private h2 {font-size: 20px;}
+.project .private p {font-size: 14px;}
+.project .private ul li {width: 100%; padding: 0 0 48px 0;}
+.project .private ul li:last-child {padding: 0px;}
+/* -- 프로젝트 페이지 끝 -- */
+
+
+/* -- 프로젝트 상세 페이지 공통 시작 -- */
+
+/* 타이틀 */
+.project_detail .title h2 {font-size:24px;}
+.project_detail .title .icon img {width: 36px;}
+
+/* 작은 배너 */
+.project_detail .background {padding: 40px 0 52px 0;}
+.project_detail .background > div {width: 100%; height: 260px;}
+
+/* 개요 */
+.project_detail .outline h2 {font-size: 20px; margin: 0 0 12px 0;}
+.project_detail .outline p {font-size: 14px; margin-bottom:8px;}
+
+/* 목업 이미지 */
+.project_detail .mockup {padding: 36px 0;}
+.project_detail .mockup img {width: 90%;}
+
+/* 프로젝트 포인트 */
+.project_detail .point {padding: 36px 0;}
+.project_detail .point h2 {font-size: 20px; margin: 0 0 12px 0;}
+.project_detail .point p {font-size: 14px; margin-bottom:8px;}
+.project_detail .point img {width: 100%; margin: 40px 0 0 0;}
+
+/* 개발 기술 */
+.project_detail .skills h2 {font-size:20px;}
+.project_detail .skills p {font-size: 14px;}
+.project_detail .skills a {top: 0px; right: 0px; font-size: 12px; height: 32px; padding: 0 16px; line-height: 32px;}
+.project_detail .back {padding: 40px 0;}
+/* -- 프로젝트 상세 페이지 공통 끝 -- */
+
+/* -- 프로젝트별 상세 페이지 시작 -- */
+
+/* 어바웃 피리어드 배너 */
+.aboutperiod .background > div {background-size: contain;}
+
+/* 코드프레소 배너 */
+.codepresso .background > div {background: url(../images/mok_codepresso.png) no-repeat 0px 0px; background-size: contain;}
+
+/* 자비스 배너 */
+.jabis .background > div {background: url(../images/mok_jabis.png) no-repeat 0px 0px; background-size: contain;}
+
+/* -- 프로젝트별 상세 페이지 끝 -- */
+
+
+/* -- 블로그 시작 -- */
+
+/* 타이틀 */
+.blog .title h2 { font-size: 24px;}
+
+/* 탭 */
+.blog .title .count {float:unset;}
+.blog .title .count ul {text-align: center; margin-top: 16px;}
+.blog .title .count p {font-size: 24px;}
+.blog .tab {padding: 32px 0;}
+.blog .tab .filter {float: right; font-size: 20px; cursor: pointer;}
+.blog .tab .search {float:unset;width: 100%; margin-top: 20px; display:none;}
+.blog .tab .search.show {display: block;}
+.blog .tab .search input {width: 90%;}
+
+/* 포스트 리스트 */
+.blog .post_list ul li {width: 100%; margin: 0 0 36px 0;}
+.blog .post_list ul li .contents {padding: 20px 16px;}
+.blog .post_list .search_count .back {display: none;}
+.blog .post_none .not {font-size: 16px;}
+
+/* 시리즈 리스트 */
+.blog .series_list ul li {flex-direction: column;}
+.blog .series_list ul li .thumb {width: 100%;}
+.blog .series_list ul li .contents {width: 100%; padding: 20px 16px;}
+.blog .series_none .not {font-size: 16px;}
+
+/* 태그 리스트 */
+.blog .tag_list a {font-size: 12px; padding: 6px 8px; margin: 0px 4px 8px 0px;}
+
+/* 페이징 */
+.blog .page {padding: 20px 0 20px 0;}
+
+/* -- 블로그 끝 -- */
+
+/* -- 포스트 시작 -- */
+
+/* 타이틀 */
+.post_detail .title h2 {font-size: 24px;}
+.post_detail .title .icon {width: auto; margin: 0px;}
+.post_detail .title .icon img {width: 36px; margin-top: 8px;}
+.post_detail .title .date {position: relative; padding: 16px 0px; font-size: 16px;}
+
+/* 컨테이너 */
+.post_detail .container .area {width: 100%; display: inline-block;}
+
+/* 콘텐츠 네비바 */
+.post_detail .container aside { display: none;}
+
+/* 썸네일 */
+.post_detail .thumbnail{padding: 32px 0 18px 0;}
+
+/* 시리즈 */
+.post_detail .series h2 {font-size: 20px;}
+.post_detail .series ul li {flex-direction: column;}
+.post_detail .series ul li a {width: 100%;}
+.post_detail .series ul li > div {width: 100%; padding: 16px;}
+.post_detail .series ul li h3 {font-size: 18px;}
+.post_detail .series .swiper-container {margin-bottom: 40px;}
+
+/* 연관 포스트 */
+.post_detail .relation h2 {font-size: 20px;}
+.post_detail .relation h3 {font-size: 16px;}
+.post_detail .relation ul li a {padding: 20px;}
+.post_detail .relation p {min-height: auto;}
+
+/* 목록 이동 */
+.post_detail .back {padding: 20px 0;}
+
+/* -- 포스트 끝 -- */
+
+
+/* -- 시리즈 시작 -- */
+
+/* 타이틀 */
+.series_detail .title h2 {font-size: 24px;}
+.series_detail .title .icon {width: auto; margin: 0px;}
+.series_detail .title .icon img {width: 36px; margin-top: 8px;}
+.series_detail .title .date {position: relative; padding: 16px 0 0; font-size: 16px;}
+
+/* 컨테이너 */
+.series_detail .container .area {width: 100%; display: inline-block;}
+
+/* 콘텐츠 네비바 */
+.series_detail .container aside { display: none;}
+
+/* 썸네일 */
+.series_detail .thumbnail{padding: 32px 0 18px 0;}
+
+/* 목록 이동 */
+.series_detail .back {padding: 20px 0;}
+
+/* -- 시리즈 끝 -- */
+
+
+/* --  개인정보 처리 방침 시작 -- */
+
+/* 타이틀 */
+.policy .title h2 {font-size: 24px;}
+
+/* 내용 */
+.policy .contents {padding: 40px 0; font-size: 14px;}
+.policy .contents h3 {font-size: 20px;}
+.policy .contents > div div {margin: 32px 0;}
+
+/* --  개인정보 처리 방침 끝 -- */
+
+
+/* -- 로그인 시작 -- */
+
+.login { width: 100%; padding: 110px 24px; box-sizing: border-box;}
+.login input {padding: 12px 16px; font-size: 14px;}
+
+/* -- 로그인 끝 -- */
+
+}

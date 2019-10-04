@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  {{>cl-seo title="로그인 - 데브현"}}
+
+  {{>cl-style}}
+
+</head>
+
+<body>
+
+  {{>cl-common}}
+
+  <section class="login">
+    <h2><a href="/"><img src="/images/logo.png" alt="Devhyun"></a></h2>
+    <form method="POST" onsubmit="APP.login();">
+      <input id="id" name="id" type="text" placeholder="아이디">
+      <input name="password" type="password" placeholder="비밀번호" autocomplete="off">
+
+      <div class="checks">
+        <input type="checkbox" id="save" name="save">
+        <label for="save">아이디 저장</label>
+      </div>
+
+      <button type="submit">로그인</button>
+
+    </form>
+  </section>
+
+  {{>cl-script MODULE=(config 'client' 'login')}}
+
+</body>
+
+</html>

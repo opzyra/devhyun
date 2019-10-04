@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='index'}}
+
+	<main id="contents" class="index">
+		<h2 class="hide">광고</h2>
+		<section class="visual">
+			<div>
+				<div class="slide">
+					안녕하세요,
+					<div>
+						<p>웹 브라우저로 사람을 연결하는 개발자 김현호 입니다.</p>
+						<p class="text-effect"></p>
+					</div>
+				</div>
+				<img class="human" src="/images/human.png">
+				<img class="code" src="/images/code.png">
+			</div>
+		</section>
+
+		<h2 class="hide">핵심기술</h2>
+		<section class="skills">
+			<div>
+				<h2>Skills</h2>
+				<p>
+					웹 개발 파트별로 정리한 간략한 기술 스택입니다.<br>
+					분야별 기술에 대하여 더 자세한 내용은 소개 페이지에서 확인 하실 수 있습니다.
+				</p>
+				<ul>
+					<li>
+						<div>
+							<img src="/images/frontend.png">
+							<h3>Frontend</h3>
+						</div>
+						<p>HTML·CSS·JQuery 웹 퍼블리싱<br>Vue·React SPA 개발</p>
+					</li>
+					<li>
+						<div>
+							<img src="/images/backend.png">
+							<h3>Backend</h3>
+						</div>
+						<p>SpringBoot·NodeJS API 구축<br>MySQL DB 스키마 설계</p>
+					</li>
+					<li>
+						<div>
+							<img src="/images/server.png">
+							<h3>Devops</h3>
+						</div>
+						<p>Linux·AWS 서버 구축<br>Git 버전관리</p>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<h2 class="hide">프로젝트</h2>
+		<section class="projects">
+			<div>
+				<ul>
+					<li>
+						<a href="/project">
+							<h3>회사 프로젝트</h3>
+							<p>회사에서 진행한 프로젝트 입니다.</p>
+							<p>애플리케이션 개발이 완료되어 현재 운영되고 있습니다.</p>
+							<div class="more">상세 보기<i class="mdi mdi-arrow-right"></i></div>
+						</a>
+					</li>
+					<li>
+						<a href="/project?scroll=private">
+							<h3>개인 프로젝트</h3>
+							<p>다양한 기술을 습득하며 개발한 포트폴리오 입니다.</p>
+							<p>학습용, 간단한 서비스 등의 개발 활동 입니다.</p>
+							<div class="more">상세 보기<i class="mdi mdi-arrow-right"></i></div>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<h2 class="hide">블로그</h2>
+		<section class="blog">
+			<div>
+				<h2>Blog</h2>
+				<p>
+					개발과 관련된 다양한 이야기들을 정성을 담아 기록하고 있습니다.
+				</p>
+				<div class="blog-swiper swiper-container">
+					<div class="swiper-wrapper">
+						{{#each latestPosts}}
+						<div class="swiper-slide">
+							<a class="item" href="/blog/post/{{idx}}">
+								<img src="{{thumbnail}}">
+								<div class="white-mask"></div>
+							</a>
+							<div class="content">
+								<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
+								<p>{{parseMarkdown contents 89}}</p>
+							</div>
+						</div>
+						{{/each}}
+					</div>
+					<button class="swiper-next"></button>
+					<button class="swiper-prev"></button>
+				</div>
+				<a class="more" href="/blog/post">블로그 더 보기<i class="mdi mdi-arrow-right"></i></a>
+			</div>
+		</section>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'main')}}
+
+</body>
+
+</html>

@@ -1,0 +1,56 @@
+{{!-- 헤더 영역 --}}
+<header>
+  <section class="logo">
+    <a href="/">
+      <img class="lg" src="/images/logo.png" alt="logo" />
+      <img class="sm" src="/images/favicon.png" alt="logo" />
+    </a>
+  </section>
+  <section class="profile">
+    <img src="{{session.member.thumbnail}}" alt="thumbnail" />
+    <h3>{{session.member.name}}</h3>
+    <p>{{session.member.role_name}}</p>
+    <a href="javascript:;" onclick="COMMON.logout();" class="btn">로그아웃 <i class="mdi mdi-arrow-right"></i></a>
+  </section>
+  <nav class="lnb">
+    <ul>
+      <li class="{{#eq active 'dashboard'}}on{{/eq}}">
+        <a href="/admin">
+          <i class="mdi mdi-monitor"></i>
+          <span>대시보드</span>
+        </a>
+      </li>
+      <li class="{{#eq active 'schedule'}}on{{/eq}}">
+        <a href="/admin/schedule">
+          <i class="mdi mdi-calendar"></i>
+          <span>스케줄</span>
+        </a>
+      </li>
+      <li class="{{#eq active 'task'}}on{{/eq}}">
+        <a href="/admin/task">
+          <i class="mdi mdi-format-list-checkbox"></i>
+          <span>태스크</span>
+        </a>
+      </li>
+      <li class="{{#eq active 'note'}}on{{/eq}}">
+        <a href="/admin/note">
+          <i class="mdi mdi-file-document-box-check-outline"></i>
+          <span>노트</span>
+        </a>
+      </li>
+      <li class="{{#eq active 'blog'}}on{{/eq}}">
+        <a href="/admin/blog/post">
+          <i class="mdi mdi-lead-pencil"></i>
+          <span>블로그</span>
+        </a>
+      </li>
+      <li class="{{#eq active 'statistics'}}on{{/eq}}">
+        <a href="https://analytics.google.com/analytics/web/?hl=ko&pli=1#/report-home/a145435902w207175152p199928658"
+          target="_blank">
+          <i class="mdi mdi-finance"></i>
+          <span>통계</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>

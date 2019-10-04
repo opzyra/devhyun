@@ -1,0 +1,21 @@
+{{!-- 헤더 영역 --}}
+<header class="{{fix}}">
+  <div>
+    <h1><a href="/"><img src="/images/logo.png" alt="Devhyun"></a></h1>
+    <h2 class="hide">메뉴</h2>
+    <button id="burger" type="button">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="lnb">
+      <ul>
+        <li><a href="/about" class="{{#eq active 'about'}}on{{/eq}}">소개</a></li>
+        <li><a href="/project" class="{{#eq active 'project'}}on{{/eq}}">프로젝트</a></li>
+        <li><a href="/blog/post" class="{{#eq active 'blog'}}on{{/eq}}">블로그</a></li>
+        <li><a href="https://github.com/opzyra" target="_blank">깃허브</a></li>
+      </ul>
+    </nav>
+    <div id="overlay" class="overlay"></div>
+  </div>
+</header>

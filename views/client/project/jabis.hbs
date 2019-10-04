@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="프로젝트 - 데브현" description="개발을 통해 작은 문제를 해결하고 개선한 프로젝트들을 정리 했어요."}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='project' fix='fix'}}
+
+	<main id="contents" class="project_detail jabis">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path">프로젝트</span>
+						<span class="path on">상세정보</span>
+					</p>
+				</div>
+			</section>
+
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						학원 관리 프로그램
+					</h2>
+					<p class="date">2018.07 ~ 2018.08</p>
+					<div class="icon">
+						<img src="/images/production.png" alt="배포" data-tippy-content="배포">
+						<img src="/images/responsive.png" alt="반응형" data-tippy-content="반응형">
+					</div>
+					<p class="url">
+						<span><i class="mdi mdi-eventbrite"></i></span>
+						<a href="https://www.jabis.kr" target="_blank">https://www.jabis.kr</a>
+					</p>
+				</div>
+			</section>
+
+			<section class="background">
+				<div>자비스 대표이미지</div>
+			</section>
+
+			<section class="outline">
+				<div>
+					<h2>프로젝트 개요</h2>
+					<p>자비스는 학원의 효율적인 학생 상담일지 관리를 위해 개발된 애플리케이션입니다.</p>
+					<p>학생정보 및 상담일지를 데이터베이스화 하여 웹 환경에서 통합하여 관리 합니다.</p>
+					<p>직관적인 UI/UX를 추구하였고 관리자 페이지 형태로 구현 되었습니다.</p>
+				</div>
+			</section>
+			<section class="mockup">
+				<div>
+					<img src="/images/concept_jabis.png" alt="자비스 컨셉 이미지">
+				</div>
+			</section>
+			<section class="point">
+				<div>
+					<h2>작업 포인트</h2>
+					<p>강사의 상담일지 작성현황을 한눈에 파악하고 학생의 상세 정보를 쉽게 공유할 수 있습니다.</p>
+					<p>다양한 차트 라이브러리를 활용하여 데이터 파악을 쉽게 할 수 있습니다.</p>
+					<p>업무 특성상 모바일 접속 빈도가 높아 반응형에 최적화된 인터페이스를 제공합니다.</p>
+					<br>
+					<p>SpringBoot로 개발였으며 SpringSecurity·Ehcache 등 다양한 라이브러리를 활용하였습니다.</p>
+					<p>스케줄러를 활용해 통계를 처리하였고 빌드는 Gradle로 Executable Jar 패키징 했습니다.</p>
+					<img src="/images/jabis_full.png" alt="자비스 이미지">
+				</div>
+			</section>
+			<section class="skills">
+				<div>
+					<h2>개발 기술</h2>
+					<p>Thymleaf·VueJS·HTML/CSS·Bootstrap·JQuery</p>
+					<p>SpringBoot·MySQL</p>
+					<p>AWS·SVN</p>
+					<a href="/blog/tag/jabis">
+						개발 이슈 <i class="mdi mdi-chevron-right"></i>
+					</a>
+				</div>
+			</section>
+			<section class="back">
+				<div>
+					<a href="/project?scroll=private">
+						목록으로 가기
+					</a>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'projectDetail')}}
+
+</body>
+
+</html>

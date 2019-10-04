@@ -1,0 +1,36 @@
+{{!-- 하단 푸터 영역 --}}
+<footer>
+  <div>
+    <div class="footer_links">
+      <div class="brand">
+        <span>데브현</span>
+      </div>
+      <div class="policy">
+        <a href="/policy">개인정보 처리 방침</a>
+        {{#if session.member}}
+        <a href="/admin">관리자</a>
+        {{else}}
+        <a href="/login">로그인</a>
+        {{/if}}
+      </div>
+      <div class="sns">
+        <a href="mailto:opzyra@gmail.com" title="이메일">
+          <img src="/images/mail.png" alt="이메일">
+        </a>
+        <a href="javascript:void(0);" title="카카오톡">
+          <img src="/images/kakao.png" alt="카카오톡">
+        </a>
+        <a href="https://github.com/opzyra" target="_blank" title="깃허브">
+          <img src="/images/git.png" alt="깃허브">
+        </a>
+      </div>
+    </div>
+    <div class="info">
+      <span><strong>김현호</strong></span>
+      <span>이메일 opzyra@gmail.com</span>
+      <span class="visual_pc">카카오톡 opzyra</span>
+      <span>깃허브 opzyra</span>
+      <div>Copyright ⓒ 2019 Devhyun All Rights Reserved.</div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{APP}} - 관리자</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body>
+  {{>ad-common}}
+
+  {{>ad-header active="note"}}
+
+  <main class="note">
+    <h1 class="page_title">노트</h1>
+    <aside class="aside">
+      <a class="btn" href="/admin/note/edit/{{note.idx}}">
+        <i class="mdi mdi-circle-edit-outline"></i> 수정
+      </a>
+      <button type="button" class="btn danger" onclick="APP.deleteNote({{note.idx}});">
+        <i class="mdi mdi-delete"></i> 삭제
+      </button>
+    </aside>
+    <section class="lib">
+      <div class="left">
+        <div class="menu">
+          <div class="all">
+            <a href="/admin/note">전체보기</a>
+          </div>
+        </div>
+        <div id="noteGroup" class="list">
+          {{#each noteGroups}}
+          <div class="item" data-idx="{{idx}}">
+            <a href="/admin/note?group={{idx}}">
+              <span class="icon" style="border-color: {{color}}; background-color: {{color}};"></span>
+              <span>
+                {{name}}
+              </span>
+              {{#eq idx ../note.note_group_idx}}
+              <span class="check">
+                <i class="mdi mdi-check-bold"></i>
+              </span>
+              {{/eq}}
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="right">
+        <div class="menu">
+          <span class="title">
+            {{note.title}}
+          </span>
+          <span class="info">
+            <span class="reg">등록일 {{parseDate note.reg 'YYYY.MM.DD'}}</span>
+          </span>
+        </div>
+        <div class="container">
+          <div class="contents">
+            <div class="tui-editor-contents">
+              {{{note.contents}}}
+            </div>
+          </div>
+          <div id="aside" class="aside">
+            {{{toc}}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {{>ad-script MODULE=(config 'admin' 'noteDetail')}}
+
+</body>
+
+</html>

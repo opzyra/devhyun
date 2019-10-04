@@ -1,0 +1,16 @@
+@media (max-width: 1440px){
+  header {width: 100px;}
+  header .lnb ul li i {margin-right: 0px; font-size: 20px;}
+  header .lnb ul li a {text-align: center;}
+  header .lnb ul li a span {display: none;}
+  
+  header .logo img.sm {display: block; width: 40px; margin: 0 auto;}
+  header .logo img.lg {display: none;}
+
+  header .profile h3 {font-size: 14px;}
+  header .profile p {font-size: 10px;}
+  header .profile img {width: 48px;}
+  header .profile .btn {font-size: 10px;}
+  
+  main {margin-left:100px;}
+}

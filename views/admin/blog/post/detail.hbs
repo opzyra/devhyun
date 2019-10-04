@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{APP}} - 관리자</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body>
+  {{>ad-common}}
+
+  {{>ad-header active="blog"}}
+
+  <main class="blog">
+    <h1 class="page_title">블로그</h1>
+    <aside class="aside">
+      <a class="btn" href="/admin/blog/post/edit/{{post.idx}}">
+        <i class="mdi mdi-circle-edit-outline"></i> 수정
+      </a>
+      <button type="button" class="btn danger" onclick="APP.deletePost({{post.idx}});">
+        <i class="mdi mdi-delete"></i> 삭제
+      </button>
+    </aside>
+    <section class="lib">
+      <div class="left">
+        <div class="menu">
+          <div class="all">
+            카테고리
+          </div>
+        </div>
+        <div class="list">
+          <ul>
+            <li class="item">
+              <a href="/admin/blog/post">
+                <i class="mdi mdi-post-outline"></i><span>포스트</span>
+                <span class="check">
+                  <i class="mdi mdi-check-bold"></i>
+                </span>
+              </a>
+            </li>
+            <li class="item">
+              <a href="#"><i class="mdi mdi-cube-outline"></i><span>시리즈</span></a>
+            </li>
+            <li class="item">
+              <a href="#"><i class="mdi mdi-pound"></i><span>태그</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="right">
+        <div class="menu">
+          <span class="title">
+            {{post.title}}
+          </span>
+          <span class="info">
+            <span class="reg">등록일 {{parseDate post.reg 'YYYY.MM.DD'}}</span>
+            <span class="hit">
+              조회수 {{post.hit}}
+            </span>
+          </span>
+
+        </div>
+        <div class="container">
+          <div class="contents">
+            <div class="thumbnail">
+              <img src="{{post.thumbnail}}" alt="{{post.title}}">
+            </div>
+            <div class="tui-editor-contents">
+              {{{post.contents}}}
+            </div>
+            <div class="tags">
+              {{#each tags}}
+              <a href="javascipt:;">{{this}}</a>
+              {{/each}}
+            </div>
+          </div>
+          <div id="aside" class="aside">
+            <div class="icon">
+              {{#isNewPost post.reg}}
+              <img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
+              {{/isNewPost}}
+              {{#isHotPost post.hit}}
+              <img src="/images/hot.png" alt="핫한" data-tippy-content="핫한">
+              {{/isHotPost}}
+              {{#isGoodPost post.contents}}
+              <img src="/images/long.png" alt="길다란" data-tippy-content="길다란">
+              {{/isGoodPost}}
+            </div>
+            {{{toc}}}
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {{>ad-script MODULE=(config 'admin' 'postDetail')}}
+
+</body>
+
+</html>

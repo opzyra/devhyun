@@ -1,0 +1,536 @@
+
+
+/* 애니메이션 */
+@keyframes cursor{ 0%{border-right: 1px solid #fff} 50%{border-right: 1px solid #000} 100%{border-right: 1px solid #fff} }
+
+/* 상단 비동기 컨틀롤러 바 */
+#progress .progress-bar {background-color: #004abf; color: #004abf;}
+
+/* -- 공통 컴포넌트 시작 -- */
+
+/* 헤더 */
+header {position: fixed; left: 0; top: 0; width: 100%; z-index: 20; background: #fff;}
+header > div {width: 1200px; margin: 0 auto; height: 81px;}
+header h1 {float: left; line-height: 81px; height: 81px;}
+header h1 a {display: inline-block;}
+header h1 img {width: 200px; display: block; margin-top: 12px; margin-left: -18px;}
+header .lnb {float: right; }
+header .lnb ul {font-size:0px;}
+header .lnb li {display: inline-block; }
+header .lnb li a {display: block; line-height: 81px; padding: 0 16px; font-size: 16px;}
+header .lnb li a:hover {color:#004abf;}
+header .lnb li a.on {color:#004abf;}
+header.scroll {border-bottom: 1px solid #eee;}
+header.fix {border-bottom: 1px solid #eee;}
+header button {display: none;}
+
+/* 레이 아웃 */
+main {min-height: calc(100vh - 185px); padding-top: 81px;}
+main section > div {width: 1200px; margin: 0 auto; position: relative; box-sizing: border-box;}
+main > div {padding: 40px 0;}
+main .location {margin: 0 0 20px 0;}
+main .location p {font-size:12px;}
+main .location .path {margin: 0 14px 0 0; position: relative;}
+main .location .path::after {content: '\F35F'; position: absolute; font: normal normal normal 14px/1 "Material Design Icons"; top: 3px;}
+main .location .path:last-child::after {display:none;}
+main .location .path.on {color:#004abf; font-weight: 500;}
+
+/* 페이징 */
+.pagination {text-align: center;}
+.pagination .page-item { display: inline-block; position: relative; width: 34px; height: 34px; overflow: hidden; border: 1px solid #d9d9d9; background: #fff; margin: 0 1px;}
+.pagination .page-item a {display:inline-block; width: 100%; height: 100%; font-size: 14px; line-height: 34px;}
+.pagination .page-item.active a {background: #004abf; color: #fff;}
+.pagination .prev {margin-right: 8px;}
+.pagination .next {margin-left: 8px;}
+.pagination .first a , .pagination .last a, .pagination .prev a, .pagination .next a {text-indent: -9999px;}
+.pagination .first a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat;}
+.pagination .last a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -33px;}
+.pagination .prev a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -11px;}
+.pagination .next a::before {content: ''; position: absolute; top: 50%; left: 50%; width: 11px; height: 11px; margin: -5px 0 0 -5px; background: url(../images/btn_paginate.png) 0 0 no-repeat; background-position: 0 -22px;}
+
+/* 푸터 */
+footer {background: #39424c; font-size: 14px;}
+footer > div {width: 1200px; margin: 0 auto; position: relative; box-sizing: border-box; padding: 40px 0px;}
+footer .footer_links {display: flex; flex-direction: row; margin: 0 0 20px 0; padding: 0 0 12px 0; border-bottom: 1px solid #485561; color: #b2bbc3; align-items: center; justify-content: space-between;}
+footer .brand span {margin: 0 24px 0 0;}
+footer .brand span::after {content: "|"; margin: 0 0 0 24px; color: #485561;}
+footer .policy {display: flex; flex-wrap: wrap; flex: 1 0 auto;}
+footer .policy a {line-height: 22px; font-weight: 500; letter-spacing: -.5px; color: inherit; margin: 0 24px 0 0;}
+footer .sns {display: flex;}
+footer .sns a img {width:28px; opacity: 0.6;}
+footer .sns a:hover img {opacity: 1;}
+footer .sns a+a {margin: 0 0 0 4px;}
+footer .info {color:#b2bbc3; line-height: 18px; font-weight: 300; letter-spacing: -.5px; margin: 0; line-height: 22px;}
+footer .info span {display: inline; margin: 0 10px 0 0;color: #647586; font-size:12px;}
+footer .info strong {color:#b2bbc3; font-weight: 300;}
+footer .info span::after {content: " |"; display: inline-block; padding: 0 0 0 10px; color: #485561;}
+footer .info span:nth-child(4)::after {display: none;}
+
+/* -- 공통 컴포넌트 끝 -- */
+
+/* -- 인덱스 페이지 시작 -- */
+
+/* 비주얼 */
+.index .visual {background: url(../images/visual.png) no-repeat; height: 450px; background-size: cover;}
+.index .visual .slide {font-size: 36px; color: #004abf; padding: 130px 0 0 0; line-height: 80px;  font-weight: 500;}
+.index .visual .slide p {font-size: 20px; color: #666; line-height: initial;}
+.index .visual .human {position: absolute; top: 130px; right: 85px;}
+.index .visual .code {position: absolute; top: 80px; right: 200px; width: 80px;}
+.index .visual .slide > div {line-height: 30px;}
+.index .visual .txt-type {display: inline-block; font-weight: 300;}
+.index .visual .txt-type::after { content: " "; display: inline-block; animation-name: cursor; animation-duration: 0.3s; animation-iteration-count: infinite; width: 1px; height: 18px; padding: 0 0 0 5px;} 
+
+/* 핵심스킬 */
+.index .skills > div {text-align: center; padding: 80px 0px;}
+.index .skills h2 {font-size: 24px; color:#004abf;padding:0 0 16px; font-weight: 500;}
+.index .skills p {font-size: 16px; padding: 0px 0px 90px 0px;}
+.index .skills ul {font-size: 0;}
+.index .skills ul li {display: inline-block; width:33.3%; padding: 0 15px; box-sizing: border-box;}
+.index .skills ul img {width: 64px;}
+.index .skills ul h3 {font-size:initial; padding: 12px 0px 16px; font-weight: 500;}
+.index .skills ul p {font-size:14px; padding: 0px;}
+
+/* 프로젝트 */
+.index .projects {background: #fafafa;}
+.index .projects > div {text-align: center; padding: 32px 0px;}
+.index .projects ul {font-size:0px;}
+.index .projects li:nth-child(1) a {background:url(../images/project-icon.png) no-repeat 90% center #fff; background-size:18%;}
+.index .projects li:nth-child(2) a {background:url(../images/portfolio-icon.png) no-repeat 90% center #fff; background-size:18%;}
+.index .projects ul li {display:inline-block; width: 48%; text-align: left; font-size: initial; margin: 0 10px;}
+.index .projects a {display: block; padding: 25px; border: 1px solid #eeeeee; background: #fff;}
+.index .projects h3 {font-weight: 500; font-size:20px;padding:0 0 10px; color:#004abf;}
+.index .projects p {font-size:14px;line-height: 24px;}
+.index .projects .more {margin: 20px 0 0; font-size:14px;}
+.index .projects .more i {margin:0 0 0 4px;}
+
+/* 블로그 */
+.index .blog > div {text-align: center; padding: 80px 0px;}
+.index .blog h2 {font-size: 24px; color:#004abf;padding:0 0 16px; font-weight: 500;}
+.index .blog p {font-size: 16px; padding: 0px 0px 60px 0px;}
+.index .blog .blog-swiper {width: 1040px; position: static; min-height: 380px;}
+.index .blog .swiper-prev, .blog .swiper-next {position: absolute; width: 48px; height: 66px; left: 0; top: 375px; font-size: 0; text-indent: -999px; overflow: hidden; border: 1px solid rgba(221, 221, 221, .7); background-color: rgba(255, 255, 255, .7); background-image: url('../images/slide-arrow.png'); background-repeat: no-repeat; background-position: center center; transition: all 300ms; z-index: 10; cursor: pointer;}  
+.index .blog .swiper-next {left: auto; right: 0; transform: scale(-1, 1);}
+.index .blog .item {border: 1px solid hsla(0,0%,60.8%,.17); transition: all .1s linear;display: block; position: relative; border-radius: 5px 5px 0px 0px;}
+.index .blog .item img {width: 100%; border-radius: 5px 5px 0px 0px;}
+.index .blog .item .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.index .blog .item:hover .white-mask { opacity: 1;}
+.index .blog .content {padding: 30px 15px; text-align: left; height: 214px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.index .blog .content h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500;}
+.index .blog .content h3 a:hover {color:#004abf;}
+.index .blog .content p {padding: 0px; font-size:14px; line-height: 24px;}
+.index .blog .more {display: inline-block;border-radius: 60px; height: 45px; padding: 0 30px; font-size: 14px; line-height: 45px; margin: 32px 0 0 0; border: 1px solid hsla(0,0%,59.2%,.24); background-color: #fff;}
+.index .blog .more:hover {color:#fff; background: #004abf;}
+.index .blog .more .mdi {margin: 0 0 0 5px;}
+
+/* -- 인덱스 페이지 끝 -- */
+
+/* -- 소개 페이지 시작 -- */
+
+/* 타이틀 */
+.about .title h2 {font-size:28px; font-weight: 300;}
+
+/* 키워드 리스트 */
+.about .keyword {margin: 48px 0 0 0;}
+.about .keyword ul {font-size:0px;}
+.about .keyword li {display: inline-block; text-align: center; background: #f2f2f2; padding: 20px; width: 148px; border-radius: 50%; box-sizing: border-box; margin: 0 0 0 72px;}
+.about .keyword li:first-child {margin: 0px;}
+.about .keyword li img {width: 64px; opacity: 0.9;}
+.about .keyword p {font-size:14px; margin: 2px 0 0 0;}
+
+/* 자기소개 */
+.about .introduce {padding: 80px 0; border-bottom: 1px solid #ebebeb;}
+.about .introduce h2 {font-size:24px; margin:0 0 16px 0;}
+.about .introduce p {font-size:16px;}
+
+/* 기술스택 소개*/
+.about .skills {padding: 80px 0; border-bottom: 1px solid #ebebeb;}
+.about .skills h2 {font-size:24px; margin:0 0 16px 0;}
+.about .skills p {font-size:16px;}
+.about .skills .category {font-size: 0px; padding: 0 0 40px 0; display: flex;}
+.about .skills .category.first {padding: 60px 0 40px 0;}
+.about .skills .category.last {padding: 0;}
+.about .skills .list {padding: 0 0 0 32px; width: 70%;}
+.about .skills .list .status {font-size:12px; margin:0 0 0 8px; display:inline-block; font-weight: 500;}
+.about .skills .list .status.p {color: #004abf; }
+.about .skills .list ul {font-size:0px;}
+.about .skills .list li {width: 50%; display: inline-block; margin: 0 0 28px 0; height: 48px;}
+.about .skills .list li a {display: block;}
+.about .skills .list li img {float: left; margin: 0 12px 0 0;}
+.about .skills .list li div {display: block; font-size: 14px;}
+.about .skills .list li div h3 {font-size:16px; font-weight: 500;}
+.about .skills .list li div .desc {font-size:14px;}
+.about .skills .detail {width: 36%; font-size: initial; box-sizing: border-box;}
+.about .skills .detail > div {height: 100%; display: none; align-items: center;}
+.about .skills .detail .default {display:flex;}
+.about .skills .detail > div:not(.default) {display:inline-block;}
+.about .skills .detail .default img {margin: 0px 24px 0 0; opacity: 0.7; width: 84px;}
+
+/* 브랜드 소개 */
+.about .brand {padding: 80px 0;}
+.about .brand h2 {font-size:24px; margin:0 0 16px 0;}
+.about .brand p {font-size:16px;}
+.about .brand .logo_box {display:flex; margin: 32px 0 0 0;}
+.about .brand .logo_box .desc {display: flex; align-items: center;}
+.about .brand .logo_box .bi {flex:1; text-align: center;}
+
+/* -- 소개 페이지 끝 -- */
+
+/* -- 프로젝트 페이지 시작 -- */
+
+/* 타이틀 */
+.project .title h2 {font-size:28px; font-weight: 300;}
+
+/* 회사 프로젝트 */
+.project .biz {padding: 48px 0 80px 0; border-bottom: 1px solid #ebebeb;}
+.project .biz h2 {font-size:24px; margin:0 0 16px 0;}
+.project .biz p {font-size:16px;}
+.project .biz .list-box > li {display: flex; align-items: center; margin: 28px 0;}
+.project .biz .list-box .intro {display: flex;}
+.project .biz .list-box li .logo {margin: 0 28px 0 0;}
+.project .biz .list-box li img {width: 48px;}
+.project .biz .list-box li h3 {font-size: 16px;}
+.project .biz .list-box li .outline {margin: 0 40px 0 0; min-width: 200px;}
+.project .biz .list-box li .outline > div {font-size:14px;}
+.project .biz .list-box li .detail {font-size: 14px; margin: 0 60px 0 0; min-width: 300px;}
+.project .biz .list-box li .link a {font-size: 14px; display: inline-block; border-radius: 60px; height: 36px; padding: 0 24px; line-height: 36px; border: 1px solid hsla(0,0%,59.2%,.24); background-color: #fff;}
+.project .biz .list-box li .link a:hover {color:#fff; background: #004abf;}
+
+/* 개인 프로젝트 */
+.project .private {padding: 48px 0 80px 0;}
+.project .private h2 {font-size:24px; margin:0 0 16px 0;}
+.project .private p {font-size:16px;}
+.project .private ul {font-size:0px; margin: 32px 0px;}
+.project .private ul li {position: relative; width: 33.3%; padding: 0 35px 31px 0; box-sizing: border-box; display: inline-block;}
+.project .private ul li img {width: 100%;}
+.project .private ul li .title {margin: 24px 0 0; font-size: 16px;}
+.project .private ul li .desc {font-size: 14px;}
+.project .private ul li .status {margin: 24px 0 0; font-size: 14px; color: #004abf;}
+.project .private ul li .lang {position: absolute; border: 1px solid transparent; border-radius: 100%; background: #fff; top: 215px; left: 290px; width: 48px; height: 48px; text-align: center;}
+.project .private ul li .lang img {width: 36px; margin: 6px 0 0 0;}
+
+/* -- 프로젝트 페이지 끝 -- */
+
+/* -- 프로젝트 상세 페이지 공통 시작 -- */
+
+/* 타이틀 */
+.project_detail .title h2 {font-size:28px;}
+.project_detail .title .date {font-size: 14px;}
+.project_detail .title .icon {position: absolute; top: 10px; right: 10px; text-align: center;}
+.project_detail .title .icon {position: absolute; top: 0px; right: 0px;}
+.project_detail .title .icon img {width: 64px; cursor: pointer;}
+.project_detail .title .url {margin: 20px 0 0 0 ; clear: both; font-size: 14px;}
+.project_detail .title .url a {color: #004abf;}
+
+/* 작은 배너 */
+.project_detail .background {padding: 48px 0 60px 0;}
+.project_detail .background > div {width: 1200px; margin: 0 auto; position: relative; box-sizing: border-box; height: 360px; text-indent: -9999px;}
+
+/* 개요 */
+.project_detail .outline > div {border-bottom: 1px solid #ebebeb; padding: 0 0 40px 0;}
+.project_detail .outline h2 {font-size: 24px; margin: 0 0 16px 0;}
+.project_detail .outline p {font-size: 16px;}
+
+/* 목업 이미지 */
+.project_detail .mockup {padding: 48px 0;}
+.project_detail .mockup > div {text-align: center;}
+.project_detail .mockup img {width: 80%;}
+
+/* 프로젝트 포인트 */
+.project_detail .point {padding: 48px 0;}
+.project_detail .point > div {border-bottom: 1px solid #ebebeb; padding: 0 0 40px 0;}
+.project_detail .point h2 {font-size: 24px; margin: 0 0 16px 0;}
+.project_detail .point p {font-size: 16px;}
+.project_detail .point img {margin: 40px 0 0 0;}
+
+/* 개발 기술 */
+.project_detail .skills h2 {font-size: 24px; margin: 0 0 16px 0;}
+.project_detail .skills p {font-size: 16px;}
+.project_detail .skills a {font-size: 14px; display: inline-block; border-radius: 60px; height: 36px; padding: 0 24px; line-height: 36px; border: 1px solid hsla(0,0%,59.2%,.24); background-color: #fff; position: absolute; top: 50px; right: 50px;}
+.project_detail .skills a:hover {color:#fff; background: #004abf;}
+
+/* 목록 이동 */
+.project_detail .back {padding: 80px 0;}
+.project_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
+.project_detail .back a {font-size: 16px;}
+.project_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
+.project_detail .back a::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.project_detail .back a::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+
+/* -- 프로젝트 상세 페이지 공통 끝 -- */
+
+/* -- 프로젝트별 상세 페이지 시작 -- */
+
+/* 어바웃 피리어드 배너 */
+.aboutperiod .background > div {background: url(../images/mok_aboutperiod.png) no-repeat; background-size: cover;}
+
+/* 코드프레소 배너 */
+.codepresso .background > div {background: url(../images/mok_codepresso.png) no-repeat 0px -55px; background-size: cover;}
+
+/* 자비스 배너 */
+.jabis .background > div {background: url(../images/mok_jabis.png) no-repeat 0px -325px; background-size: cover;}
+
+/* -- 프로젝트별 상세 페이지 끝 -- */
+
+/* -- 블로그 시작 -- */
+
+/* 타이틀 */
+.blog .title h2 {font-size: 28px; font-weight: 300; display:inline-block;}
+.blog .title .count {float: right;}
+.blog .title .count ul li {display: inline-block; padding: 0px 24px;}
+.blog .title .count h3 {font-size: 16px;}
+.blog .title .count p {font-size: 28px; color: #004abf;}
+.blog .title .count span {font-size: 16px;}
+
+/* 탭 */
+.blog .tab {padding: 48px 0;}
+.blog .tab ul {display:inline-block;}
+.blog .tab ul li {display:inline-block;}
+.blog .tab ul li a {padding: 0 0 4px 0; font-size: 16px; margin: 0 20px 0 0;}
+.blog .tab ul li a.on {color:#004abf; border-bottom: 1px solid #004abf;}
+.blog .tab .search {float: right; width: 190px; margin: 0 24px 0 0;}
+.blog .tab .search {border-bottom: 1px solid #ccc; position: relative; padding-bottom: 4px;}
+.blog .tab .search.focus {border-bottom: 1px solid #004abf;}
+.blog .tab .search input {background: transparent; border: none; text-indent: 0px; padding: 0 12px; box-sizing: border-box; width: 85%; height: 24px; text-align: center; font-size: 16px;}
+.blog .tab .search button {background: url(../images/search.png) no-repeat center center; background-size: contain; width: 24px; height: 24px; cursor: pointer;}
+
+/* 포스트 리스트 */
+.blog .post_list .search_count {font-size: 20px; margin: 0 0 28px 0;}
+.blog .post_list .search_count .keyword {color:#004abf; font-weight: 500;}
+.blog .post_list .search_count .keyword.tag {font-size: 14px;}
+.blog .post_list .search_count .back {font-size: 16px; position: relative; padding: 0 0 0 24px; float: right;}
+.blog .post_list .search_count .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.blog .post_list .search_count .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+.blog .post_list ul li {display:inline-block; width: 31.6%; margin: 0px 28px 36px 0;}
+.blog .post_list ul li:nth-child(3n) {margin-right:0px;}
+.blog .post_list ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; border-radius: 5px 5px 0px 0px;}
+.blog .post_list ul li .thumb img {width: 100%; border-radius: 5px 5px 0px 0px;}
+.blog .post_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.blog .post_list ul li .thumb:hover .white-mask { opacity: 1;}
+.blog .post_list ul li .contents {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.blog .post_list ul li .contents h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 46px;}
+.blog .post_list ul li .contents h3 a:hover {color:#004abf;}
+.blog .post_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .post_list ul li .contents div {margin: 16px 0 0 0;}
+.blog .post_none .not {font-size:20px;}
+.blog .post_none .not .keyword {color:#004abf; font-weight: 500;}
+.blog .post_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
+.blog .post_none .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.blog .post_none .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+
+/* 시리즈 리스트 */
+.blog .series_list .search_count {font-size: 20px; margin: 0 0 28px 0;}
+.blog .series_list .search_count .keyword {color:#004abf; font-weight: 500;}
+.blog .series_list .search_count .keyword.tag {font-size: 14px;}
+.blog .series_list .search_count .back {font-size: 16px; position: relative; padding: 0 0 0 24px; float: right;}
+.blog .series_list .search_count .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.blog .series_list .search_count .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+.blog .series_list ul li {display:flex; width: 100%; margin: 0 0 36px 0;}
+.blog .series_list ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:30%;}
+.blog .series_list ul li .thumb img {width: 100%;}
+.blog .series_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.blog .series_list ul li .thumb:hover .white-mask { opacity: 1;}
+.blog .series_list ul li .contents {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .series_list ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .series_list ul li .contents h3 a:hover {color:#004abf;}
+.blog .series_list ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .series_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
+.blog .series_list ul li .contents div {font-size: 14px;}
+.blog .series_none .not {font-size:20px;}
+.blog .series_none .not .keyword {color:#004abf; font-weight: 500;}
+.blog .series_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
+.blog .series_none .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.blog .series_none .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+
+/* 태그 리스트 */
+.blog .tag_list a {border: 1px solid #ccc; font-size: 14px; display: inline-block; padding: 8px 16px; border-radius: 24px; margin: 0px 12px 16px 0px;}
+.blog .tag_list a:hover {border: 1px solid #004abf;}
+.blog .tag_list a .name {font-weight: 500;margin:0 4px;}
+.blog .tag_list a:hover .name {color: #004abf;}
+.blog .tag_list a .count {margin:0 2px;}
+
+
+/* 페이징 */
+.blog .page {padding: 20px 0 40px 0;}
+
+/* -- 블로그 끝 -- */
+
+/* -- 포스트 시작 -- */
+
+/* 타이틀 */
+.post_detail .title h2 {font-size:28px;}
+.post_detail .title .date {font-size: 14px;}
+.post_detail .title .icon {position: absolute; top: 0px; right: 0px; width: 200px; margin: 0 36px 0 0;}
+.post_detail .title .icon img {width: 64px;}
+
+/* 컨테이너 */
+.post_detail .container .area {width: 72%; display: inline-block;}
+
+/* 콘텐츠 네비바 */
+.post_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
+.post_detail .sidenav .on {color: #004abf;}
+/* 언더라인
+.post_detail .sidenav .on::after {content: ''; position: absolute; width: 100%; height: 1px; border-bottom: 1px solid #004abf; bottom: -2px; left: 0px;}
+*/
+.post_detail .sidenav li a {font-size: 16px; position: relative;}
+.post_detail .sidenav > li {margin: 0 0 8px 0;}
+.post_detail .sidenav > li > ul {padding:0 0 0 8px;}
+.post_detail .sidenav > li > ul li a {font-size: 14px;}
+.post_detail .sidenav > li > ul li:first-child {margin-top: 4px;}
+.post_detail .sidenav > li > ul li {margin: 0 0 4px 0;}
+.post_detail .sidenav > li > ul > li > ul {padding:0 0 0 12px;}
+
+
+/* 썸네일 */
+.post_detail .thumbnail {padding: 48px 0 24px 0;}
+.post_detail .thumbnail img {width: 100%;}
+
+/* 콘텐츠 */
+.post_detail .contents {padding: 24px 0 24px;}
+
+/* 태그 */
+.post_detail .tags {padding: 12px 0px 32px 0;}
+.post_detail .tags a {background: #fafafa; display: inline-block; border: 1px solid #dee2e6; padding: 6px 8px; border-radius: 6px; margin: 0px 8px 12px 0px;}
+.post_detail .tags a:hover {color: #004abf;}
+
+/* 댓글 */
+.post_detail .comments {padding:12px 0px}
+.post_detail .comments h3 {font-size: 20px; margin: 0 0 12px 0;}
+.post_detail .comments textarea {padding: 16px; text-indent: 0px; resize: none; min-height: 80px; font-size: 14px;}
+
+/* 시리즈 */
+.post_detail .series {padding:0 0 24px 0;}
+.post_detail .series h2 {font-size: 24px;}
+.post_detail .series h2 span {font-size: 16px;}
+.post_detail .series ul li {margin: 20px 0; border: 1px solid #d2d2d2; border-radius: 6px; display: flex;}
+.post_detail .series ul li a {width: 35%; position: relative;}
+.post_detail .series ul li a .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.post_detail .series ul li a:hover .white-mask { opacity: 1;}
+.post_detail .series ul li img {width: 100%;}
+.post_detail .series ul li > div {width: 65%; padding: 24px; box-sizing: border-box; position: relative;}
+.post_detail .series ul li h3 {font-size: 20px; margin: 0 0 16px 0;}
+.post_detail .series ul li h4 {font-size: 16px; margin: 0 0 8px 0;}
+.post_detail .series ul li h4 span {color: #004abf; font-size: 12px;}
+.post_detail .series ul li p {font-size: 14px;}
+.post_detail .series ul li a:hover:not(.on) h4 { color:#004abf;}
+.post_detail .series .swiper-container {position: static;}
+.post_detail .series .swiper-prev, .post_detail .series .swiper-next {position: absolute; width: 28px; height: 28px; right: 56px; bottom:10px; font-size: 0; text-indent: -999px; overflow: hidden; border: 1px solid rgba(221, 221, 221, .7); background-color: rgba(255, 255, 255, .7); background-image: url('../images/slide-arrow.png'); background-repeat: no-repeat; background-position: center center; transition: all 300ms; z-index: 10; cursor: pointer; background-size: 24%;}  
+.post_detail .series .swiper-next {right: 24px; transform: scale(-1, 1);}
+.post_detail .series .swiper-button-disabled {background-color: #dee2e6;}
+.post_detail .series .swiper-pagination {text-align: left; left: 24px; width: initial; font-size: 14px; bottom: 16px;}
+
+/* 관련 포스트 */
+.post_detail .post {padding:0 0 16px 0;}
+.post_detail .post h2 {font-size: 24px;}
+.post_detail .post h2 span {font-size: 16px;}
+
+/* 연관 포스트 */
+.post_detail .relation {padding:0 0 16px 0;}
+.post_detail .relation h2 {font-size: 24px;}
+.post_detail .relation h2 span {font-size: 16px;}
+.post_detail .relation ul li {margin: 20px 0; border: 1px solid #d2d2d2; border-radius: 6px; }
+.post_detail .relation ul li a {display: block; padding: 24px; box-sizing: border-box;}
+.post_detail .relation ul li.this {border: 1px solid #004abf;}
+.post_detail .relation ul li.this h3 {color: #004abf}
+.post_detail .relation ul li:hover {border: 1px solid #004abf; transition: 0.5s;}
+.post_detail .relation .date {font-size:14px; color: #989696;}
+.post_detail .relation h3 {font-size: 20px; margin: 4px 0 12px;}
+.post_detail .relation p {font-size: 14px; min-height: 60px;}
+
+/* 목록 이동 */
+.post_detail .back {padding: 80px 0;}
+.post_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
+.post_detail .back a {font-size: 16px;}
+.post_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
+.post_detail .back a::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.post_detail .back a::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+
+/* -- 포스트 끝 -- */
+
+/* -- 시리즈 시작 -- */
+
+/* 타이틀 */
+.series_detail .title h2 {font-size:28px;}
+.series_detail .title .date {font-size: 14px;}
+.series_detail .title .icon {position: absolute; top: 0px; right: 0px; width: 200px; margin: 0 36px 0 0;}
+.series_detail .title .icon img {width: 64px;}
+
+/* 컨테이너 */
+.series_detail .container .area {width: 72%; display: inline-block;}
+
+/* 콘텐츠 네비바 */
+.series_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
+.series_detail .sidenav .on {color: #004abf;}
+.series_detail .sidenav li a {font-size: 16px; position: relative;}
+.series_detail .sidenav > li {margin: 0 0 8px 0;}
+.series_detail .sidenav > li > ul {padding:0 0 0 8px;}
+.series_detail .sidenav > li > ul li a {font-size: 14px;}
+.series_detail .sidenav > li > ul li:first-child {margin-top: 4px;}
+.series_detail .sidenav > li > ul li {margin: 0 0 4px 0;}
+.series_detail .sidenav > li > ul > li > ul {padding:0 0 0 12px;}
+
+/* 썸네일 */
+.series_detail .thumbnail {padding: 48px 0 24px 0;}
+.series_detail .thumbnail img {width: 100%;}
+
+/* 콘텐츠 */
+.series_detail .contents {padding: 24px 0 24px;}
+
+/* 관련 포스트 */
+.series_detail .post {padding:0 0 16px 0;}
+.series_detail .post h2 {font-size: 24px;}
+.series_detail .post h2 span {font-size: 16px;}
+.series_detail .post ul {margin: 20px 0;}
+.series_detail .post ul li {margin: 8px 0; font-size: 18px;}
+.series_detail .post ul li a { color: #004abf;}
+
+/* 목록 이동 */
+.series_detail .back {padding: 80px 0;}
+.series_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
+.series_detail .back a {font-size: 16px;}
+.series_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
+.series_detail .back a::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
+.series_detail .back a::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
+
+/* -- 시리즈 끝 -- */
+
+/* --  개인정보 처리 방침 시작 -- */
+
+/* 타이틀 */
+.policy .title h2 {font-size:28px; font-weight: 300;}
+
+/* 내용 */
+.policy .contents {font-size: 16px; padding: 48px 0 80px 0;}
+.policy .contents > div div {margin: 40px 0;}
+.policy .contents h3 {font-size: 24px; margin: 0 0 12px 0;}
+.policy .contents ul {padding-left: 20px; margin: 16px 0;}
+.policy .contents ol {padding-left: 20px; margin: 16px 0;}
+.policy .contents ul li {list-style-type: disc; margin-bottom: 12px;}
+.policy .contents ol li {list-style-type: decimal; margin-bottom: 12px;}
+.policy .contents h4 {font-size: 20px; margin: 20px 0 12px 0;}
+.policy .contents a {color:#004abf;}
+/* --  개인정보 처리 방침 끝 -- */
+
+/* -- 로그인 시작 -- */
+.login { width: 400px; margin: 0 auto; padding: 130px 0;}
+.login h2 {margin: 0 0 30px 0; letter-spacing: 12px; color:#004abf; font-size:48px; text-align: center;}
+.login input { padding: 15px 25px; margin: 0 0 24px 0; box-sizing: border-box; height: auto; font-size: 16px; transition: none;}
+.login input::placeholder {font-size:16px;}
+.login input[type='password'] {margin: 0 0 20px 0;}
+.login .checks {margin:0 0 60px 0;}
+.login .checks input[type="checkbox"] {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0}
+.login .checks input[type="checkbox"] + label { display: inline-block; position: relative; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
+.login .checks input[type="checkbox"] + label:before {content: ' '; display: inline-block; width: 21px; height: 21px; line-height: 21px; margin: -2px 8px 0 0; text-align: center;  vertical-align: middle; background: #fafafa; border: 1px solid #cacece; border-radius : 3px; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);}
+.login .checks input[type="checkbox"] + label:active:before,
+.login .checks input[type="checkbox"]:checked + label:active:before { box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);}
+.login .checks input[type="checkbox"]:checked + label:before {content: '\2714'; color: #99a1a7; text-shadow: 1px 1px #fff; background: #e9ecee; border-color: #adb8c0; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);}
+.login .checks.small input[type="checkbox"] + label { font-size: 12px; }
+.login .checks.small input[type="checkbox"] + label:before { width: 17px; height: 17px; line-height: 17px; font-size: 11px;}
+.login button { display: block; width: 100%; color: #fff; font-size: 16px; background: #004abf; text-align: center; vertical-align: middle; user-select: none; border: 1px solid transparent; padding: 12px 0px; border-radius: 6px; cursor: pointer;}
+.login button:hover {opacity: 0.8; transition: 0.8s;}
+.login ul {padding:0px;}
+.login ul li { display:inline-block; width: 49%; text-align: center; position: relative;}
+.login ul li::after { content: ''; position: absolute; width: 1px; height: 100%; top: 0px; right: 0px; background:#a0a0a0;}
+.login ul li:last-child::after {display:none;}
+.login .checks {position: relative;}
+
+/* -- 로그인 끝 -- */

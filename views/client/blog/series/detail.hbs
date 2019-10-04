@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo 
+		title=(add series.title ' - 데브현') 
+		description=(parseMarkdown series.contents 150)
+		img=series.thumbnail
+		type='article'
+	}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header active='blog' fix='fix'}}
+
+	<main id="contents" class="series_detail">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path">블로그</span>
+						<span class="path on">시리즈</span>
+					</p>
+				</div>
+			</section>
+
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>
+						{{series.title}}
+					</h2>
+					<div class="date">{{parseDate series.reg 'YYYY.MM.DD'}}
+						<div class="icon">
+							{{#isNewPost series.reg}}
+							<img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
+							{{/isNewPost}}
+							{{#isHotPost series.hit}}
+							<img src="/images/hot.png" alt="핫한" data-tippy-content="핫한">
+							{{/isHotPost}}
+							{{#isGoodPost series.contents}}
+							<img src="/images/long.png" alt="길다란" data-tippy-content="길다란">
+							{{/isGoodPost}}
+						</div>
+					</div>
+
+				</div>
+			</section>
+
+			<section class="container">
+				<div>
+					<div class="area">
+						<div class="thumbnail">
+							<div>
+								<img src="{{series.thumbnail}}">
+							</div>
+						</div>
+
+						<div class="contents">
+							<div class="tui-editor-contents">
+								{{{series.contents}}}
+							</div>
+						</div>
+
+						<div class="post">
+							<h2 id="postList"></h2>
+							<ul>
+								{{#each post}}
+								<li>{{add @index 1}}. <a href="/blog/post/{{idx}}">{{title}}</a>
+								</li>
+								{{/each}}
+							</ul>
+						</div>
+					</div>
+					<aside>
+						{{{toc}}}
+					</aside>
+				</div>
+			</section>
+			<section class="back">
+				<div>
+					<a href="/blog/series">
+						목록으로 가기
+					</a>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'seriesDetail')}}
+
+</body>
+
+</html>

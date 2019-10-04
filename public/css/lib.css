@@ -1,0 +1,253 @@
+/* -- 마크다운 에디터 시작 -- */
+.tui-editor-contents {
+  font-size: 18px;
+}
+
+.tui-editor-contents *:not(table) {
+  line-height: 180%;
+}
+
+.tui-editor-contents h1 {
+  font-size: 24px;
+  line-height: 32px;
+  border-bottom: none;
+  margin: 52px 0 15px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.tui-editor-contents h1:first-child {
+  margin-top: 0px;
+}
+
+.tui-editor-contents h2 {
+  font-size: 20px;
+  line-height: 28px;
+  border-bottom: none;
+  margin: 30px 0 13px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.tui-editor-contents h3,
+.tui-editor-contents h4 {
+    font-size: 16px;
+    line-height: 20px;
+    margin: 20px 0 2px;
+    color: #333;
+    font-weight: 500;
+}
+
+.tui-editor-contents h5,
+.tui-editor-contents h6 {
+    font-size: 14px;
+    line-height: 18px;
+    margin: 10px 0 -4px;
+    color: #333;
+    font-weight: 500;
+}
+
+.tui-editor-contents ul li, .tui-editor-contents ol li {
+  list-style: initial;
+}
+
+.tui-editor-contents a {
+  text-decoration: none;
+}
+
+.tui-editor-contents a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.tui-editor-contents img {
+  max-width: 100%;
+  display: block;
+  margin: 16px 0px;
+}
+
+.tui-editor-defaultUI .emoji {
+  background: url(../images/emoji-icon.png);
+  background-position: 1px 2px;
+  background-size: 100%;
+}
+
+.tui-editor-defaultUI .temp {
+  background: url(../images/temp-icon.png);
+  background-position: 1px 2px;
+  background-size: 100%;
+}
+
+.tui-editor-defaultUI .load {
+  background: url(../images/load-icon.png);
+  background-position: 1px 2px;
+  background-size: 100%;
+}
+
+.tui-editor-defaultUI-toolbar {
+  padding: 0 10px;
+  overflow: visible;
+}
+
+.tui-editor-defaultUI .te-mode-switch-section {
+  display:none !important;
+}
+
+.tui-editor-defaultUI .CodeMirror-line {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.tui-editor-defaultUI ul.lsx-emojipicker-tabs li.selected {
+  border-bottom: 0px;
+}
+
+.tui-editor-defaultUI .lsx-emojipicker-container {
+  right: -44px;
+}
+
+.te-md-container .te-preview .tui-editor-contents {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.tui-editor .te-preview-style-vertical .te-preview {
+  padding: 0 10px;
+}
+
+.te-md-container .te-preview {
+  background: #fff;
+}
+
+@media (max-width: 999px) {
+.te-toolbar-section {
+  height: auto;
+}
+
+.tui-editor-defaultUI .te-markdown-tab-section {
+  float:none;
+}
+
+.te-markdown-tab-section .te-tab {
+  margin: 0px;
+}
+
+.tui-editor-contents pre {
+  overflow-x: scroll;
+}
+
+.tui-editor-contents pre code {
+    width: max-content;
+    display: inline-block;
+    font-size: 14px;
+}
+}
+
+/* -- 마크다운 에디터 끝 -- */
+
+/* -- 툴팁 시작 -- */
+.tippy-tooltip.devhyun-theme {
+  background-color: #004abf;
+  color: #fff;
+  font-size: 12px;
+}
+
+.tippy-tooltip.devhyun-theme[data-animatefill] {
+  background-color: transparent;
+}
+
+.tippy-tooltip.devhyun-theme .tippy-backdrop {
+  background-color: #004abf;
+}
+/* -- 툴팁 끝 -- */
+
+/* -- 프로그래스바 시작 -- */
+#nprogress .bar {
+  background: #004abf;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #004abf, 0 0 5px #004abf;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #004abf;
+  border-left-color: #004abf;
+}
+/* -- 프로그래스바 끝 -- */
+
+/* -- 얼럿창 시작 -- */
+.swal2-popup .swal2-styled.swal2-confirm {
+  background-color: #004abf !important;
+}
+/* -- 얼럿창 끝 -- */
+
+/* -- 모달 시작 -- */
+#remodal {
+  padding: 48px 24px 24px;
+}
+#remodal .title {
+  position: absolute;
+    top: 16px;
+    font-size: 20px;
+    left: 24px;
+    font-weight: normal;
+}
+#remodal .contents_slot {
+  margin: 16px 0px 0px;
+}
+#remodal .confirm {
+  margin-top: 24px;
+  clear: both;
+}
+#remodal .remodal-confirm {
+  background: #004abf;
+  font-size: 14px;
+}
+#remodal .form_group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+#remodal .form_group span {
+  font-size: 16px;
+  margin-bottom: 12px;
+  display: block;
+}
+#remodal .form_group input {
+  padding: 10px;
+  height: 36px;
+  border-radius: 0px;
+}
+#remodal .form_group .tui-datepicker-input {
+  height: 40px;
+}
+
+#remodal .form_group select {
+  padding: 10px;
+  height: 44px;
+  border-radius: 0px;
+  width: 100%;
+}
+
+/* -- 모달 끝 -- */
+
+/* -- 캘린더 시작 -- */
+.tui-full-calendar-popup-detail .tui-full-calendar-schedule-title {
+  font-weight: normal;
+}
+
+/* -- 캘린더 끝 -- */
+
+/* -- 데이트 피커 시작 -- */
+.tui-datepicker {
+  left: 0px;
+}
+/* -- 데이트 피커 시작 -- */
+
+/* -- 컨텍스트 메뉴 시작 --*/
+.context-menu-item {
+  padding: 4px 12px;
+}
+.context-menu-item span {
+  margin-left: 4px;
+}

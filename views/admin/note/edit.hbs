@@ -17,7 +17,7 @@
   {{>ad-header active="note"}}
 
   <main class="note">
-    <form method="POST" onsubmit="{{#if note}}APP.updateNote({{note.idx}});{{else}}APP.insertTemp();{{/if}}">
+    <form method="POST" onsubmit="{{#if note}}APP.updateNote({{note.idx}});{{else}}APP.insertNote();{{/if}}">
       <h1 class="page_title">노트</h1>
       <aside class="aside">
         <button type="submit" class="btn">

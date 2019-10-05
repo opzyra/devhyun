@@ -86,7 +86,7 @@ export default function(conn) {
       let offset = (parseInt(page) - 1) * limit;
       const sql = conn({ n: "note", ng: "note_group" })
         .whereRaw("??=??", ["n.note_group_idx", "ng.idx"])
-        .orderBy([{ column: "reg", order: "desc" }])
+        .orderBy([{ column: "odr" }, { column: "reg", order: "desc" }])
         .limit(limit)
         .offset(offset);
 

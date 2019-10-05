@@ -290,6 +290,7 @@ export const schedule = {
           <span style="border-color: ${calendar.borderColor}; background-color: ${calendar.borderColor};"></span>
           <span>${calendar.name}</span>
           </label>
+          <span class="move"><i class="mdi mdi-drag-variant"></i></span>
           <span class="edit" onclick="APP.scheduleGroupModal(${calendar.id})">
           <i class="mdi mdi-pen"></i>
           </span>
@@ -301,6 +302,18 @@ export const schedule = {
       );
     });
     calendarList.innerHTML = html.join("\n");
+  },
+  setCalendarSortable() {
+    $('#calendarList').sortable({
+      handle: ".move",
+      update: async (event, ui) => {
+        let calendars = [];
+        $("#calendarList .lnb-calendars-item .tui-full-calendar-checkbox-round").each((i, e) => {
+          calendars.push(parseInt(e.value));
+        });
+        await AJAX.post('/group/schedule/odr', {calendars});
+      }
+    });
   },
   async setCalendars() {
     this.caldedars = await fx.go(
@@ -319,6 +332,7 @@ export const schedule = {
     );
     APP.cal.setCalendars(this.caldedars);
     this.setCalendarGroupRender();
+    this.setCalendarSortable();
   },
   async setSchedules() {
     this.cal.clear();

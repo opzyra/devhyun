@@ -64,9 +64,12 @@ router.post(
       return;
     }
 
+    const count = await SCHEDULE_GROUP.countAll();
+
     await SCHEDULE_GROUP.insertOne({
       name,
-      color
+      color,
+      odr: count+1
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다` });
@@ -109,6 +112,26 @@ router.delete(
     await SCHEDULE_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
+  })
+);
+
+router.post(
+  "/schedule/odr",
+  sessionCtx.isAdmin(),
+  validator.body({
+    calendars: Joi.array().required(),
+  }),
+  txrtfn(async (req, res, next, conn) => {
+    const { calendars } = req.body;
+
+    const SCHEDULE_GROUP = ScheduleGroup(conn);
+
+    for(let i = 0; i < calendars.length; i++) {
+      const idx = calendars[i];
+      await SCHEDULE_GROUP.updateOne({odr: i+1}, idx);
+    }
+
+    res.status(200).json({ message: `수정이 완료 되었습니다` });
   })
 );
 
@@ -165,9 +188,12 @@ router.post(
       return;
     }
 
+    const count = await TASK_GROUP.countAll();
+
     const task = await TASK_GROUP.insertOne({
       name,
-      color
+      color,
+      odr: count+1
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: task });
@@ -210,6 +236,26 @@ router.delete(
     await TASK_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
+  })
+);
+
+router.post(
+  "/task/odr",
+  sessionCtx.isAdmin(),
+  validator.body({
+    taskGroup: Joi.array().required(),
+  }),
+  txrtfn(async (req, res, next, conn) => {
+    const { taskGroup } = req.body;
+
+    const TASK_GROUP = TaskGroup(conn);
+
+    for(let i = 0; i < taskGroup.length; i++) {
+      const idx = taskGroup[i];
+      await TASK_GROUP.updateOne({odr: i+1}, idx);
+    }
+
+    res.status(200).json({ message: `수정이 완료 되었습니다` });
   })
 );
 
@@ -266,9 +312,12 @@ router.post(
       return;
     }
 
+    const count = await NOTE_GROUP.countAll();
+
     const note = await NOTE_GROUP.insertOne({
       name,
-      color
+      color,
+      odr: count+1
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note });
@@ -311,6 +360,26 @@ router.delete(
     await NOTE_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
+  })
+);
+
+router.post(
+  "/note/odr",
+  sessionCtx.isAdmin(),
+  validator.body({
+    noteGroup: Joi.array().required(),
+  }),
+  txrtfn(async (req, res, next, conn) => {
+    const { noteGroup } = req.body;
+
+    const NOTE_GROUP = NoteGroup(conn);
+
+    for(let i = 0; i < noteGroup.length; i++) {
+      const idx = noteGroup[i];
+      await NOTE_GROUP.updateOne({odr: i+1}, idx);
+    }
+
+    res.status(200).json({ message: `수정이 완료 되었습니다` });
   })
 );
 

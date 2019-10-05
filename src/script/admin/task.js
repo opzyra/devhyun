@@ -120,6 +120,7 @@ export const task = {
           ${name}
         </span>
         </a>
+        <span class="move"><i class="mdi mdi-drag-variant"></i></span>
         <span class="edit" onclick="APP.modalTaskGroup(${idx})">
           <i class="mdi mdi-pen"></i>
           </span>
@@ -195,6 +196,19 @@ export const task = {
       }
     });
   },
+  taskGroupSortable() {
+    $('#taskGroup').sortable({
+      handle: ".move",
+      update: async (event, ui) => {
+        let taskGroup = [];
+        $("#taskGroup .item").each((i, e) => {
+          const idx = $(e).attr('data-idx');
+          taskGroup.push(parseInt(idx));
+        });
+        await AJAX.post('/group/task/odr', {taskGroup});
+      }
+    });
+  },
   async createTaskGroup() {
     event.preventDefault();
 
@@ -231,6 +245,7 @@ export const task = {
       let modal = $("#remodal").remodal();
       modal.close();
       TOAST.success(rs.message);
+      this.taskGroupSortable();
     }
 
     return false;
@@ -558,5 +573,6 @@ export const task = {
       this.registerCtxMenu(`#list ul li[data-idx="${idx}"]`);
     });
     COMMON.pagination("#page", STATE.taskPage.totalPages, STATE.taskPage.page);
+    this.taskGroupSortable();
   }
 };

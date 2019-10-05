@@ -21,6 +21,7 @@ export const note = {
           ${name}
         </span>
         </a>
+        <span class="move"><i class="mdi mdi-drag-variant"></i></span>
         <span class="edit" onclick="APP.modalNoteGroup(${idx})">
           <i class="mdi mdi-pen"></i>
           </span>
@@ -96,6 +97,19 @@ export const note = {
       }
     });
   },
+  noteGroupSortable() {
+    $('#noteGroup').sortable({
+      handle: ".move",
+      update: async (event, ui) => {
+        let noteGroup = [];
+        $("#noteGroup .item").each((i, e) => {
+          const idx = $(e).attr('data-idx');
+          noteGroup.push(parseInt(idx));
+        });
+        await AJAX.post('/group/note/odr', {noteGroup});
+      }
+    });
+  },
   async createNoteGroup() {
     event.preventDefault();
 
@@ -132,6 +146,7 @@ export const note = {
       let modal = $("#remodal").remodal();
       modal.close();
       TOAST.success(rs.message);
+      this.noteGroupSortable();
     }
 
     return false;
@@ -301,6 +316,7 @@ export const note = {
       const idx = $(e).attr("data-idx");
       this.registerCtxMenu(`#list ul a[data-idx="${idx}"]`);
     });
+    this.noteGroupSortable();
   }
 };
 

@@ -22,6 +22,7 @@ export default function(conn) {
             idx INT(11) NOT NULL AUTO_INCREMENT,
             name VARCHAR(100) NOT NULL COLLATE 'utf8mb4_unicode_ci',
             color VARCHAR(10) NOT NULL COLLATE 'utf8mb4_unicode_ci',
+            odr INT(11) NOT NULL,
             PRIMARY KEY (idx),
             UNIQUE INDEX name (name)
           )
@@ -60,7 +61,17 @@ export default function(conn) {
      * @return {Array<TaskGroup>} 해당 리스트
      */
     async selectAll() {
-      return await conn(table).select();
+      return await conn(table).orderBy('odr').select();
+    },
+    /**
+     * 태스크그룹 갯수 조회
+     * @method TaskGroup.countAll
+     * @return {int} 갯수
+     */
+    async countAll() {
+      const [{count}] = await conn(table)
+        .count({ count: "*" });
+      return count;
     },
     /**
      * 태스크그룹 등록

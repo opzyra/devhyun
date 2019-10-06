@@ -63,7 +63,7 @@ header .lnb ul li.on a {color: #004abf;}
 header .lnb ul li.on a::before {content: ''; position: absolute; top:0; left: 0; width:4px; background-color: #004abf; height: 100%;}
 header .lnb ul li i {margin-right:8px;}
 
-main {margin-left: 260px; background: #fafcfe; padding:40px; min-width: 1160px; position: relative; height: 100vh;}
+main {margin-left: 260px; background: #fafcfe; padding:40px; min-width: 1160px; position: relative; min-height: 100vh;}
 main aside {position: absolute; top: 48px; right: 40px;}
 main aside .today{font-size: 12px; line-height: 24px; color: #000;}
 main aside .version {margin-left: 4px;}

@@ -101,8 +101,11 @@ export const task = {
 
     $(".datepicker").each((i, e) => {
       let id = $(e).attr("id");
+      let date = $(e)
+        .children(".input")
+        .val();
       new tui.DatePicker(`#${id} .warp`, {
-        date: new Date(),
+        date: new Date(date),
         language: "ko",
         input: {
           element: `#${id} .input`,
@@ -197,15 +200,15 @@ export const task = {
     });
   },
   taskGroupSortable() {
-    $('#taskGroup').sortable({
+    $("#taskGroup").sortable({
       handle: ".move",
       update: async (event, ui) => {
         let taskGroup = [];
         $("#taskGroup .item").each((i, e) => {
-          const idx = $(e).attr('data-idx');
+          const idx = $(e).attr("data-idx");
           taskGroup.push(parseInt(idx));
         });
-        await AJAX.post('/group/task/odr', {taskGroup});
+        await AJAX.post("/group/task/odr", { taskGroup });
       }
     });
   },

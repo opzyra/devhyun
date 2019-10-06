@@ -102,10 +102,10 @@ export const task = {
     $(".datepicker").each((i, e) => {
       let id = $(e).attr("id");
       let date = $(e)
-        .children(".input")
+        .find(".input")
         .val();
       new tui.DatePicker(`#${id} .warp`, {
-        date: new Date(date),
+        date: date ? new Date(date) : new Date(),
         language: "ko",
         input: {
           element: `#${id} .input`,

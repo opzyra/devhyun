@@ -60,6 +60,7 @@ router.get(
 
     const BOARD_POST = BoardPost(conn);
     const POST_TAG = PostTag(conn);
+    const TEMP = Temp(conn);
 
     let post = await BOARD_POST.selectOne(idx);
 
@@ -183,6 +184,7 @@ router.get(
     const { idx } = req.params;
 
     const BOARD_SERIES = BoardSeries(conn);
+    const TEMP = Temp(conn);
 
     let series = await BOARD_SERIES.selectOne(idx);
 

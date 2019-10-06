@@ -1,5 +1,5 @@
 import knex from "./db";
-import { debugLogger } from "./logger";
+import { debugLogger, errorLogger } from "./logger";
 
 export const rtfn = fn => {
   return function(req, res, next) {
@@ -20,7 +20,7 @@ export const txfn = fn => {
       .catch(async error => {
         await conn.rollback();
         debugLogger.info("DATABASE ROLBACK");
-        next(error);
+        errorLogger.error(error.stack);
       })
       .finally(async () => {
         debugLogger.info("DATABASE CONNECTION RELEASE");

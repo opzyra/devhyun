@@ -15,7 +15,7 @@ export default function() {
         .format("YYYY-MM-DD");
       const HIT_BOARD = HitBoard(conn);
       await HIT_BOARD.deleteExpired(date);
-      batchLogger.info(`${ymd} 이전에 등록된 조회수 정보가 초기화되었습니다.`);
+      batchLogger.info(`${date} 이전에 등록된 조회수 정보가 초기화되었습니다.`);
     })
   );
 }

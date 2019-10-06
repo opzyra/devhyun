@@ -355,8 +355,6 @@ export const EDITOR = {
       }
     });
 
-    $(el).append('<input id="tempIdx" type="hidden">');
-
     const toolbar = this.EDITOR.getUI().getToolbar();
 
     toolbar.addButton(

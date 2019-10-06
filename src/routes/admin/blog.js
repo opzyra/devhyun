@@ -11,6 +11,7 @@ import validator, { Joi } from "../../lib/validator";
 import PostTag from "../../sql/PostTag";
 import BoardPost from "../../sql/BoardPost";
 import BoardSeries from "../../sql/BoardSeries";
+import Temp from "../../sql/Temp";
 
 const router = express.Router();
 
@@ -66,6 +67,8 @@ router.get(
       throw new Error("잘못된 접근입니다");
     }
 
+    const temp = await TEMP.selectByTitle(post.title);
+
     // 태그
     const tags = await go(
       POST_TAG.selectReletedPost(idx),
@@ -77,6 +80,7 @@ router.get(
     });
 
     res.render("admin/blog/post/edit", {
+      temp: temp && temp.idx,
       post,
       tags,
       layout: false
@@ -186,6 +190,8 @@ router.get(
       throw new Error("잘못된 접근입니다");
     }
 
+    const temp = await TEMP.selectByTitle(series.title);
+
     const posts = await go(
       BOARD_SERIES.selectRelatedPost(idx),
       map(e => {
@@ -201,6 +207,7 @@ router.get(
     });
 
     res.render("admin/blog/series/edit", {
+      temp: temp && temp.idx,
       series,
       posts,
       layout: false

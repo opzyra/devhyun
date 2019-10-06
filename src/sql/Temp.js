@@ -44,6 +44,18 @@ export default function(conn) {
       return item;
     },
     /**
+     * 타이틀로 임시저장 조회
+     * @method Temp.selectByTitle
+     * @param {string} title 타이틀 값
+     * @return {Temp} 해당 객체
+     */
+    async selectByTitle(title) {
+      const [item] = await conn(table)
+        .where("title", title)
+        .select();
+      return item;
+    },
+    /**
      * 전체 임시저장 조회
      * @method Temp.selectAll
      * @return {Array<Temp>} 해당 리스트

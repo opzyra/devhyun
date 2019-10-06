@@ -98,15 +98,15 @@ export const note = {
     });
   },
   noteGroupSortable() {
-    $('#noteGroup').sortable({
+    $("#noteGroup").sortable({
       handle: ".move",
       update: async (event, ui) => {
         let noteGroup = [];
         $("#noteGroup .item").each((i, e) => {
-          const idx = $(e).attr('data-idx');
+          const idx = $(e).attr("data-idx");
           noteGroup.push(parseInt(idx));
         });
-        await AJAX.post('/group/note/odr', {noteGroup});
+        await AJAX.post("/group/note/odr", { noteGroup });
       }
     });
   },
@@ -464,7 +464,7 @@ export const nodeEdit = {
       "현재 작성된 데이터가 모두 삭제됩니다"
     );
     if (value) {
-      const temp = await AJAX.get(`/temp/${idx}`);
+      const temp = await AJAX.get(`/editor/temp/${idx}`);
       $("#title").val(temp.title);
       $("#tempIdx").val(temp.idx);
       window.EDITOR.setHtml(temp.contents);

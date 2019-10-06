@@ -23,9 +23,11 @@
       <button type="button" class="btn" onclick="APP.modalNoteGroup();">
         <i class="mdi mdi-puzzle-outline"></i> 그룹 추가
       </button>
-      <a href="/admin/note/edit{{#if noteGroup}}?group={{noteGroup.idx}}{{/if}}" class="btn">
+      {{#if noteGroup}}
+      <a href="/admin/note/edit?group={{noteGroup.idx}}" class="btn">
         <i class="mdi mdi-playlist-edit"></i> 노트 등록
       </a>
+      {{/if}}
     </aside>
     <section class="lib">
       <div class="left">

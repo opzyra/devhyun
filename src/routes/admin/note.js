@@ -10,6 +10,7 @@ import validator, { Joi } from "../../lib/validator";
 
 import Note from "../../sql/Note";
 import NoteGroup from "../../sql/NoteGroup";
+import Temp from "../../sql/Temp";
 
 const router = express.Router();
 
@@ -120,6 +121,7 @@ router.get(
 
     const NOTE = Note(conn);
     const NOTE_GROUP = NoteGroup(conn);
+    const TEMP = Temp(conn);
 
     let note = await NOTE.selectOne(idx);
 
@@ -127,10 +129,13 @@ router.get(
       throw new Error("잘못된 접근입니다");
     }
 
+    const temp = await TEMP.selectByTitle(note.title);
+
     let group = note.note_group_idx;
     let noteGroups = await NOTE_GROUP.selectAll();
 
     res.render("admin/note/edit", {
+      temp: temp && temp.idx,
       note,
       group,
       noteGroups,

@@ -285,7 +285,7 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .note .lib .right .list .not {font-size: 20px; margin: 12px;}
 .note .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
 
-.note .lib .right .page_area {margin-top: 36px;}
+.note .lib .right .page_area {margin: 32px 0px;}
 
 .note .lib .right .container {margin-top: 12px;}
 .note .lib .right .container .contents {width: 72%; display: inline-block; margin-right: 32px; margin-bottom: 320px;}
@@ -362,6 +362,7 @@ main .lib .right {width: 100%; margin-left: 30px;}
 
 .blog .lib .right .list .not {font-size: 20px;}
 .blog .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
+.blog .lib .right .page_area {margin: 20px 0px 36px 0px;}
 
 .blog .lib .right .post ul {margin: 16px 0px;}
 .blog .lib .right .post ul li {display:inline-block; width: calc(33.25% - 20px); margin: 0px 28px 36px 0;}

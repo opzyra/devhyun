@@ -116,13 +116,13 @@ router.get(
     // 조회수 처리
     const client = clinfo(req);
     if (!client.robot && client.device != "undefined") {
-      const { insertId } = await HIT_BOARD.insertIgonre({
+      const { affectedRows } = await HIT_BOARD.insertIgonre({
         ip: client.ip,
         board: "post",
         board_idx: idx
       });
 
-      if (insertId != 0) await BOARD_POST.updateHit(idx);
+      if (affectedRows != 0) await BOARD_POST.updateHit(idx);
     }
 
     res.render("client/blog/post/detail", {
@@ -220,12 +220,12 @@ router.get(
     // 조회수 처리
     const client = clinfo(req);
     if (!client.robot && client.device != "undefined") {
-      const { insertId } = await HIT_BOARD.insertIgonre({
+      const { affectedRows } = await HIT_BOARD.insertIgonre({
         ip: client.ip,
         board: "series",
         board_idx: idx
       });
-      if (insertId != 0) await BOARD_SERIES.updateHit(idx);
+      if (affectedRows != 0) await BOARD_SERIES.updateHit(idx);
     }
 
     res.render("client/blog/series/detail", {

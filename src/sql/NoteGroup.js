@@ -61,7 +61,9 @@ export default function(conn) {
      * @return {Array<NoteGroup>} 해당 리스트
      */
     async selectAll() {
-      return await conn(table).orderBy('odr').select();
+      return await conn(table)
+        .orderBy("odr")
+        .select();
     },
     /**
      * 노트그룹 갯수 조회
@@ -69,8 +71,7 @@ export default function(conn) {
      * @return {int} 갯수
      */
     async countAll() {
-      const [{count}] = await conn(table)
-        .count({ count: "*" });
+      const [{ count }] = await conn(table).count({ count: "*" });
       return count;
     },
     /**

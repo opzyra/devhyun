@@ -22,15 +22,10 @@ export default function(conn) {
           CREATE TABLE IF NOT EXISTS ${table} (
             idx INT(11) NOT NULL AUTO_INCREMENT,
             note_group_idx INT(11) NOT NULL,
-            title VARCHAR(200) NOT NULL,
-            location VARCHAR(200) NOT NULL,
-            state VARCHAR(50) NOT NULL,
-            all_day TINYINT(1) NOT NULL,
-            start DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            end DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            PRIMARY KEY (idx),
-            INDEX FK_note_note_group (note_group_idx),
-            CONSTRAINT FK_note_note_group FOREIGN KEY (note_group_idx) REFERENCES note_group (idx) ON UPDATE CASCADE ON DELETE CASCADE
+            title VARCHAR(100) NOT NULL,
+            contents MEDIUMTEXT NOT NULL,
+            reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (idx)
           )
           `
         );

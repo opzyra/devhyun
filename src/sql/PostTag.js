@@ -76,7 +76,7 @@ export default function(conn) {
       return data;
     },
     /**
-     * 태그 등록
+     * 태그 삭제
      * @method PostTag.deleteRelatedPost
      * @param {int} idx 포스트 idx
      */

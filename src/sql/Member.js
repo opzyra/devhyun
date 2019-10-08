@@ -28,7 +28,7 @@ export default function(conn) {
             thumbnail VARCHAR(200) NOT NULL DEFAULT '/images/default_thumbnail.png',
             active TINYINT(1) NOT NULL DEFAULT '1',
             withdraw TINYINT(1) NOT NULL DEFAULT '0',
-            reg_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             password_temp VARCHAR(100) NOT NULL DEFAULT '',
             PRIMARY KEY (idx),
             UNIQUE INDEX id (id)

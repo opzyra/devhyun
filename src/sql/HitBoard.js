@@ -22,7 +22,7 @@ export default function(conn) {
             ip VARCHAR(30) NOT NULL,
             board VARCHAR(30) NOT NULL,
             board_idx TINYINT(11) NOT NULL DEFAULT '0',
-            reg_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             UNIQUE INDEX ip_board_idx (ip, board, board_idx)
           )
           `

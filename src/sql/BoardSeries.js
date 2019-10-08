@@ -26,7 +26,7 @@ export default function(conn) {
             thumbnail VARCHAR(200) NOT NULL,
             contents MEDIUMTEXT NOT NULL,
             hit INT(11) NOT NULL DEFAULT '0',
-            reg_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (idx)
           )
           `

@@ -24,9 +24,8 @@ export default function(conn) {
             title VARCHAR(100) NOT NULL,
             thumbnail VARCHAR(200) NOT NULL,
             contents MEDIUMTEXT NOT NULL,
-            tags MEDIUMTEXT NOT NULL,
             hit INT(11) NOT NULL DEFAULT 0,
-            reg_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (idx)
           )
           `

@@ -66,9 +66,9 @@ export const task = {
           <div class="start_date">
             <div id="start_date" class="datepicker">
               <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                <input type="text" class="input" aria-label="Date-Time" name="start" value="${moment(
-                  task.start
-                )}">
+                <input type="text" class="input" aria-label="Date-Time" name="start" value="${
+                  task.start != "" ? moment(task.start) : moment()
+                }">
               </div>
               <div class="warp"></div>
             </div>
@@ -76,9 +76,9 @@ export const task = {
           <div class="end_date">
             <div id="end_date" class="datepicker">
               <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-                <input type="text" class="input" aria-label="Date-Time" name="end" value="${moment(
-                  task.end
-                )}">
+                <input type="text" class="input" aria-label="Date-Time" name="end" value="${
+                  task.end != "" ? moment(task.end) : moment()
+                }">
               </div>
               <div class="warp"></div>
             </div>
@@ -104,6 +104,7 @@ export const task = {
       let date = $(e)
         .find(".input")
         .val();
+
       new tui.DatePicker(`#${id} .warp`, {
         date: date ? new Date(date) : new Date(),
         language: "ko",

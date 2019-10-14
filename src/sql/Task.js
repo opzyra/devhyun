@@ -58,7 +58,11 @@ export default function(conn) {
     async selectAll() {
       return await conn({ t: "task", tg: "task_group" })
         .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
-        .orderBy([{ column: "completed" }, { column: "odr" }, { column: "end" }])
+        .orderBy([
+          { column: "completed" },
+          { column: "odr" },
+          { column: "end" }
+        ])
         .select("t.*", "tg.color");
     },
     /**
@@ -74,7 +78,11 @@ export default function(conn) {
       let offset = (parseInt(page) - 1) * limit;
       const sql = conn({ t: "task", tg: "task_group" })
         .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
-        .orderBy([{ column: "completed" }, { column: "odr" }, { column: "end" }])
+        .orderBy([
+          { column: "completed" },
+          { column: "odr" },
+          { column: "end" }
+        ])
         .limit(limit)
         .offset(offset);
 
@@ -129,7 +137,11 @@ export default function(conn) {
       return await conn({ t: "task", tg: "task_group" })
         .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
         .where("t.completed", false)
-        .orderBy([{ column: "completed" }, { column: "end" }])
+        .orderBy([
+          { column: "completed" },
+          { column: "start" },
+          { column: "end" }
+        ])
         .select("t.*", "tg.color");
     },
     /**

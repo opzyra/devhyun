@@ -366,7 +366,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .container .area {width: 72%; display: inline-block;}
 
 /* 콘텐츠 네비바 */
-.post_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
+.post_detail .container aside {float:right; width: 230px; margin:48px 0 0 0;}
 .post_detail .sidenav .on {color: #004abf;}
 /* 언더라인
 .post_detail .sidenav .on::after {content: ''; position: absolute; width: 100%; height: 1px; border-bottom: 1px solid #004abf; bottom: -2px; left: 0px;}
@@ -458,7 +458,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .series_detail .container .area {width: 72%; display: inline-block;}
 
 /* 콘텐츠 네비바 */
-.series_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
+.series_detail .container aside {float:right; width: 230px; margin:48px 0 0 0;}
 .series_detail .sidenav .on {color: #004abf;}
 .series_detail .sidenav li a {font-size: 16px; position: relative;}
 .series_detail .sidenav > li {margin: 0 0 8px 0;}

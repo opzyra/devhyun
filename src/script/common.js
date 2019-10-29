@@ -441,6 +441,20 @@ export const EDITOR = {
 };
 
 export const COMMON = {
+  anchorScroll(height = 100) {
+    // 앵커 오프셋
+    $("a").click(function() {
+      var href = $.attr(this, "href");
+      if (href.indexOf("#") == -1 || href == "#contents") return;
+      $("html, body").animate(
+        {
+          scrollTop: $(href).offset().top - height
+        },
+        500
+      );
+      return false;
+    });
+  },
   pagination(el, total, page) {
     let totalPages = parseInt(total) || 1;
     let startPage = parseInt(page) || 1;

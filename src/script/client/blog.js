@@ -76,6 +76,7 @@ export const postDetail = {
     this.aside();
     this.toolTip();
     this.seriesSlide();
+    COMMON.anchorScroll();
   }
 };
 
@@ -160,6 +161,7 @@ export const seriesDetail = {
     this.aside();
     this.toolTip();
     this.seriesSlide();
+    COMMON.anchorScroll();
   }
 };
 

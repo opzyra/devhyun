@@ -64,6 +64,7 @@ export const postDetail = {
   init() {
     this.aside();
     this.toolTip();
+    COMMON.anchorScroll(0);
   }
 };
 
@@ -366,6 +367,7 @@ export const seriesDetail = {
   init() {
     this.aside();
     this.toolTip();
+    COMMON.anchorScroll(0);
   }
 };
 

@@ -35,23 +35,6 @@ export const init = () => {
     }
   });
 
-  // 앵커 오프셋
-  $("a").click(function() {
-    var href = $.attr(this, "href");
-
-    if (href.indexOf("#") == -1 || href == "#contents") return;
-
-    var headerHeight = 100; //header 의 높이 만큼 조절 하면 됨
-    $("html, body").animate(
-      {
-        scrollTop: $(href).offset().top - headerHeight
-      },
-      500
-    );
-
-    return false;
-  });
-
   // 햄버거 메뉴 처리
   $("#burger").click(function() {
     $("header .lnb").toggleClass("collapse");

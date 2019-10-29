@@ -359,6 +359,7 @@ export const nodeDetail = {
   },
   init() {
     this.aside();
+    COMMON.anchorScroll(0);
   }
 };
 

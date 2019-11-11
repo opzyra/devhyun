@@ -1,16 +1,16 @@
-import express from 'express';
+import express from "express";
 
-import { rtfn } from '../../core/tx';
+import { rtfn } from "../../core/tx";
 
 const router = express.Router();
 
 router.get(
-  '/about',
+  "/about",
   rtfn(async (req, res, next) => {
-    res.render('client/about', {
-      layout: false,
+    res.render("client/about", {
+      layout: false
     });
-  }),
+  })
 );
 
 export default router;

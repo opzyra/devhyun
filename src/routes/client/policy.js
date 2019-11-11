@@ -1,10 +1,10 @@
-import express from 'express';
+import express from "express";
 
 const router = express.Router();
 
-router.get('/policy', (req, res) => {
-  res.render('client/policy', {
-    layout: false,
+router.get("/policy", (req, res) => {
+  res.render("client/policy", {
+    layout: false
   });
 });
 

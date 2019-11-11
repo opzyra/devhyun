@@ -522,11 +522,13 @@ footer .info span:nth-child(4)::after {display: none;}
 .login .box .left h4 {font-size: 16px;}
 .login .box .left ul {margin: 40px 0px 28px;}
 .login .box .left ul li + li{margin-top: 16px;}
-.login .box .left button {padding: 16px; width: 85%; text-align: left; font-size: 16px;}
-.login .box .left button:hover {opacity: 0.8;}
-.login .box .left button i {margin-right: 6px;}
-.login .box .left button span {font-weight: 500;}
+.login .box .left a {padding: 16px; width: 85%; text-align: left; font-size: 16px; cursor: pointer; display: block;}
+.login .box .left a:hover {opacity: 0.8;}
+.login .box .left a i {margin-right: 6px;}
+.login .box .left a span {font-weight: 500;}
 .login .box .left .git {background: #eee; color: #333; border: 1px solid #eee;}
 .login .box .left .google {background: #c92a2a;  color: #fff; border: 1px solid #d72020;}
 .login .box .left .facebook {background: #1971c2;  color: #fff; border: 1px solid #1971c2;}
+.login .box .right {display: flex; align-items: center; justify-content: center;}
+.login .box .right img {width: 90%;}
 /* -- 로그인 끝 -- */

@@ -14,15 +14,17 @@ header > div {width: 1200px; margin: 0 auto; height: 81px;}
 header h1 {float: left; line-height: 81px; height: 81px;}
 header h1 a {display: inline-block;}
 header h1 img {width: 200px; display: block; margin-top: 12px; margin-left: -18px;}
-header .lnb {float: right; }
+header .menu {float: left; margin-left: 20px;}
+header .account {float: right; }
 header .lnb ul {font-size:0px;}
 header .lnb li {display: inline-block; }
-header .lnb li a {display: block; line-height: 81px; padding: 0 16px; font-size: 16px;}
+header .lnb li a {display: block; line-height: 81px; padding: 0 20px; font-size: 16px;}
 header .lnb li a:hover {color:#004abf;}
 header .lnb li a.on {color:#004abf;}
 header.scroll {border-bottom: 1px solid #eee;}
 header.fix {border-bottom: 1px solid #eee;}
 header button {display: none;}
+
 
 /* 레이 아웃 */
 main {min-height: calc(100vh - 185px); padding-top: 81px;}
@@ -511,26 +513,20 @@ footer .info span:nth-child(4)::after {display: none;}
 /* --  개인정보 처리 방침 끝 -- */
 
 /* -- 로그인 시작 -- */
-.login { width: 400px; margin: 0 auto; padding: 130px 0;}
-.login h2 {margin: 0 0 30px 0; letter-spacing: 12px; color:#004abf; font-size:48px; text-align: center;}
-.login input { padding: 15px 25px; margin: 0 0 24px 0; box-sizing: border-box; height: auto; font-size: 16px; transition: none;}
-.login input::placeholder {font-size:16px;}
-.login input[type='password'] {margin: 0 0 20px 0;}
-.login .checks {margin:0 0 60px 0;}
-.login .checks input[type="checkbox"] {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0}
-.login .checks input[type="checkbox"] + label { display: inline-block; position: relative; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
-.login .checks input[type="checkbox"] + label:before {content: ' '; display: inline-block; width: 21px; height: 21px; line-height: 21px; margin: -2px 8px 0 0; text-align: center;  vertical-align: middle; background: #fafafa; border: 1px solid #cacece; border-radius : 3px; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);}
-.login .checks input[type="checkbox"] + label:active:before,
-.login .checks input[type="checkbox"]:checked + label:active:before { box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);}
-.login .checks input[type="checkbox"]:checked + label:before {content: '\2714'; color: #99a1a7; text-shadow: 1px 1px #fff; background: #e9ecee; border-color: #adb8c0; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);}
-.login .checks.small input[type="checkbox"] + label { font-size: 12px; }
-.login .checks.small input[type="checkbox"] + label:before { width: 17px; height: 17px; line-height: 17px; font-size: 11px;}
-.login button { display: block; width: 100%; color: #fff; font-size: 16px; background: #004abf; text-align: center; vertical-align: middle; user-select: none; border: 1px solid transparent; padding: 12px 0px; border-radius: 6px; cursor: pointer;}
-.login button:hover {opacity: 0.8; transition: 0.8s;}
-.login ul {padding:0px;}
-.login ul li { display:inline-block; width: 49%; text-align: center; position: relative;}
-.login ul li::after { content: ''; position: absolute; width: 1px; height: 100%; top: 0px; right: 0px; background:#a0a0a0;}
-.login ul li:last-child::after {display:none;}
-.login .checks {position: relative;}
+.login {position: relative;}
+.login .box > div {display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.login .box > div > div {width: 50%; padding: 20px 0px;}
 
+.login .box .left {border-right: 1px solid #eee;}
+.login .box .left h2 {font-size: 28px; font-weight: 300; margin-bottom: 8px;}
+.login .box .left h4 {font-size: 16px;}
+.login .box .left ul {margin: 40px 0px 28px;}
+.login .box .left ul li + li{margin-top: 16px;}
+.login .box .left button {padding: 16px; width: 85%; text-align: left; font-size: 16px;}
+.login .box .left button:hover {opacity: 0.8;}
+.login .box .left button i {margin-right: 6px;}
+.login .box .left button span {font-weight: 500;}
+.login .box .left .git {background: #eee; color: #333; border: 1px solid #eee;}
+.login .box .left .google {background: #c92a2a;  color: #fff; border: 1px solid #d72020;}
+.login .box .left .facebook {background: #1971c2;  color: #fff; border: 1px solid #1971c2;}
 /* -- 로그인 끝 -- */

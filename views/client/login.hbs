@@ -16,21 +16,44 @@
 
   {{>cl-common}}
 
-  <section class="login">
-    <h2><a href="/"><img src="/images/logo.png" alt="Devhyun"></a></h2>
-    <form method="POST" onsubmit="APP.login();">
-      <input id="id" name="id" type="text" placeholder="아이디">
-      <input name="password" type="password" placeholder="비밀번호" autocomplete="off">
+  {{>cl-header fix='fix'}}
 
-      <div class="checks">
-        <input type="checkbox" id="save" name="save">
-        <label for="save">아이디 저장</label>
+  <main id="contents" class="login">
+    <section class="box">
+      <div>
+        <div class="left">
+          <h2>간편 로그인</h2>
+          <h4>아래의 플랫폼으로 간단하게 가입하여 이용하실 수 있습니다.<br />데브현에서 제공하는 다양한 정보를 취득해보세요 !</h4>
+          <ul>
+            <li>
+              <button class="git">
+                <i class="mdi mdi-github-circle"></i>
+                <span>Github</span> 로그인
+              </button>
+            </li>
+            <li>
+              <button class="google">
+                <i class="mdi mdi-google"></i>
+                <span>Google</span> 로그인
+              </button>
+            </li>
+            <li>
+              <button class="facebook">
+                <i class="mdi mdi-facebook-box"></i>
+                <span>Facebook</span> 로그인
+              </button>
+            </li>
+          </ul>
+          <p>로그인 버튼을 누르시면 개인정보 처리방침에 동의하시는 것으로 간주됩니다.</p>
+        </div>
+        <div>
+          d
+        </div>
       </div>
+    </section>
+  </main>
 
-      <button type="submit">로그인</button>
-
-    </form>
-  </section>
+  {{>cl-footer}}
 
   {{>cl-script MODULE=(config 'client' 'login')}}
 

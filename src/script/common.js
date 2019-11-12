@@ -550,5 +550,8 @@ window.COMMON = {
   async logout() {
     const rs = await AJAX.post("/member/logout");
     if (rs) location.href = "/";
+  },
+  error(message) {
+    ALERT.error(message);
   }
 };

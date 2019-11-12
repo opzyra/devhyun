@@ -3,6 +3,18 @@
   <div>
     <h1><a href="/"><img src="/images/logo.png" alt="Devhyun"></a></h1>
     <h2 class="hide">메뉴</h2>
+    {{#if session.member}}
+    <a class="member_dropdown mobile_member" href="javascript:;"><img src="{{session.member.thumbnail}}" /></a>
+    <div class="member_menu dropdown">
+      <a class="menu_item" href="javascript:;" onclick="COMMON.error('서비스 준비중입니다.')">마이페이지</a>
+      {{#isAdmin session.member}}
+      <a class="menu_item" href="/admin">관리자</a>
+      {{/isAdmin}}
+      <a class="menu_item" href="javascript:;" onclick="COMMON.logout();">로그아웃</a>
+    </div>
+    {{else}}
+    <a class="mobile_member" href="/login"><img src="/images/default_thumbnail.png" /></a>
+    {{/if}}
     <button id="burger" type="button">
       <span></span>
       <span></span>
@@ -18,8 +30,25 @@
     </nav>
     <nav class="lnb account">
       <ul>
-        <li><a href="/login">로그인</a></li>
+        {{#if session.member}}
+        <li>
+          <a class="member_dropdown" href="javascript:;">
+            <img src="{{session.member.thumbnail}}" />
+            <div class="name">{{session.member.name}}</div>
+            <i class="mdi mdi-menu-down"></i>
+          </a>
+        </li>
+        {{else}}
+        <li><a href="/login"><img src="/images/default_thumbnail.png" />로그인</a></li>
+        {{/if}}
       </ul>
+      <div class="member_menu dropdown">
+        <a class="menu_item" href="javascript:;" onclick="COMMON.error('서비스 준비중입니다.')">마이페이지</a>
+        {{#isAdmin session.member}}
+        <a class="menu_item" href="/admin">관리자</a>
+        {{/isAdmin}}
+        <a class="menu_item" href="javascript:;" onclick="COMMON.logout();">로그아웃</a>
+      </div>
     </nav>
     <div id="overlay" class="overlay"></div>
   </div>

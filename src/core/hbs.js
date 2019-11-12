@@ -275,6 +275,12 @@ const condition = {
       return options.fn(this);
     }
     return options.inverse(this);
+  },
+  isAdmin: function(member, options) {
+    if (member && member.role.indexOf("ADMIN") >= 0) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
   }
 };
 

@@ -27,7 +27,7 @@ const github = async code => {
   return {
     id: `GIT_${data.id}`,
     name: data.name,
-    avatar: data.avatar_url
+    thumbnail: data.avatar_url
   };
 };
 
@@ -62,7 +62,7 @@ const google = async code => {
   return {
     id: `GOOGLE_${data.id}`,
     name: data.name,
-    avatar: data.picture
+    thumbnail: data.picture
   };
 };
 
@@ -91,7 +91,7 @@ const facebook = async code => {
   return {
     id: `FACEBOOK_${data.id}`,
     name: data.name,
-    avatar: data.picture.data.url
+    thumbnail: data.picture.data.url
   };
 };
 

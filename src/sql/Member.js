@@ -49,6 +49,33 @@ export default function(conn) {
         .where("id", id)
         .select();
       return item;
+    },
+    /**
+     * 사용자 등록
+     * @method Member.upsert
+     * @return {Array<Object>} 등록된 데이터
+     */
+    async insertOne(item) {
+      const [data] = await conn.raw(
+        conn(table)
+          .returning()
+          .insert(item)
+          .toString()
+          .replace("insert", "INSERT IGNORE")
+      );
+      return data;
+    },
+    /**
+     * 사용자 수정
+     * @method Member.updateOne
+     * @param {Member} item 수정할 객체
+     * @param {int} idx 테이블의 idx 값
+     * @return {Member} 수정된 객체
+     */
+    async updateOne(item, idx) {
+      return await conn(table)
+        .where("idx", idx)
+        .update(item);
     }
   };
 }

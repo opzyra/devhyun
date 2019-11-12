@@ -10,21 +10,29 @@
 
 /* 헤더 */
 header {position: fixed; left: 0; top: 0; width: 100%; z-index: 20; background: #fff;}
-header > div {width: 1200px; margin: 0 auto; height: 81px;}
+header > div {width: 1200px; margin: 0 auto; height: 81px; position: relative;}
 header h1 {float: left; line-height: 81px; height: 81px;}
 header h1 a {display: inline-block;}
 header h1 img {width: 200px; display: block; margin-top: 12px; margin-left: -18px;}
-header .menu {float: left; margin-left: 20px;}
-header .account {float: right; }
+
 header .lnb ul {font-size:0px;}
 header .lnb li {display: inline-block; }
 header .lnb li a {display: block; line-height: 81px; padding: 0 20px; font-size: 16px;}
 header .lnb li a:hover {color:#004abf;}
 header .lnb li a.on {color:#004abf;}
+header .menu {float: left; margin-left: 20px;}
+header .account {float: right;}
+header .account li a {padding: 0px;}
+header .account img {width: 28px; border-radius: 50%; margin-right: 8px; margin-top: -4px;}
+header .account .name {display: inline-block;}
 header.scroll {border-bottom: 1px solid #eee;}
 header.fix {border-bottom: 1px solid #eee;}
 header button {display: none;}
-
+header .mobile_member {display: none;}
+header .dropdown {position: absolute; visibility: hidden; opacity : 0; transition : .2s ease-in-out; transform : translateY (-20px); top: 82px; right: 0px; width: 150px; background: #fff; border: 1px solid #eee; font-size: 14px; border-radius: 0 0 .28571429rem .28571429rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.08);}
+header .dropdown.on {visibility : visible; opacity : 1; transform : translateY (0);}
+header .dropdown > a {display: block; padding: 24px 24px 0px;}
+header .dropdown > a:last-child {padding-bottom: 24px;}
 
 /* 레이 아웃 */
 main {min-height: calc(100vh - 185px); padding-top: 81px;}
@@ -514,21 +522,24 @@ footer .info span:nth-child(4)::after {display: none;}
 
 /* -- 로그인 시작 -- */
 .login {position: relative;}
-.login .box > div {display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
-.login .box > div > div {width: 50%; padding: 20px 0px;}
+.login .box {width: 1200px; display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
+.login .box > div {width: 50%; padding: 20px 0px;}
 
 .login .box .left {border-right: 1px solid #eee;}
+.login .box .left img {display: none;}
 .login .box .left h2 {font-size: 28px; font-weight: 300; margin-bottom: 8px;}
 .login .box .left h4 {font-size: 16px;}
-.login .box .left ul {margin: 40px 0px 28px;}
-.login .box .left ul li + li{margin-top: 16px;}
-.login .box .left a {padding: 16px; width: 85%; text-align: left; font-size: 16px; cursor: pointer; display: block;}
-.login .box .left a:hover {opacity: 0.8;}
-.login .box .left a i {margin-right: 6px;}
-.login .box .left a span {font-weight: 500;}
-.login .box .left .git {background: #eee; color: #333; border: 1px solid #eee;}
-.login .box .left .google {background: #c92a2a;  color: #fff; border: 1px solid #d72020;}
-.login .box .left .facebook {background: #1971c2;  color: #fff; border: 1px solid #1971c2;}
+.login .box .left ul {margin: 40px 0px 36px; display: flex;}
+.login .box .left .btn_login {padding: 16px; width: 120px; text-align: left; font-size: 16px; cursor: pointer; display: block; border: 1px solid #238bfd; border-radius: 16px;}
+.login .box .left li + li {margin-left: 12px;}
+.login .box .left .btn_login:hover {opacity: 0.8;}
+.login .box .left .btn_login div {text-align: center;}
+.login .box .left .btn_login i {font-size: 32px;}
+.login .box .left .btn_login span {font-weight: 500;}
+.login .box .left .git {color: #333; border-color:#333;}
+.login .box .left .google {color: #c92a2a; border-color: #c92a2a;}
+.login .box .left .facebook {color: #1971c2; border-color: #1971c2;}
+.login .box .left a {color: #004abf;}
 .login .box .right {display: flex; align-items: center; justify-content: center;}
 .login .box .right img {width: 90%;}
 /* -- 로그인 끝 -- */

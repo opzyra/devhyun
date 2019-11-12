@@ -19,38 +19,39 @@
   {{>cl-header fix='fix'}}
 
   <main id="contents" class="login">
-    <section class="box">
-      <div>
+    <div>
+      <section class="box">
         <div class="left">
           <h2>간편 로그인</h2>
           <h4>아래의 플랫폼으로 간단하게 가입하여 이용하실 수 있습니다.<br />데브현에서 제공하는 다양한 정보를 취득해보세요 !</h4>
+          <img src="/images/login.png" alt="로그인">
           <ul>
             <li>
-              <a class="git" href="{{loginUrl.github}}">
-                <i class="mdi mdi-github-circle"></i>
-                <span>Github</span> 로그인
+              <a class="btn_login git" href="{{loginUrl.github}}">
+                <div><i class="mdi mdi-github-circle"></i></div>
+                <div>Github</div>
               </a>
             </li>
             <li>
-              <a class="google" href="{{loginUrl.google}}">
-                <i class="mdi mdi-google"></i>
-                <span>Google</span> 로그인
+              <a class="btn_login google" href="{{loginUrl.google}}">
+                <div><i class="mdi mdi-google"></i></div>
+                <div>Google</div>
               </a>
             </li>
             <li>
-              <a class="facebook" href="{{loginUrl.facebook}}">
-                <i class="mdi mdi-facebook-box"></i>
-                <span>Facebook</span> 로그인
+              <a class="btn_login facebook" href="{{loginUrl.facebook}}">
+                <div><i class="mdi mdi-facebook-box"></i></div>
+                <div>Facebook</div>
               </a>
             </li>
           </ul>
-          <p>로그인 버튼을 누르시면 개인정보 처리방침에 동의하시는 것으로 간주됩니다.</p>
+          <p>로그인 버튼을 누르시면 <a href="/policy">개인정보 처리 방침</a>에 동의하시는 것으로 간주됩니다.</p>
         </div>
         <div class="right">
           <img src="/images/login.png" alt="로그인">
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   {{>cl-footer}}

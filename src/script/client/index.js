@@ -38,10 +38,29 @@ export const init = () => {
   // 햄버거 메뉴 처리
   $("#burger").click(function() {
     $("header .lnb").toggleClass("collapse");
+    $(".member_menu").removeClass("on");
   });
 
   $("#overlay").click(function() {
     $("header .lnb").removeClass("collapse");
+    $(".member_menu").removeClass("on");
+  });
+
+  // 드롭다운 처리
+  $(".member_dropdown").click(function(e) {
+    e.stopPropagation();
+    $(".member_menu").toggleClass("on");
+    $("header .lnb").removeClass("collapse");
+  });
+
+  $("html").click(function(e) {
+    if (
+      !$(e.target).hasClass("member_menu") &&
+      !$(e.target).hasClass("menu_item") &&
+      $(".member_menu").hasClass("on")
+    ) {
+      $(".member_menu").removeClass("on");
+    }
   });
 
   // 검색창 열기

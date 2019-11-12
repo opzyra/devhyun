@@ -6,6 +6,8 @@ import oauth, { loginUrl } from "../../lib/oauth";
 
 import { txrtfn } from "../../core/tx";
 
+import Member from "../../sql/Member";
+
 const router = express.Router();
 
 router.get("/login", sessionCtx.isAnonymous(), (req, res) => {
@@ -25,16 +27,27 @@ router.get(
     const { platform } = req.params;
     const { code } = req.query;
 
+    const MEMBER = Member(conn);
+
     const auth = oauth[platform];
 
     if (!auth) {
       throw new Error("platform error");
     }
 
-    const user = await auth(code);
+    const member = await auth(code);
 
-    //TODO 테이블 작업
-    console.log(user);
+    const dbMember = await MEMBER.selectById(member.id);
+
+    if (!dbMember) {
+      await MEMBER.insertOne(member);
+    } else {
+      await MEMBER.updateOne(member, dbMember.idx);
+    }
+
+    const sessionMember = await MEMBER.selectById(member.id);
+
+    req.session.member = sessionMember;
 
     res.redirect("/");
   })

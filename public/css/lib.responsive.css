@@ -1,5 +1,5 @@
 @media (max-width: 999px){
-  #remodal .confirm {margin-top: 88px !important; }
+  .tui-full-calendar-month {min-height: 800px;}
   .tui-full-calendar-layout #tui-full-calendar-startpicker-container, .tui-full-calendar-layout #tui-full-calendar-endpicker-container {top: -50px; left: 0px; position: absolute !important;}
   .tui-full-calendar-popup-container {min-width: 100%; padding: 12px;}
   .tui-full-calendar-section-title input {width: 280px;}
@@ -8,4 +8,5 @@
   .tui-full-calendar-section-date-dash {display: none;}
   .tui-full-calendar-section-start-date {margin-bottom: 6px;}
 
+  .task .lib .right .mode .header .end_date .tui-datepicker {left: -58px;}
 }

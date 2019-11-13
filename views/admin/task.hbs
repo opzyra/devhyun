@@ -90,6 +90,10 @@
                 <div class="end_date">
                   {{parseDate end 'YYYY.MM.DD'}}
                 </div>
+                <span class="ctx_menu" onclick="APP.modeTask({{idx}})"><i class="mdi mdi-pen"></i></span>
+                <span class="ctx_menu" onclick="APP.modalTaskGroupMove({{idx}})"><i
+                    class="mdi mdi-puzzle-outline"></i></span>
+                <span class="ctx_menu" onclick="APP.deleteTask({{idx}})"><i class="mdi mdi-window-close"></i></span>
                 <div class="check">
                   <input type="checkbox" id="checkTask{{idx}}" class="cbx" {{{checkbox completed}}}
                     onchange="APP.updateTaskCompleted();" />

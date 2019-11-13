@@ -15,7 +15,7 @@ header .lnb.collapse ul {display: block;  opacity: 1;}
 header .lnb ul {display: none; opacity: 0; padding:0 0 16px 0; border-bottom: 1px solid #eee;}
 header .lnb li {display: block;}
 header .lnb li a {line-height: 44px; font-size: 16px;}
-header .lnb.collapse + .overlay {position: absolute; width: 100%; height: 100vh; right: 0;}
+header .lnb.collapse + .overlay {position: absolute; width: 100%; height: 100vh; right: 0; background: #333333; opacity: 0.5;}
 header .menu {margin-left: 0px;}
 header .menu ul {padding: 12px 0px;}
 header .account {display: none;}

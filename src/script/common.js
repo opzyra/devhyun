@@ -333,7 +333,7 @@ export const EDITOR = {
       el: document.querySelector(el),
       initialEditType: "markdown",
       previewStyle: BROWSER.isMobile() ? "tab" : "vertical",
-      height: height - 230 + "px",
+      height: BROWSER.isMobile() ? "600px" : height - 230 + "px",
       language: "ko_KR",
       previewDelayTime: 500,
       exts: ["scrollSync"],

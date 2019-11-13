@@ -18,6 +18,15 @@ export const task = {
         <div class="end_date">
           ${moment(task.end).format("YYYY.MM.DD")}
         </div>
+        <span class="ctx_menu" onclick="APP.modeTask(${
+          task.idx
+        })"><i class="mdi mdi-pen"></i></span>
+        <span class="ctx_menu" onclick="APP.modalTaskGroupMove(${
+          task.idx
+        })"><i class="mdi mdi-puzzle-outline"></i></span>
+        <span class="ctx_menu" onclick="APP.deleteTask(${
+          task.idx
+        })"><i class="mdi mdi-window-close"></i></span>
         <div class="check">
           <input type="checkbox" id="checkTask${
             task.idx

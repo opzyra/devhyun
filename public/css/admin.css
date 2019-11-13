@@ -50,6 +50,8 @@ header .logo a {display: block;}
 header .logo img {width: 100%;}
 header .logo img.sm {display: none;}
 
+header .burger {display: none;}
+
 header .profile {position: absolute; bottom:80px; width: 100%; text-align: center;}
 header .profile img {width: 64px; border-radius: 100%; margin-bottom:8px;}
 header .profile h3 {font-size: 16px;}

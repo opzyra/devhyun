@@ -31,8 +31,8 @@ header button {display: none;}
 header .mobile_member {display: none;}
 header .dropdown {position: absolute; visibility: hidden; opacity : 0; transition : .2s ease-in-out; transform : translateY (-20px); top: 82px; right: 0px; width: 150px; background: #fff; border: 1px solid #eee; font-size: 14px; border-radius: 0 0 .28571429rem .28571429rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.08);}
 header .dropdown.on {visibility : visible; opacity : 1; transform : translateY (0);}
-header .dropdown > a {display: block; padding: 24px 24px 0px;}
-header .dropdown > a:last-child {padding-bottom: 24px;}
+header .dropdown > a {display: block; margin: 24px 24px 0px;}
+header .dropdown > a:last-child {margin-bottom: 24px;}
 
 /* 레이 아웃 */
 main {min-height: calc(100vh - 185px); padding-top: 81px;}

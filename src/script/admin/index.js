@@ -19,5 +19,15 @@ const set = namespace => {
 export const init = () => {
   // 마크다운 하이라이트 처리
   hljs.initHighlightingOnLoad();
+
+  // 햄버거 메뉴 처리
+  $("#burger").click(function() {
+    $("header .lnb").toggleClass("collapse");
+  });
+
+  $("#overlay").click(function() {
+    $("header .lnb").removeClass("collapse");
+  });
+
   return set;
 };

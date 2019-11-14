@@ -11,7 +11,7 @@ import BoardPost from "../sql/BoardPost";
 
 export default function() {
   cron.schedule(
-    "0 0 * * * *",
+    "0 0 0 * * *",
     txfn(async conn => {
       const BOARD_POST = BoardPost(conn);
 

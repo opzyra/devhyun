@@ -1,6 +1,16 @@
 import requestIp from "request-ip";
 import { createMarkdown } from "safe-marked";
 import removeMd from "remove-markdown";
+import htmlToText2 from "html-to-text2";
+
+export const cutString = (value, max) => {
+  let isOver = true;
+  if (max > value.length) {
+    max = value.length;
+    isOver = false;
+  }
+  return value.substring(0, max) + (isOver ? "..." : "");
+};
 
 export const clinfo = req => {
   const header = req.headers["user-agent"];
@@ -85,4 +95,17 @@ export const safeMarkdown = contents => {
 
 export const removeMarkdown = markdown => {
   return removeMd(markdown);
+};
+
+export const parseMarkdown = (markdown, wordwrap) => {
+  markdown = markdown.replace(/(?:\r\n|\r|\n)/g, " ");
+  markdown = markdown.replace(/(<code data).*(<\/code>)/g, "");
+
+  let text = htmlToText2.fromString(markdown, {
+    ignoreHref: true,
+    ignoreImage: true
+  });
+
+  text = text.replace(/(?:\r\n|\r|\n)/g, " ");
+  return cutString(text, wordwrap).trim();
 };

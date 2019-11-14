@@ -54,6 +54,16 @@ export default function(conn) {
       return await conn(table).select();
     },
     /**
+     * RSS 포스트 조회
+     * @method BoardPost.selectRssAll
+     * @return {Array<Post>} 해당 포스트 데이터
+     */
+    async selectRssAll() {
+      return await conn(table)
+        .select()
+        .orderBy("idx", "desc");
+    },
+    /**
      * 페이지 처리된 게시글 조회
      * @method BoardPost.selectPage
      * @param {string} query 검색어

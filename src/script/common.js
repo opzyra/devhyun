@@ -167,9 +167,19 @@ export const AJAX = {
       $('a, :button, :input[type="submit"]').removeAttr("disabled");
       NProgress.done();
     },
-    fail(jqxhr) {
+    async fail(jqxhr) {
       let message = "데이터베이스 오류가 발생하였습니다.";
       let responseJSON = jqxhr.responseJSON;
+      let statue = jqxhr.status;
+      if (statue == 401) {
+        const { value } = await ALERT.confirm(
+          "세션이 만료되었습니다.<br/>로그인 화면으로 이동할까요?"
+        );
+        if (value) {
+          location.href = "/login";
+        }
+        return;
+      }
 
       if (responseJSON) message = responseJSON.message;
       if (!message) message = "잘못된 요청입니다.";

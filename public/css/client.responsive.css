@@ -258,6 +258,14 @@ footer .info div {margin-top: 4px;}
 .post_detail .series ul li h3 {font-size: 18px;}
 .post_detail .series .swiper-container {margin-bottom: 40px;}
 
+/* 댓글 */
+.post_detail .comments {padding: 12px 0px 36px;}
+.post_detail .comments h3 {font-size: 16px;}
+.post_detail .comments ul li {padding: 24px 0px;}
+.post_detail .comments ul li img {width: 48px;}
+.post_detail .comments ul li h4 {margin-bottom: 4px;}
+.post_detail .comments ul li .thumb {margin-right: 16px;}
+
 /* 연관 포스트 */
 .post_detail .relation h2 {font-size: 20px;}
 .post_detail .relation h3 {font-size: 16px;}

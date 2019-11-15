@@ -2,6 +2,7 @@ import "./env";
 
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import compression from "compression";
 import helmet from "helmet";
 
@@ -43,6 +44,9 @@ app.use("/uploads", express.static("uploads"));
 // 바디파서
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// 쿠키파서
+app.use(cookieParser());
 
 // 세션
 app.use(sessionCtx.config);

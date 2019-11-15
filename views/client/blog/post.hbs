@@ -92,7 +92,12 @@
 							<div class="contents">
 								<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
 								<p>{{parseMarkdown contents 89}}</p>
-								<div>{{parseDate reg 'YYYY.MM.DD'}}</div>
+								<div>
+									{{parseDate reg 'YYYY.MM.DD'}}
+									{{#if comment}}
+									<span>{{comment}}개의 댓글</span>
+									{{/if}}
+								</div>
 							</div>
 						</li>
 						{{/each}}

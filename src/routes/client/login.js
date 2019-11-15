@@ -49,7 +49,10 @@ router.get(
 
     req.session.member = sessionMember;
 
-    res.redirect("/");
+    const redirect = req.cookies.redirect || "/";
+    res.clearCookie("redirect");
+
+    res.redirect(redirect);
   })
 );
 

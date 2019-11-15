@@ -9,6 +9,7 @@ import task from "./task";
 import note from "./note";
 import post from "./post";
 import series from "./series";
+import comment from "./comment";
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use("/task", task);
 router.use("/note", note);
 router.use("/post", post);
 router.use("/series", series);
+router.use("/comment", comment);
 
 export default router;

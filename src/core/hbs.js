@@ -1,5 +1,7 @@
 import moment from "moment";
 import htmlToText2 from "html-to-text2";
+import { formatDistance, format } from "date-fns";
+import { ko } from "date-fns/locale";
 import { go, map, reduce } from "fxjs";
 
 const core = {
@@ -96,6 +98,27 @@ const convert = {
   parseDate: function(value, format) {
     if (value == 0 || !value || value == "") return "-";
     return moment(value).format(format);
+  },
+  /**
+   * 날짜의 기간을 적절한 텍스트로 변환
+   * IN: 날짜(DATE)
+   * OUT: 문자(STRING)
+   */
+  parseDiffDate: function(date) {
+    const now = new Date();
+    const givenDate = new Date(date);
+    const diff = now - givenDate;
+    if (diff < 1000 * 60) {
+      return "방금 전";
+    }
+    if (diff < 1000 * 60 * 60 * 24 * 7) {
+      const distanceString = formatDistance(givenDate, now, {
+        locale: ko,
+        addSuffix: true
+      });
+      return distanceString;
+    }
+    return format(givenDate, "yyyy.MM.dd");
   },
   /**
    * 핸드폰 연락처 분할 처리
@@ -278,6 +301,12 @@ const condition = {
   },
   isAdmin: function(member, options) {
     if (member && member.role.indexOf("ADMIN") >= 0) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+  },
+  neq: function(v1, v2, options) {
+    if (v1 !== v2) {
       return options.fn(this);
     }
     return options.inverse(this);

@@ -21,15 +21,12 @@ export default function(conn) {
           CREATE TABLE IF NOT EXISTS ${table} (
             idx INT(11) NOT NULL AUTO_INCREMENT,
             id VARCHAR(50) NOT NULL,
-            password VARCHAR(200) NOT NULL,
             name VARCHAR(50) NOT NULL,
-            role VARCHAR(50) NOT NULL,
-            role_name VARCHAR(100) NOT NULL DEFAULT '',
-            thumbnail VARCHAR(200) NOT NULL DEFAULT '/images/default_thumbnail.png',
+            role VARCHAR(50) NOT NULL DEFAULT 'USER',
+            thumbnail VARCHAR(500) NOT NULL DEFAULT '/images/default_thumbnail.png',
             active TINYINT(1) NOT NULL DEFAULT '1',
             withdraw TINYINT(1) NOT NULL DEFAULT '0',
             reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            password_temp VARCHAR(100) NOT NULL DEFAULT '',
             PRIMARY KEY (idx),
             UNIQUE INDEX id (id)
           )
@@ -37,6 +34,14 @@ export default function(conn) {
         );
         console.log(`CREATED TABLE ${table}`);
       }
+    },
+    /**
+     * 전체 회원정보 조회
+     * @method Member.selectAll
+     * @return {Array<Member>} 회원 정보 배열
+     */
+    async selectAll() {
+      return await conn(table).select();
     },
     /**
      * 아이디로 회원정보 조회

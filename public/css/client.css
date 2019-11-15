@@ -259,7 +259,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .project_detail .skills a:hover {color:#fff; background: #004abf;}
 
 /* 목록 이동 */
-.project_detail .back {padding: 80px 0;}
+.project_detail .back {padding: 40px 0px 80px 0;}
 .project_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .project_detail .back a {font-size: 16px;}
 .project_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -321,6 +321,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .post_list ul li .contents h3 a:hover {color:#004abf;}
 .blog .post_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
 .blog .post_list ul li .contents div {margin: 16px 0 0 0;}
+.blog .post_list ul li .contents div span::before {color: #adb5bd; padding: 0px 2px; content: "\B7";}
 .blog .post_none .not {font-size:20px;}
 .blog .post_none .not .keyword {color:#004abf; font-weight: 500;}
 .blog .post_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -403,9 +404,34 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .tags a:hover {color: #004abf;}
 
 /* 댓글 */
-.post_detail .comments {padding:12px 0px}
+.post_detail .comments {padding:12px 0px 48px;}
 .post_detail .comments h3 {font-size: 20px; margin: 0 0 12px 0;}
-.post_detail .comments textarea {padding: 16px; text-indent: 0px; resize: none; min-height: 80px; font-size: 14px;}
+.post_detail .comments ul li {display: flex; padding: 32px 0px; position: relative;}
+.post_detail .comments ul li + li {border-top: 1px solid #e9ecef;}
+.post_detail .comments ul li .thumb { margin-right: 20px;}
+.post_detail .comments ul li img {width: 64px; border-radius: 50%;}
+.post_detail .comments ul li h4 {font-size: 16px; margin-bottom: 8px;}
+.post_detail .comments ul li h4 span {font-size: 12px; margin-left: 8px;}
+.post_detail .comments ul li h5 {font-size: 14px; margin-bottom: 4px; color: #004abf;}
+.post_detail .comments ul li p {font-size: 14px;}
+.post_detail .comments ul li .mode {font-size: 14px; text-align: center; margin-top: 8px; color: #004abf; display: none;}
+.post_detail .comments ul li .description {width: 100%; position: relative;}
+.post_detail .comments ul li.selected .mode {display: block;}
+.post_detail .comments ul li.selected .description::before {content: ''; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; opacity: 0.4; z-index: 100;}
+.post_detail .comments ul li .menu {margin-top: 8px;}
+.post_detail .comments ul li .menu a {margin-right: 4px; cursor: pointer;}
+.post_detail .comments ul li .menu i {margin-right: 2px;}
+.post_detail .comments form {margin-top: 8px;}
+
+.post_detail .comments textarea {padding: 16px; text-indent: 0px; resize: none; min-height: 120px; font-size: 14px;}
+.post_detail .comments select {padding: 8px 16px; height: auto; float:left;}
+.post_detail .comments .submit {text-align: right; margin-top: 12px;}
+.post_detail .comments .submit .btn_submit {background: #004abf; color: #fff; border: 1px solid transparent; padding: 0.5rem 0.95rem; font-size: 0.875rem; line-height: 1.5; border-radius: 6px; font-weight: 400;}
+.post_detail .comments .submit .btn_cancel {margin-left: 4px; border: 1px solid #004abf; padding: 0.5rem 0.95rem; font-size: 0.875rem; line-height: 1.5; border-radius: 6px; font-weight: 400; display: none;}
+.post_detail .comments form.update .btn_cancel {display: inline-block;}
+.post_detail .comments .no-authorized {font-size: 14px; text-align: center;}
+.post_detail .comments .no-authorized a {color: #004abf;}
+
 
 /* 시리즈 */
 .post_detail .series {padding:0 0 24px 0;}
@@ -447,7 +473,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .relation p {font-size: 14px; min-height: 60px;}
 
 /* 목록 이동 */
-.post_detail .back {padding: 80px 0;}
+.post_detail .back {padding: 40px 0px 80px 0;}
 .post_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .post_detail .back a {font-size: 16px;}
 .post_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -494,7 +520,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .series_detail .post ul li a { color: #004abf;}
 
 /* 목록 이동 */
-.series_detail .back {padding: 80px 0;}
+.series_detail .back {padding: 40px 0px 80px 0;}
 .series_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .series_detail .back a {font-size: 16px;}
 .series_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}

@@ -97,7 +97,7 @@ router.put(
       }
     }
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
+    res.status(200).json({ message: `수정이 완료 되었습니다`, idx: insertId });
   })
 );
 

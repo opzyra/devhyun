@@ -563,5 +563,10 @@ window.COMMON = {
   },
   error(message) {
     ALERT.error(message);
+  },
+  redirectLogin() {
+    const redirect = encodeURI(window.location.href);
+    COOKIE.setCookie("redirect", redirect, 1);
+    window.location.href = "/login";
   }
 };

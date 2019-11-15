@@ -1,6 +1,6 @@
 import express from "express";
 import htmlToc from "html-toc";
-import { go, map } from "fxjs";
+import { go, map, filter, uniqueBy, take } from "fxjs";
 
 import store from "../../core/store";
 import { txrtfn } from "../../core/tx";
@@ -11,6 +11,8 @@ import BoardPost from "../../sql/BoardPost";
 import PostTag from "../../sql/PostTag";
 import BoardSeries from "../../sql/BoardSeries";
 import HitBoard from "../../sql/HitBoard";
+import Comment from "../../sql/Comment";
+import Member from "../../sql/Member";
 
 const router = express.Router();
 
@@ -21,19 +23,36 @@ router.get(
 
     const BOARD_POST = BoardPost(conn);
     const POST_TAG = PostTag(conn);
+    const COMMENT = Comment(conn);
 
     const posts = await BOARD_POST.selectPage(query, page);
     const postPage = await BOARD_POST.selectPageInfo(query, page);
+    const comments = await COMMENT.countGroupBoard(
+      "post",
+      posts.map(post => post.idx)
+    );
 
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
+
+    const comment_posts = await go(
+      posts,
+      map(post => {
+        const comment =
+          comments.find(comment => comment.board_idx === post.idx) || 0;
+        return {
+          ...post,
+          comment: comment.count
+        };
+      })
+    );
 
     store(res).setState({
       postPage
     });
 
     res.render("client/blog/post", {
-      posts,
+      posts: comment_posts,
       postPage,
       queryRow: query ? postPage.rowCount : null,
       countPostTag: {
@@ -55,6 +74,9 @@ router.get(
     const BOARD_SERIES = BoardSeries(conn);
     const HIT_BOARD = HitBoard(conn);
     const POST_TAG = PostTag(conn);
+
+    const MEMBER = Member(conn);
+    const COMMENT = Comment(conn);
 
     const post = await BOARD_POST.selectOne(idx);
 
@@ -125,12 +147,46 @@ router.get(
       if (affectedRows != 0) await BOARD_POST.updateHit(idx);
     }
 
+    // 댓글 처리
+    const members = await MEMBER.selectAll();
+    const comments = await COMMENT.selectBoardAll("post", idx);
+
+    const post_comments = await go(
+      comments,
+      map(comment => {
+        let target_member = members.find(
+          member => member.idx == comment.target_idx
+        );
+        return {
+          ...comment,
+          target_name: target_member ? target_member.name : ""
+        };
+      })
+    );
+
+    const comments_member = go(
+      post_comments,
+      filter(comment => {
+        if (req.session.member) {
+          return comment.member_idx !== req.session.member.idx;
+        }
+        return true;
+      }),
+      uniqueBy(u => u.member_idx),
+      map(comment => ({
+        idx: comment.member_idx,
+        name: comment.name
+      }))
+    );
+
     res.render("client/blog/post/detail", {
       post,
       toc,
       tags,
       series,
       relation,
+      comments: post_comments,
+      comments_member,
       layout: false
     });
   })

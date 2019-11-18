@@ -47,8 +47,12 @@
     font-weight: 500;
 }
 
-.tui-editor-contents ul li, .tui-editor-contents ol li {
-  list-style: initial;
+.tui-editor-contents ul li {
+  list-style: disc;
+}
+
+.tui-editor-contents ol li {
+  list-style: decimal;
 }
 
 .tui-editor-contents a {

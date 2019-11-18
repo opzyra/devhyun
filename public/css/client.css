@@ -553,8 +553,9 @@ footer .info span:nth-child(4)::after {display: none;}
 
 .login .box .left {border-right: 1px solid #eee;}
 .login .box .left img {display: none;}
-.login .box .left h2 {font-size: 28px; font-weight: 300; margin-bottom: 8px;}
-.login .box .left h4 {font-size: 16px;}
+.login .box .left h2 {font-size: 28px; font-weight: 300; margin-bottom: 16px;}
+.login .box .left h4 {font-size: 20px;}
+.login .box .left p {font-size: 14px;}
 .login .box .left ul {margin: 40px 0px 36px; display: flex;}
 .login .box .left .btn_login {padding: 16px; width: 120px; text-align: left; font-size: 16px; cursor: pointer; display: block; border: 1px solid #238bfd; border-radius: 16px;}
 .login .box .left li + li {margin-left: 12px;}

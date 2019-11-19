@@ -334,23 +334,25 @@ router.get(
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
 
-    const comments = await COMMENT.countGroupBoard(
-      "post",
-      tags.map(tag => tag.idx)
-    );
+    if (tags.length !== 0) {
+      const comments = await COMMENT.countGroupBoard(
+        "post",
+        tags.map(tag => tag.idx)
+      );
 
-    tags = go(
-      tags,
-      map(tag => {
-        const comment = comments.find(
-          comment => comment.board_idx === tag.idx
-        ) || { count: 0 };
-        return {
-          ...tag,
-          comment: comment.count
-        };
-      })
-    );
+      tags = go(
+        tags,
+        map(tag => {
+          const comment = comments.find(
+            comment => comment.board_idx === tag.idx
+          ) || { count: 0 };
+          return {
+            ...tag,
+            comment: comment.count
+          };
+        })
+      );
+    }
 
     store(res).setState({
       tagPage

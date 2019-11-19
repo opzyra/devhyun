@@ -1,6 +1,6 @@
 import express from "express";
 import htmlToc from "html-toc";
-import { go, map, filter, uniqueBy, take } from "fxjs";
+import { go, map, filter, uniqueBy } from "fxjs";
 
 import store from "../../core/store";
 import { txrtfn } from "../../core/tx";
@@ -25,34 +25,38 @@ router.get(
     const POST_TAG = PostTag(conn);
     const COMMENT = Comment(conn);
 
-    const posts = await BOARD_POST.selectPage(query, page);
+    let posts = await BOARD_POST.selectPage(query, page);
     const postPage = await BOARD_POST.selectPageInfo(query, page);
-    const comments = await COMMENT.countGroupBoard(
-      "post",
-      posts.map(post => post.idx)
-    );
 
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
 
-    const comment_posts = await go(
-      posts,
-      map(post => {
-        const comment =
-          comments.find(comment => comment.board_idx === post.idx) || 0;
-        return {
-          ...post,
-          comment: comment.count
-        };
-      })
-    );
+    if (posts.length !== 0) {
+      const comments = await COMMENT.countGroupBoard(
+        "post",
+        posts.map(post => post.idx)
+      );
+
+      posts = go(
+        posts,
+        map(post => {
+          const comment = comments.find(
+            comment => comment.board_idx === post.idx
+          ) || { count: 0 };
+          return {
+            ...post,
+            comment: comment.count
+          };
+        })
+      );
+    }
 
     store(res).setState({
       postPage
     });
 
     res.render("client/blog/post", {
-      posts: comment_posts,
+      posts,
       postPage,
       queryRow: query ? postPage.rowCount : null,
       countPostTag: {
@@ -324,12 +328,33 @@ router.get(
 
     const BOARD_POST = BoardPost(conn);
     const POST_TAG = PostTag(conn);
+    const COMMENT = Comment(conn);
 
-    const tags = await BOARD_POST.selectPageRelatedTagPost(query, page);
+    let tags = await BOARD_POST.selectPageRelatedTagPost(query, page);
     const tagPage = await BOARD_POST.selectPageRelatedTagPostInfo(query, page);
 
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
+
+    if (tags.length !== 0) {
+      const comments = await COMMENT.countGroupBoard(
+        "post",
+        tags.map(tag => tag.idx)
+      );
+
+      tags = go(
+        tags,
+        map(tag => {
+          const comment = comments.find(
+            comment => comment.board_idx === tag.idx
+          ) || { count: 0 };
+          return {
+            ...tag,
+            comment: comment.count
+          };
+        })
+      );
+    }
 
     store(res).setState({
       tagPage

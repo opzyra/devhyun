@@ -31,25 +31,23 @@ router.get(
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
 
-    if (posts.length !== 0) {
-      const comments = await COMMENT.countGroupBoard(
-        "post",
-        posts.map(post => post.idx)
-      );
+    const comments = await COMMENT.countGroupBoard(
+      "post",
+      posts.map(post => post.idx)
+    );
 
-      posts = go(
-        posts,
-        map(post => {
-          const comment = comments.find(
-            comment => comment.board_idx === post.idx
-          ) || { count: 0 };
-          return {
-            ...post,
-            comment: comment.count
-          };
-        })
-      );
-    }
+    posts = go(
+      posts,
+      map(post => {
+        const comment = comments.find(
+          comment => comment.board_idx === post.idx
+        ) || { count: 0 };
+        return {
+          ...post,
+          comment: comment.count
+        };
+      })
+    );
 
     store(res).setState({
       postPage
@@ -336,25 +334,23 @@ router.get(
     const post_count = await BOARD_POST.countAll();
     const tag_count = await POST_TAG.countDistinct();
 
-    if (tags.length !== 0) {
-      const comments = await COMMENT.countGroupBoard(
-        "post",
-        tags.map(tag => tag.idx)
-      );
+    const comments = await COMMENT.countGroupBoard(
+      "post",
+      tags.map(tag => tag.idx)
+    );
 
-      tags = go(
-        tags,
-        map(tag => {
-          const comment = comments.find(
-            comment => comment.board_idx === tag.idx
-          ) || { count: 0 };
-          return {
-            ...tag,
-            comment: comment.count
-          };
-        })
-      );
-    }
+    tags = go(
+      tags,
+      map(tag => {
+        const comment = comments.find(
+          comment => comment.board_idx === tag.idx
+        ) || { count: 0 };
+        return {
+          ...tag,
+          comment: comment.count
+        };
+      })
+    );
 
     store(res).setState({
       tagPage

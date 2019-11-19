@@ -24,9 +24,16 @@ const github = async code => {
     }
   });
 
+  const name = data => {
+    if (!data.name || data.name === "") {
+      return data.login;
+    }
+    return data.name;
+  };
+
   return {
     id: `GIT_${data.id}`,
-    name: data.name,
+    name: name(data),
     thumbnail: data.avatar_url
   };
 };

@@ -29,5 +29,22 @@ export const init = () => {
     $("header .lnb").removeClass("collapse");
   });
 
+  // 드롭다운 처리
+  $(".member_dropdown").click(function(e) {
+    e.stopPropagation();
+    $(".member_menu").toggleClass("on");
+    $("header .lnb").removeClass("collapse");
+  });
+
+  $("html").click(function(e) {
+    if (
+      !$(e.target).hasClass("member_menu") &&
+      !$(e.target).hasClass("menu_item") &&
+      $(".member_menu").hasClass("on")
+    ) {
+      $(".member_menu").removeClass("on");
+    }
+  });
+
   return set;
 };

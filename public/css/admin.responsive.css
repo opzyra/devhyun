@@ -11,7 +11,7 @@
   header .profile p {font-size: 10px;}
   header .profile img {width: 48px;}
   header .profile .btn {font-size: 10px;}
-  
+  header .profile a+a {margin-left: 0px; margin-top: 8px;}
   main {margin-left:100px;}
 }
 
@@ -23,6 +23,17 @@
   header .logo img.sm {display: none;}
 
   header .profile {display: none;}
+
+  header .mobile_member {position: absolute; top: 18px; right: 52px; cursor: pointer; display: inline-block; background: transparent;}
+  header .account {display:block; float: right;}
+  header .account li a {padding: 0px;}
+  header .account img {width: 24px; border-radius: 50%;}
+  header .account .name {display: inline-block;}
+  header .dropdown {position: absolute; visibility: hidden; opacity: 0; transition: .2s ease-in-out; transform: translateY (-20px); top: 60px; right: 0px; width: 150px; background: #fff; border: 1px solid #eee; font-size: 14px; border-radius: 0 0 .28571429rem .28571429rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.08);}
+  header .dropdown.on {visibility: visible; opacity: 1;}
+  header .dropdown > a {display: block; margin: 24px 24px 0px;}
+  header .dropdown > a:last-child {margin-bottom: 24px;}
+
   header .burger {display: block;}
   header .burger button {position: absolute; top: 10px; right: 4px; cursor: pointer; display: inline-block; padding:12px; background: transparent;}
   header .burger button > span {display: block; width: 22px; height: 3px; border-radius: 4px; background: #004abf;}

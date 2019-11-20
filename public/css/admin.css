@@ -56,6 +56,8 @@ header .profile {position: absolute; bottom:80px; width: 100%; text-align: cente
 header .profile img {width: 64px; border-radius: 100%; margin-bottom:8px;}
 header .profile h3 {font-size: 16px;}
 header .profile p {font-size: 12px; color: #aaaaaa; margin-bottom: 16px;}
+header .profile a+a {margin-left: 4px;}
+header .account {display: none;}
 
 header .lnb {height: 770px;}
 header .lnb ul {margin-top: 12px;}

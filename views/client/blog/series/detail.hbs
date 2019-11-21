@@ -75,10 +75,20 @@
 						</div>
 
 						<div class="post">
-							<h2 id="postList"></h2>
+							<h2 id="postList">관련 포스트</h2>
 							<ul>
 								{{#each post}}
-								<li>{{add @index 1}}. <a href="/blog/post/{{idx}}">{{title}}</a>
+								<li>
+									<a class="thumb" href="/blog/post/{{idx}}">
+										<img src="{{thumbnail}}">
+										<div class="white-mask"></div>
+									</a>
+									<div class="contents">
+										<span>{{parseDate reg 'YYYY.MM.DD'}}</span>
+										<h3><a href="/blog/series/{{idx}}">{{title}}</a></h3>
+										<p class="visual_pc">{{parseMarkdown contents 200}}</p>
+										<p class="visual_mobile">{{parseMarkdown contents 80}}</p>
+									</div>
 								</li>
 								{{/each}}
 							</ul>

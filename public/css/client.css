@@ -336,7 +336,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .series_list .search_count .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
 .blog .series_list .search_count .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
 .blog .series_list ul li {display:flex; width: 100%; margin: 0 0 36px 0;}
-.blog .series_list ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:30%;}
+.blog .series_list ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:30%;}
 .blog .series_list ul li .thumb img {width: 100%;}
 .blog .series_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .series_list ul li .thumb:hover .white-mask { opacity: 1;}
@@ -513,11 +513,19 @@ footer .info span:nth-child(4)::after {display: none;}
 
 /* 관련 포스트 */
 .series_detail .post {padding:0 0 16px 0;}
-.series_detail .post h2 {font-size: 24px;}
+.series_detail .post h2 {font-size: 24px; line-height: 32px; border-bottom: none; margin: 24px 0 15px 0; color: #333; font-weight: 500;}
 .series_detail .post h2 span {font-size: 16px;}
-.series_detail .post ul {margin: 20px 0;}
-.series_detail .post ul li {margin: 8px 0; font-size: 18px;}
-.series_detail .post ul li a { color: #004abf;}
+.series_detail .post ul li {display:flex; width: 100%; margin: 0 0 16px 0;}
+.series_detail .post ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:36%;}
+.series_detail .post ul li .thumb img {width: 100%;}
+.series_detail .post ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.series_detail .post ul li .thumb:hover .white-mask { opacity: 1;}
+.series_detail .post ul li .contents {padding: 20px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.series_detail .post ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.series_detail .post ul li .contents h3 a:hover {color:#004abf;}
+.series_detail .post ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.series_detail .post ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
+.series_detail .post ul li .contents div {font-size: 14px;}
 
 /* 목록 이동 */
 .series_detail .back {padding: 40px 0px 80px 0;}

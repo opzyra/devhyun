@@ -515,6 +515,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .series_detail .post {padding:0 0 16px 0;}
 .series_detail .post h2 {font-size: 24px; line-height: 32px; border-bottom: none; margin: 24px 0 15px 0; color: #333; font-weight: 500;}
 .series_detail .post h2 span {font-size: 16px;}
+.series_detail .post ul {padding: 10px 0px;}
 .series_detail .post ul li {display:flex; width: 100%; margin: 0 0 16px 0;}
 .series_detail .post ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:36%;}
 .series_detail .post ul li .thumb img {width: 100%;}

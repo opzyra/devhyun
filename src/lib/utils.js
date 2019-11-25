@@ -5,7 +5,7 @@ import htmlToText2 from "html-to-text2";
 
 export const cutString = (value, max) => {
   let isOver = true;
-  if (max > value.length) {
+  if (max >= value.length) {
     max = value.length;
     isOver = false;
   }

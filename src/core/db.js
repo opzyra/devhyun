@@ -1,7 +1,24 @@
-import _knex from "knex";
+import knex from "knex";
 import { debugLogger } from "./logger";
 
-const knex = _knex({
+import Application from "../sql/Application";
+import Member from "../sql/Member";
+import BoardPost from "../sql/BoardPost";
+import BoardSeries from "../sql/BoardSeries";
+import SeriesPost from "../sql/SeriesPost";
+import Comment from "../sql/Comment";
+import HitBoard from "../sql/HitBoard";
+import Note from "../sql/Note";
+import NoteGroup from "../sql/NoteGroup";
+import PostTag from "../sql/PostTag";
+import Schedule from "../sql/Schedule";
+import ScheduleGroup from "../sql/ScheduleGroup";
+import Task from "../sql/Task";
+import TaskGroup from "../sql/TaskGroup";
+import Temp from "../sql/Temp";
+import Upload from "../sql/Upload";
+
+const db = knex({
   client: "mysql2",
   connection: {
     host: process.env.DB_HOST,
@@ -23,8 +40,26 @@ const knex = _knex({
   debug: process.env != "production" ? true : false
 });
 
-const initialize = async () => {};
+const initialize = async () => {
+  if (process.env == "production") return;
+  Application(db).createSchema();
+  Member(db).createSchema();
+  BoardPost(db).createSchema();
+  BoardSeries(db).createSchema();
+  SeriesPost(db).createSchema();
+  Comment(db).createSchema();
+  HitBoard(db).createSchema();
+  Note(db).createSchema();
+  NoteGroup(db).createSchema();
+  PostTag(db).createSchema();
+  Schedule(db).createSchema();
+  ScheduleGroup(db).createSchema();
+  Task(db).createSchema();
+  TaskGroup(db).createSchema();
+  Temp(db).createSchema();
+  Upload(db).createSchema();
+};
 
 initialize();
 
-export default knex;
+export default db;

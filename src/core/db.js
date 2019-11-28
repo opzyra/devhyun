@@ -42,22 +42,22 @@ const db = knex({
 
 const initialize = async () => {
   if (process.env == "production") return;
-  Application(db).createSchema();
-  Member(db).createSchema();
-  BoardPost(db).createSchema();
-  BoardSeries(db).createSchema();
-  SeriesPost(db).createSchema();
-  Comment(db).createSchema();
-  HitBoard(db).createSchema();
-  Note(db).createSchema();
-  NoteGroup(db).createSchema();
-  PostTag(db).createSchema();
-  Schedule(db).createSchema();
-  ScheduleGroup(db).createSchema();
-  Task(db).createSchema();
-  TaskGroup(db).createSchema();
-  Temp(db).createSchema();
-  Upload(db).createSchema();
+  await Application(db).createSchema();
+  await Member(db).createSchema();
+  await BoardPost(db).createSchema();
+  await BoardSeries(db).createSchema();
+  await SeriesPost(db).createSchema();
+  await Comment(db).createSchema();
+  await HitBoard(db).createSchema();
+  await Note(db).createSchema();
+  await NoteGroup(db).createSchema();
+  await PostTag(db).createSchema();
+  await Schedule(db).createSchema();
+  await ScheduleGroup(db).createSchema();
+  await Task(db).createSchema();
+  await TaskGroup(db).createSchema();
+  await Temp(db).createSchema();
+  await Upload(db).createSchema();
 };
 
 initialize();

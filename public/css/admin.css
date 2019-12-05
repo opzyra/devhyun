@@ -426,3 +426,48 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .blog .lib .right .container .aside .sidenav > li > ul li:first-child {margin-top: 4px;}
 .blog .lib .right .container .aside .sidenav > li > ul li {margin: 0 0 4px 0;}
 .blog .lib .right .container .aside .sidenav > li > ul > li > ul {padding:0 0 0 12px;}
+
+/* ----- 회원 ----- */
+
+.member .aside .btn {margin-right: 4px; vertical-align: middle;}
+.member .aside .btn:last-child {margin-right: 0px;}
+.member .lib {display: flex;}
+.member .lib .left .menu {padding: 10px 16px 24px 16px; border-bottom: 1px solid #e5e5e5; position: relative;}
+.member .lib .left .all {min-height: 14px; line-height: 14px; font-size: 18px; font-weight: 300;}
+.member .lib .left .list {padding: 12px 16px; border-bottom: 1px solid #e5e5e5; font-weight: normal;}
+.member .lib .left .list .item {min-height: 14px; line-height: 14px; padding: 8px 0px; position: relative;}
+.member .lib .left .list .item a {display: block;}
+.member .lib .left .list .item i {margin-right: 8px; font-size: 16px;}
+.member .lib .left .list .item span {vertical-align: text-top;}
+.member .lib .left .list .item .check {position: absolute; top: 8px; right: 4px;}
+.member .lib .left .list .item .check i {font-size: 12px;}
+
+.member .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5;}
+.member .lib .right .menu .title {padding-right: 12px; font-size: 19px; vertical-align: middle;}
+.member .lib .right .menu .title input {border:0; height: 24px; font-size: 20px; background: transparent;}
+.member .lib .right .menu .title input::placeholder { font-size: 20px; }
+.member .lib .right .menu .search {position: absolute; top:0px; right:0px; float: right; width: 190px;}
+.member .lib .right .menu .search.focus {border-bottom: 1px solid #004abf;}
+.member .lib .right .menu .search input {background: transparent; border: none; text-indent: 0px; padding: 0 12px; box-sizing: border-box; width: 85%; height: 24px; text-align: center; font-size: 16px;}
+.member .lib .right .menu .search button {background: url(../images/search.png) no-repeat center center; background-size: contain; width: 24px; height: 24px; cursor: pointer;}
+.member .lib .right .menu .info {position: absolute; top:10px; right:0px; float: right;}
+.member .lib .right .menu .info .reg {margin-right: 8px;}
+
+.member .lib .right .list .not {font-size: 20px;}
+.member .lib .right .list .not .keyword {color: #004abf; font-weight: 500;}
+.member .lib .right .page_area {margin: 20px 0px 36px 0px;}
+
+.member .lib .right .list ul { margin: 16px 0px;}
+.member .lib .right .list ul li {display: flex; border-bottom: 1px solid #e5e5e5; padding: 12px 0px; align-items: center; position: relative;}
+.member .lib .right .list ul li:last-child {border-bottom: none;}
+.member .lib .right .list ul li .thumbnail {margin-right: 8px;}
+.member .lib .right .list ul li .thumbnail img {width: 40px; border-radius: 100%;}
+.member .lib .right .list ul li .contents .name {font-size: 16px;}
+.member .lib .right .list ul li .option {position: absolute; right: 0px;}
+.member .lib .right .list ul li .option div {display: inline-block;}
+.member .lib .right .list ul li .option div + div {margin-left: 4px;}
+.member .lib .right .list ul li .option .status .withdraw {color: #ff4040;}
+.member .lib .right .list ul li .option .status .active {color: #004abf;}
+.member .lib .right .list ul li .option .status .disabled {color: #ff4040;}
+.member .lib .right .list ul li .option .platform .mdi-google {color: #c92a2a;}
+.member .lib .right .list ul li .option .platform .mdi-facebook-box {color: #1971c2;}

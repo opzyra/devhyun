@@ -44,6 +44,38 @@ export default function(conn) {
       return await conn(table).select();
     },
     /**
+     * 페이지와 필터링 처리된 회원정보 조회
+     * @method BoardPost.selectPage
+     * @param {string} query 검색어
+     * @param {string} category 카테고리
+     * @param {int} page 페이지 (default = 1)
+     * @param {int} offset 한 페이지당 게시글 수 (default = 20)
+     * @return {Array<Member>} 해당 회원정보
+     */
+    async selectPage(query = "", category = "", page = 1, limit = 20) {
+      let offset = (parseInt(page) - 1) * limit;
+      const sql = conn(table)
+        .orderBy("idx", "desc")
+        .limit(limit)
+        .offset(offset);
+
+      if (query) {
+        sql.where(builder => {
+          builder.where("name", "like", `%${query}%`);
+        });
+      }
+
+      if (category) {
+        sql.where(builder => {
+          builder.where("id", "like", `%${category}%`);
+        });
+      }
+
+      const items = await sql.select();
+
+      return items;
+    },
+    /**
      * 아이디로 회원정보 조회
      * @method Member.selectById
      * @param {string} id 사용자 계정 아이디

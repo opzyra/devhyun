@@ -293,6 +293,12 @@ const condition = {
     }
     return options.inverse(this);
   },
+  isNull: function(value, options) {
+    if (value && value.length > 0) {
+      return options.inverse(this);
+    }
+    return options.fn(this);
+  },
   isNotNull: function(value, options) {
     if (value && value.length > 0) {
       return options.fn(this);

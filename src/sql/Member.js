@@ -49,7 +49,7 @@ export default function(conn) {
      * @param {string} query 검색어
      * @param {string} category 카테고리
      * @param {int} page 페이지 (default = 1)
-     * @param {int} offset 한 페이지당 게시글 수 (default = 20)
+     * @param {int} offset 한 페이지당 회원정보 수 (default = 20)
      * @return {Array<Member>} 해당 회원정보
      */
     async selectPage(query = "", category = "", page = 1, limit = 20) {
@@ -65,10 +65,15 @@ export default function(conn) {
         });
       }
 
-      if (category) {
+      if (category === "active" || category === "disabled") {
+        const value = category === "active" ? 1 : 0;
         sql.where(builder => {
-          builder.where("id", "like", `%${category}%`);
+          builder.where("active", value).andWhere("withdraw", 0);
         });
+      }
+
+      if (category === "withdraw") {
+        sql.where("withdraw", 1);
       }
 
       const items = await sql.select();

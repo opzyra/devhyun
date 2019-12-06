@@ -47,6 +47,17 @@ router.get(
 
     const sessionMember = await MEMBER.selectById(member.id);
 
+    if (!sessionMember.active) {
+      res.redirect("/login?error=active");
+      return;
+    }
+
+    if (sessionMember.withdraw) {
+      res.redirect("/login?error=withdraw");
+      
+      return;
+    }
+
     req.session.member = sessionMember;
 
     const redirect = req.cookies.redirect || "/";

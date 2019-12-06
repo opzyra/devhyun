@@ -1,4 +1,4 @@
-import { AJAX, ALERT, COOKIE } from "../common";
+import { AJAX, ALERT, COOKIE, BROWSER } from "../common";
 import { validate } from "revalidator";
 
 export const login = {
@@ -38,8 +38,8 @@ export const login = {
     }
 
     const data = await AJAX.post("/member/login", form);
-    
-    if(data) {
+
+    if (data) {
       location.href = "/admin";
     }
 
@@ -52,7 +52,21 @@ export const login = {
       $("#id").val(id);
     }
   },
+  handleError() {
+    const { error } = BROWSER.queryString();
+    switch (error) {
+      case "active":
+        ALERT.error("사용이 제한된 계정입니다.");
+        break;
+      case "withdraw":
+        ALERT.error("탈퇴한 계정입니다.");
+        break;
+      default:
+        break;
+    }
+  },
   init() {
     this.setSavedId();
+    this.handleError();
   }
 };

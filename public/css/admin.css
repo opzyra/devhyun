@@ -442,7 +442,7 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .member .lib .left .list .item .check {position: absolute; top: 8px; right: 4px;}
 .member .lib .left .list .item .check i {font-size: 12px;}
 
-.member .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5;}
+.member .lib .right .menu {padding: 0px 0px 20px; border-bottom: 1px solid #e5e5e5; position: relative;}
 .member .lib .right .menu .title {padding-right: 12px; font-size: 19px; vertical-align: middle;}
 .member .lib .right .menu .title input {border:0; height: 24px; font-size: 20px; background: transparent;}
 .member .lib .right .menu .title input::placeholder { font-size: 20px; }

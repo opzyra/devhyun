@@ -151,4 +151,11 @@
   .blog .lib .right .series ul li .contents {width: 100%;}
 
   .blog .lib .right .tag a {font-size:12px; padding: 4px 8px; margin: 0px 8px 12px 0px;}
+
+  /* ----- 회원 ----- */
+  .member .lib {flex-direction: column;}
+  .member .lib .left .menu {padding: 8px 0px 16px;}
+  .member .lib .left .list {padding: 8px 4px;}
+  .member .lib .right .list ul li .thumbnail img {width: 32px;}
+  .member .lib .right .list ul li .contents .name {font-size: 14px;}
 }

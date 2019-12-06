@@ -3,8 +3,9 @@ import * as schedule from "./schedule";
 import * as task from "./task";
 import * as note from "./note";
 import * as blog from "./blog";
+import * as member from "./member";
 
-const modules = Object.assign(dashboard, schedule, task, note, blog);
+const modules = Object.assign(dashboard, schedule, task, note, blog, member);
 
 const set = namespace => {
   const app = fx.go(

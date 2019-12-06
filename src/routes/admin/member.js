@@ -3,6 +3,7 @@ import { go, map } from "fxjs";
 
 import sessionCtx from "../../core/session";
 import { txrtfn } from "../../core/tx";
+import store from "../../core/store";
 
 import Member from "../../sql/Member";
 
@@ -27,10 +28,30 @@ router.get(
       })
     );
 
+    let memberPage = await MEMBER.selectPageInfo(query, category, query, page);
+    let title = (() => {
+      switch (category) {
+        case "active":
+          return "활성";
+        case "disabled":
+          return "정지";
+        case "withdraw":
+          return "탈퇴";
+        default:
+          return "전체";
+      }
+    })();
+
+    store(res).setState({
+      memberPage
+    });
+
     res.render("admin/member", {
       members,
       query,
       category,
+      memberPage,
+      title,
       layout: false
     });
   })

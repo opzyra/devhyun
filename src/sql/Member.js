@@ -1,5 +1,6 @@
 import Knex from "knex";
 
+import { pagination } from "../lib/pagination";
 /**
  * member 테이블의 SQL메서드에 접근하기 위한 인스턴스
  * @class Member
@@ -79,6 +80,39 @@ export default function(conn) {
       const items = await sql.select();
 
       return items;
+    },
+    /**
+     * 페이지 처리 정보 조회
+     * @method BoardPost.selectPageInfo
+     * @param {string} query 검색어
+     * @param {string} category 카테고리
+     * @param {int} page 페이지 (default = 1)
+     * @param {int} offset 한 페이지당 게시글 수 (default = 20)
+     * @return {int} 해당 게시글 갯수
+     */
+    async selectPageInfo(query = "", category = "", page = 1, limit = 20) {
+      const sql = conn(table);
+
+      if (query) {
+        sql.where(builder => {
+          builder.where("name", "like", `%${query}%`);
+        });
+      }
+
+      if (category === "active" || category === "disabled") {
+        const value = category === "active" ? 1 : 0;
+        sql.where(builder => {
+          builder.where("active", value).andWhere("withdraw", 0);
+        });
+      }
+
+      if (category === "withdraw") {
+        sql.where("withdraw", 1);
+      }
+
+      const [{ rowCount }] = await sql.count({ rowCount: "*" });
+
+      return pagination(rowCount, limit, page);
     },
     /**
      * 아이디로 회원정보 조회

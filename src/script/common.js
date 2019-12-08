@@ -27,6 +27,11 @@ export const BROWSER = {
       else b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
     }
     return b;
+  },
+  replaceUrl(url) {
+    if (window.history.replaceState) {
+      window.history.replaceState({}, null, url);
+    }
   }
 };
 

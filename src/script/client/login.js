@@ -57,9 +57,11 @@ export const login = {
     switch (error) {
       case "active":
         ALERT.error("사용이 제한된 계정입니다.");
+        BROWSER.replaceUrl("/login");
         break;
       case "withdraw":
         ALERT.error("탈퇴한 계정입니다.");
+        BROWSER.replaceUrl("/login");
         break;
       default:
         break;

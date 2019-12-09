@@ -22,12 +22,16 @@ export default function(conn) {
           CREATE TABLE IF NOT EXISTS ${table} (
             idx INT(11) NOT NULL AUTO_INCREMENT,
             id VARCHAR(50) NOT NULL,
+            social VARCHAR(200) NOT NULL,
             name VARCHAR(50) NOT NULL,
             role VARCHAR(50) NOT NULL DEFAULT 'USER',
             thumbnail VARCHAR(500) NOT NULL DEFAULT '/images/default_thumbnail.png',
+            email VARCHAR(500) NOT NULL,
+            marketing TINYINT(1) NOT NULL DEFAULT '0',
             active TINYINT(1) NOT NULL DEFAULT '1',
             withdraw TINYINT(1) NOT NULL DEFAULT '0',
             reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            login DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (idx),
             UNIQUE INDEX id (id)
           )

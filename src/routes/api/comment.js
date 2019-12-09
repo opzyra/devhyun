@@ -4,11 +4,9 @@ import xssFilter from "xssfilter";
 import sessionCtx from "../../core/session";
 import { txrtfn } from "../../core/tx";
 
-import { anchorConvert, safeMarkdown } from "../../lib/utils";
 import validator, { Joi } from "../../lib/validator";
 
 import Comment from "../../sql/Comment";
-import BoardPost from "../../sql/BoardPost";
 
 const router = express.Router();
 

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	{{>cl-seo title="마이페이지 - 데브현" description="회원님의 회원정보를 확인/변경 할 수 있습니다"}}
+
+	{{>cl-style}}
+
+</head>
+
+<body>
+
+	{{>cl-common}}
+
+	{{>cl-header fix='fix'}}
+
+	<main id="contents" class="mypage">
+		<div>
+			<h2 class="hide">현재 화면 위치</h2>
+			<section class="location">
+				<div>
+					<p>
+						<span class="path">데브현 메인</span>
+						<span class="path on">마이페이지</span>
+					</p>
+				</div>
+			</section>
+			<h2 class="hide">타이틀</h2>
+			<section class="title">
+				<div>
+					<h2>회원님의 정보를 확인하거나<br>변경할 수 있어요</h2>
+				</div>
+			</section>
+
+			<section class="info">
+				<div>
+					<h2>회원정보</h2>
+					<p>회원정보는 간편 로그인 정보를 그대로 가져옵니다.</p>
+					<p>이메일을 제외한 정보는 로그인시 자동으로 동기화 및 업데이트 됩니다.</p>
+					<div class="data">
+						<div class="thumbnail">
+							<img src="{{session.member.thumbnail}}">
+						</div>
+						<ul>
+							<li>
+								<span class="title">아이디</span>
+								<span>{{memberIdEllipse session.member.id}}</span>
+							</li>
+							<li>
+								<span class="title">별명</span>
+								<span>{{session.member.name}}</span>
+							</li>
+							<li>
+								<span class="title">연동 정보</span>
+								<span>
+									{{#eq session.member.platform 'GIT'}}
+									<i class="mdi mdi-github-circle"></i>
+									{{/eq}}
+									{{#eq session.member.platform 'GOOGLE'}}
+									<i class="mdi mdi-google"></i>
+									{{/eq}}
+									{{#eq session.member.platform 'FACEBOOK'}}
+									<i class="mdi mdi-facebook-box"></i>
+									{{/eq}}
+								</span>
+							</li>
+							<li>
+								<span class="title">가입일</span>
+								<span>{{parseDate session.member.reg 'YYYY.MM.DD'}}</span>
+							</li>
+						</ul>
+						<div class="email">
+							<ul>
+								<li>
+									<span class="title">이메일</span>
+									<form method="POST" onsubmit="APP.updateEmail();">
+										<input class="email_input" type="text" value="{{session.member.email}}" name="email">
+										<button type="submit">변경</button>
+									</form>
+								</li>
+								<li>
+									<span class="title">마케팅 수신 동의</span>
+									<span>
+										<input class="email_agree" type="checkbox" id="emailAgree" onchange="APP.updateMarketing(this);"
+											{{{checkbox session.member.marketing}}}>
+										<label for="emailAgree">
+											이메일 수신
+										</label>
+									</span>
+								</li>
+								<li>
+									<span class="description">
+										다양한 정보에 대한 알림을 받아보세요 !<br>
+										해당 서비스는 현재 준비중입니다.
+									</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section class="withdraw">
+				<div>
+					<h2>회원탈퇴</h2>
+					<p>회원 탈퇴 전 아래 사항을 꼭 확인해주시기 바랍니다.</p>
+					<p>관련된 사항을 숙지하고 진행해주세요.</p>
+					<div class="contents">
+						<ul>
+							<li>
+								<div>회원 탈퇴 시, 보유하고 계신 포인트는 삭제되며 복구되지 않습니다.</div>
+							</li>
+							<li>
+								<div>회원 탈퇴 시, 데브현에 등록된 회원님의 개인정보는 모두 삭제되며 복구되지 않습니다.</div>
+								<div>단, 작성하신 게시글은 삭제되지 않습니다.</div>
+							</li>
+							<li>
+								<div>부정한 목적으로 탈퇴 후 재가입을 한 경우에는 이용에 제한이 있을 수 있습니다.</div>
+							</li>
+						</ul>
+						<div class="action">
+							<input class="withdraw_agree" type="checkbox" id="withdrawAgree"
+								onchange="APP.handleWithdrawAgree(this);">
+							<label for="withdrawAgree">
+								안내사항을 확인하였으며, 해당 내용을 인지하였고 동의합니다.
+							</label>
+							<button id="withdraw" type="button" disabled="disabled" onclick="APP.withdraw();">탈퇴하기</button>
+						</div>
+					</div>
+
+				</div>
+			</section>
+		</div>
+	</main>
+
+	{{>cl-footer}}
+
+	{{>cl-script MODULE=(config 'client' 'mypage')}}
+
+</body>
+
+</html>

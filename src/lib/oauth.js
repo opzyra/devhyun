@@ -33,6 +33,7 @@ const github = async code => {
 
   return {
     id: `GIT_${data.id}`,
+    social: data.login,
     name: name(data),
     thumbnail: data.avatar_url
   };
@@ -68,6 +69,7 @@ const google = async code => {
 
   return {
     id: `GOOGLE_${data.id}`,
+    social: data.email.replace("@gmail.com", ""),
     name: data.name,
     thumbnail: data.picture
   };
@@ -97,6 +99,7 @@ const facebook = async code => {
 
   return {
     id: `FACEBOOK_${data.id}`,
+    social: data.id,
     name: data.name,
     thumbnail: data.picture.data.url
   };

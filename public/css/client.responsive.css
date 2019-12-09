@@ -336,4 +336,28 @@ footer .info div {margin-top: 4px;}
 
 /* -- 로그인 끝 -- */
 
+
+/* -- 마이페이지 시작 -- */
+.mypage .title h2 {font-size: 24px;}
+.mypage .info {padding: 40px 0px;}
+.mypage .info h2 {font-size: 20px;}
+.mypage .info p {font-size: 14px;}
+.mypage .info .data {flex-direction: column; margin: 28px 0px 0px;}
+.mypage .info .data .thumbnail {margin-right: 0px; text-align: center;}
+.mypage .info .data ul {margin: 20px 0px 12px;}
+.mypage .info .data ul li .title {width: 30%;}
+.mypage .info .data .email {width: 100%; margin-left: 0px;}
+.mypage .info .data .email .email_input {width: 50%;}
+.mypage .info .data .email ul li .title {width: 120px;}
+.mypage .info .data .email ul li:last-child {padding-left: 0px;}
+
+.mypage .withdraw {padding: 40px 0px;}
+.mypage .withdraw h2 {font-size: 20px;}
+.mypage .withdraw p {font-size: 14px;}
+.mypage .withdraw .contents {flex-direction: column; margin: 0px;}
+.mypage .withdraw .contents ul {width: 100%; margin: 28px 0px;}
+.mypage .withdraw .contents ul li div {padding-left: 0px;}
+.mypage .withdraw .contents .action {display: block;}
+
+/* -- 마이페이지 끝 -- */
 }

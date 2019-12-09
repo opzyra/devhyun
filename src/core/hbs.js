@@ -343,6 +343,10 @@ const client = {
       return options.fn(this);
     }
     return options.inverse(this);
+  },
+  memberIdEllipse: function(value, options) {
+    const [platform, id] = value.split("_");
+    return `${platform}_${id.substring(0, 2)}*****`;
   }
 };
 

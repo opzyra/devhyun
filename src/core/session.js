@@ -38,9 +38,11 @@ const listener = () => {
       return;
     }
 
-    // 중복 로그인 체크
+    // 회원 관련 처리
     if (req.session.member) {
       const { member } = req.session;
+
+      // 중복 로그인 체크
       store.all((_, sessions) => {
         for (let i = 0; i < sessions.length; i++) {
           let e = sessions[i];
@@ -53,6 +55,10 @@ const listener = () => {
           }
         }
       });
+
+      // 로그인 플랫폼 처리
+      const [platform, ...rest] = member.id.split("_");
+      member.platform = platform;
     }
 
     // 접근 로그

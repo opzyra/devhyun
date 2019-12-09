@@ -42,7 +42,7 @@ router.get(
     if (!dbMember) {
       await MEMBER.insertOne(member);
     } else {
-      await MEMBER.updateOne(member, dbMember.idx);
+      await MEMBER.updateOne({ ...member, login: new Date() }, dbMember.idx);
     }
 
     const sessionMember = await MEMBER.selectById(member.id);
@@ -54,7 +54,6 @@ router.get(
 
     if (sessionMember.withdraw) {
       res.redirect("/login?error=withdraw");
-      
       return;
     }
 

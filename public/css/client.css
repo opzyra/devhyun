@@ -579,3 +579,52 @@ footer .info span:nth-child(4)::after {display: none;}
 .login .box .right {display: flex; align-items: center; justify-content: center;}
 .login .box .right img {width: 90%;}
 /* -- 로그인 끝 -- */
+
+/* -- 마이페이지 시작 -- */
+.mypage .title h2 {font-size: 28px; font-weight: 300;}
+.mypage .info {padding: 48px 0 80px 0; border-bottom: 1px solid #ebebeb;}
+.mypage .info h2 {font-size: 24px; margin: 0 0 16px 0;}
+.mypage .info p {font-size: 16px;}
+.mypage .info .data {display: flex; margin: 28px 0px;}
+.mypage .info .data .thumbnail {margin-right: 28px;}
+.mypage .info .data .thumbnail img {width: 100px; border-radius: 100%; margin-top: 4px;}
+.mypage .info .data ul {font-size: 16px;}
+.mypage .info .data ul li + li {margin-top: 4px;}
+.mypage .info .data ul li .title {font-weight: 500; color: #8a8a8a; width: 80px; display: inline-block;}
+.mypage .info .data .email ul li .title {width: 160px;}
+.mypage .info .data .email ul li:last-child {padding-left: 162px;}
+.mypage .info .data .email {margin-left: 36px; width: 45%;}
+.mypage .info .data .email form {display: inline;}
+.mypage .info .data .email .email_input {width: 35%; border: 1.25px solid #d3d3d3; border-radius: 0px; padding: 0px 8px;}
+.mypage .info .data .email button {border:1px solid #6e6e73; background-color: #fff; color: #6e6e73; padding: 5px 12px; font-weight: 500;}
+.mypage .info .data .email button:hover {color:white; background-color: #004abf; border: 1px solid #004abf}
+.mypage .info .data .email .email_agree {display: none;}
+.mypage .info .data .email .email_agree + label {position: relative; padding-left: 28px; cursor: pointer;}
+.mypage .info .data .email .email_agree + label::before {content: ''; box-sizing: border-box; position: absolute; top: 0; left: 0; bottom: 0; border: 1px solid #d3d3d3; margin: auto; width: 20px; height: 20px; background-color: #fff; transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
+.mypage .info .data .email .email_agree + label::after {content: ''; position: absolute; top: -4px; left: 4px; bottom: 0; margin: auto; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; opacity: 0; transform: rotate(-45deg); transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
+.mypage .info .data .email .email_agree:checked + label::before {border-width: 4px; border-color: #004abf; background-color: #004abf;}
+.mypage .info .data .email .email_agree:checked + label::after {opacity: 1;}
+.mypage .info .data .email .description {font-size: 14px;}
+
+.mypage .withdraw {padding: 80px 0;}
+.mypage .withdraw h2 {font-size: 24px; margin: 0 0 16px 0;}
+.mypage .withdraw p {font-size: 16px;}
+.mypage .withdraw .contents {display: flex; margin: 28px 0px; align-items: center;}
+.mypage .withdraw .contents ul {background-color: #f2f2f2; color: #6e6e73; padding: 16px; font-size: 14px; width: 48%;  margin-right: 24px;}
+.mypage .withdraw .contents ul li div:first-child:before {content: "\F9DD"; display: inline-block; font: normal normal normal 24px/1 "Material Design Icons"; font-size: inherit; text-rendering: auto; line-height: inherit; -webkit-font-smoothing: antialiased;}
+.mypage .withdraw .contents ul li div {padding-left: 14px;}
+.mypage .withdraw .contents ul li div:first-child {padding-left:0px;}
+.mypage .withdraw .contents ul li + li {margin-top: 8px;}
+
+.mypage .withdraw .contents .action {display: flex; flex-direction: column;}
+.mypage .withdraw .contents .action .withdraw_agree {display: none;}
+.mypage .withdraw .contents .action .withdraw_agree + label {position: relative; padding-left: 28px; cursor: pointer;}
+.mypage .withdraw .contents .action .withdraw_agree + label::before {content: ''; box-sizing: border-box; position: absolute; top: 0; left: 0; bottom: 0; border: 1px solid #d3d3d3; margin: auto; width: 20px; height: 20px; background-color: #fff; transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
+.mypage .withdraw .contents .action .withdraw_agree + label::after {content: ''; position: absolute; top: -4px; left: 4px; bottom: 0; margin: auto; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; opacity: 0; transform: rotate(-45deg); transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
+.mypage .withdraw .contents .action .withdraw_agree:checked + label::before {border-width: 4px; border-color: #004abf; background-color: #004abf;}
+.mypage .withdraw .contents .action .withdraw_agree:checked + label::after {opacity: 1;}
+.mypage .withdraw .contents .action button {margin-top: 20px; width: 24%; padding: 8px; border: 1px solid #004abf; background-color: #004abf; color: #fff;}
+.mypage .withdraw .contents .action button:hover {opacity: 0.8;}
+.mypage .withdraw .contents .action button:disabled {border: 1px solid #6e6e73; background-color: #fff; color: #6e6e73;}
+.mypage .withdraw .contents .action button:disabled:hover {opacity: 1;}
+/* -- 마이페이지 끝 -- */

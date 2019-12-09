@@ -6,7 +6,7 @@
     {{#if session.member}}
     <a class="member_dropdown mobile_member" href="javascript:;"><img src="{{session.member.thumbnail}}" /></a>
     <div class="member_menu dropdown">
-      <a class="menu_item" href="javascript:;" onclick="COMMON.error('서비스 준비중입니다.')">마이페이지</a>
+      <a class="menu_item" href="/mypage">마이페이지</a>
       {{#isAdmin session.member}}
       <a class="menu_item" href="/admin">관리자</a>
       {{/isAdmin}}
@@ -43,7 +43,7 @@
         {{/if}}
       </ul>
       <div class="member_menu dropdown">
-        <a class="menu_item" href="javascript:;" onclick="COMMON.error('서비스 준비중입니다.')">마이페이지</a>
+        <a class="menu_item" href="/mypage">마이페이지</a>
         {{#isAdmin session.member}}
         <a class="menu_item" href="/admin">관리자</a>
         {{/isAdmin}}

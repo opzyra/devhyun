@@ -3,8 +3,9 @@ import * as about from "./about";
 import * as project from "./project";
 import * as blog from "./blog";
 import * as login from "./login";
+import * as mypage from "./mypage";
 
-const modules = Object.assign(main, about, project, blog, login);
+const modules = Object.assign(main, about, project, blog, login, mypage);
 
 const set = namespace => {
   const app = fx.go(

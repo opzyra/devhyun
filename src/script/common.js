@@ -165,11 +165,16 @@ export const AJAX = {
     baseURL: "/api",
     timeout: 8000,
     beforeSend() {
-      $('a, :button, :input[type="submit"]').attr("disabled", "disabled");
+      $('a, :button:not(:disabled), :input[type="submit"]').attr(
+        "disabled",
+        "disabled"
+      );
       NProgress.start();
     },
     always() {
-      $('a, :button, :input[type="submit"]').removeAttr("disabled");
+      $('a, :button:not(:disabled), :input[type="submit"]').removeAttr(
+        "disabled"
+      );
       NProgress.done();
     },
     async fail(jqxhr) {

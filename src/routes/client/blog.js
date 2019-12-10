@@ -130,12 +130,9 @@ router.get(
     );
 
     // 연관 포스트
-    let relation = [];
-    if (tags) {
-      relation = await BOARD_POST.selectRelatedTagPost(tags);
-    } else {
-      relation = await BOARD_POST.selectPopularPost();
-    }
+    let relation = tags
+      ? await BOARD_POST.selectRelatedTagPost(tags)
+      : await BOARD_POST.selectPopularPost();
 
     // 조회수 처리
     const client = clinfo(req);

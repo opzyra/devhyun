@@ -345,11 +345,13 @@ footer .info div {margin-top: 4px;}
 .mypage .info .data {flex-direction: column; margin: 28px 0px 0px;}
 .mypage .info .data .thumbnail {margin-right: 0px; text-align: center;}
 .mypage .info .data ul {margin: 20px 0px 12px;}
+.mypage .info .data ul li {font-size: 14px;}
 .mypage .info .data ul li .title {width: 30%;}
 .mypage .info .data .email {width: 100%; margin-left: 0px;}
-.mypage .info .data .email .email_input {width: 50%;}
-.mypage .info .data .email ul li .title {width: 120px;}
-.mypage .info .data .email ul li:last-child {padding-left: 0px;}
+.mypage .info .data .email .email_input {width: 45%;}
+.mypage .info .data .email ul li {font-size: 14px;}
+.mypage .info .data .email ul li .title {width: 110px;}
+.mypage .info .data .email ul li:last-child {padding-left: 0px; margin-top: 8px;}
 
 .mypage .withdraw {padding: 40px 0px;}
 .mypage .withdraw h2 {font-size: 20px;}
@@ -358,6 +360,6 @@ footer .info div {margin-top: 4px;}
 .mypage .withdraw .contents ul {width: 100%; margin: 28px 0px;}
 .mypage .withdraw .contents ul li div {padding-left: 0px;}
 .mypage .withdraw .contents .action {display: block;}
-
+.mypage .withdraw .contents .action .withdraw_agree + label {font-size: 11px;}
 /* -- 마이페이지 끝 -- */
 }

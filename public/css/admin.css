@@ -375,11 +375,11 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .blog .lib .right .post ul li .thumb img {width: 100%; border-radius: 5px 5px 0px 0px;}
 .blog .lib .right .post ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .lib .right .post ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .lib .right .post ul li .contents {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
-.blog .lib .right .post ul li .contents h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 46px;}
-.blog .lib .right .post ul li .contents h3 a:hover {color:#004abf;}
-.blog .lib .right .post ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
-.blog .lib .right .post ul li .contents div {margin: 16px 0 0 0;}
+.blog .lib .right .post ul li .description {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.blog .lib .right .post ul li .description h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 46px;}
+.blog .lib .right .post ul li .description h3 a:hover {color:#004abf;}
+.blog .lib .right .post ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .lib .right .post ul li .description div {margin: 16px 0 0 0;}
 
 .blog .lib .right .series ul {margin: 16px 0px;}
 .blog .lib .right .series ul li {display:flex; width: 100%; margin: 0 0 36px 0;}
@@ -387,12 +387,12 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .blog .lib .right .series ul li .thumb img {width: 100%;}
 .blog .lib .right .series ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .lib .right .series ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .lib .right .series ul li .contents {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
-.blog .lib .right .series ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
-.blog .lib .right .series ul li .contents h3 a:hover {color:#004abf;}
-.blog .lib .right .series ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
-.blog .lib .right .series ul li .contents p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
-.blog .lib .right .series ul li .contents div {font-size: 14px;}
+.blog .lib .right .series ul li .description {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .lib .right .series ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .lib .right .series ul li .description h3 a:hover {color:#004abf;}
+.blog .lib .right .series ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .lib .right .series ul li .description p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
+.blog .lib .right .series ul li .description div {font-size: 14px;}
 
 .blog .lib .right .tag {margin: 16px 0px;}
 .blog .lib .right .tag a {border: 1px solid #ccc; font-size: 14px; display: inline-block; padding: 8px 16px; border-radius: 24px; margin: 0px 12px 16px 0px;}
@@ -426,6 +426,19 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .blog .lib .right .container .aside .sidenav > li > ul li:first-child {margin-top: 4px;}
 .blog .lib .right .container .aside .sidenav > li > ul li {margin: 0 0 4px 0;}
 .blog .lib .right .container .aside .sidenav > li > ul > li > ul {padding:0 0 0 12px;}
+
+.blog .lib .right .container .posts ul {padding: 10px 0px;}
+.blog .lib .right .container .posts ul li {display:flex; width: 100%; margin: 0 0 16px 0;}
+.blog .lib .right .container .posts ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:36%;}
+.blog .lib .right .container .posts ul li .thumb img {width: 100%;}
+.blog .lib .right .container .posts ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
+.blog .lib .right .container .posts ul li .thumb:hover .white-mask { opacity: 1;}
+.blog .lib .right .container .posts ul li .description {padding: 20px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .lib .right .container .posts ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .lib .right .container .posts ul li .description h3 a:hover {color:#004abf;}
+.blog .lib .right .container .posts ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .lib .right .container .posts ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .lib .right .container .posts ul li .description div {font-size: 14px;}
 
 /* ----- 회원 ----- */
 

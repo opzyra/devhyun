@@ -148,7 +148,7 @@
 
   .blog .lib .right .series ul li {flex-direction: column; margin: 0px 0px 24px 0;}
   .blog .lib .right .series ul li .thumb {width: 100%;}
-  .blog .lib .right .series ul li .contents {width: 100%;}
+  .blog .lib .right .series ul li .description {width: 100%;}
 
   .blog .lib .right .tag a {font-size:12px; padding: 4px 8px; margin: 0px 8px 12px 0px;}
 

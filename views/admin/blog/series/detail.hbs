@@ -78,7 +78,17 @@
             <div id="postList" class="posts">
               <ul>
                 {{#each posts}}
-                <li>{{add @index 1}}. <a href="/admin/blog/post/{{idx}}">{{title}}</a>
+                <li>
+                  <a class="thumb" href="/admin/blog/post/{{idx}}">
+                    <img src="{{thumbnail}}">
+                    <div class="white-mask"></div>
+                  </a>
+                  <div class="description">
+                    <span>{{parseDate reg 'YYYY.MM.DD'}}</span>
+                    <h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
+                    <p class="visual_pc">{{parseMarkdown contents 200}}</p>
+                    <p class="visual_mobile">{{parseMarkdown contents 80}}</p>
+                  </div>
                 </li>
                 {{/each}}
               </ul>

@@ -316,12 +316,12 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .post_list ul li .thumb img {width: 100%; border-radius: 5px 5px 0px 0px;}
 .blog .post_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .post_list ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .post_list ul li .contents {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
-.blog .post_list ul li .contents h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 56px;}
-.blog .post_list ul li .contents h3 a:hover {color:#004abf;}
-.blog .post_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
-.blog .post_list ul li .contents div {margin: 16px 0 0 0;}
-.blog .post_list ul li .contents div span::before {color: #adb5bd; padding: 0px 2px; content: "\B7";}
+.blog .post_list ul li .description {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.blog .post_list ul li .description h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 56px;}
+.blog .post_list ul li .description h3 a:hover {color:#004abf;}
+.blog .post_list ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .post_list ul li .description div {margin: 16px 0 0 0;}
+.blog .post_list ul li .description div span::before {color: #adb5bd; padding: 0px 2px; content: "\B7";}
 .blog .post_none .not {font-size:20px;}
 .blog .post_none .not .keyword {color:#004abf; font-weight: 500;}
 .blog .post_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -340,12 +340,12 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .series_list ul li .thumb img {width: 100%;}
 .blog .series_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .series_list ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .series_list ul li .contents {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
-.blog .series_list ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
-.blog .series_list ul li .contents h3 a:hover {color:#004abf;}
-.blog .series_list ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
-.blog .series_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
-.blog .series_list ul li .contents div {font-size: 14px;}
+.blog .series_list ul li .description {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .series_list ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .series_list ul li .description h3 a:hover {color:#004abf;}
+.blog .series_list ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .series_list ul li .description p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
+.blog .series_list ul li .description div {font-size: 14px;}
 .blog .series_none .not {font-size:20px;}
 .blog .series_none .not .keyword {color:#004abf; font-weight: 500;}
 .blog .series_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -521,12 +521,12 @@ footer .info span:nth-child(4)::after {display: none;}
 .series_detail .post ul li .thumb img {width: 100%;}
 .series_detail .post ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .series_detail .post ul li .thumb:hover .white-mask { opacity: 1;}
-.series_detail .post ul li .contents {padding: 20px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
-.series_detail .post ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
-.series_detail .post ul li .contents h3 a:hover {color:#004abf;}
-.series_detail .post ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
-.series_detail .post ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
-.series_detail .post ul li .contents div {font-size: 14px;}
+.series_detail .post ul li .description {padding: 20px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.series_detail .post ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.series_detail .post ul li .description h3 a:hover {color:#004abf;}
+.series_detail .post ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.series_detail .post ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
+.series_detail .post ul li .description div {font-size: 14px;}
 
 /* 목록 이동 */
 .series_detail .back {padding: 40px 0px 80px 0;}

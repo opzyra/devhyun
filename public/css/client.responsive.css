@@ -222,7 +222,7 @@ footer .info div {margin-top: 4px;}
 /* 시리즈 리스트 */
 .blog .series_list ul li {flex-direction: column;}
 .blog .series_list ul li .thumb {width: 100%; border-bottom: none; border-right: 1px solid hsla(0,0%,60.8%,.17);}
-.blog .series_list ul li .contents {width: 100%; padding: 20px 16px;}
+.blog .series_list ul li .description {width: 100%; padding: 20px 16px;}
 .blog .series_none .not {font-size: 16px;}
 
 /* 태그 리스트 */
@@ -301,7 +301,7 @@ footer .info div {margin-top: 4px;}
 /* 관련 포스트 */
 .series_detail .post ul li {flex-direction: column; margin: 0 0 24px 0;}
 .series_detail .post ul li .thumb {width: 100%; border-right: 1px solid hsla(0,0%,60.8%,.17); border-bottom:none;}
-.series_detail .post ul li .contents {width: 100%; padding: 20px 16px;}
+.series_detail .post ul li .description {width: 100%; padding: 20px 16px;}
 
 /* -- 시리즈 끝 -- */
 

@@ -135,6 +135,7 @@
   .blog .lib .left .menu {padding: 8px 0px 16px;}
   .blog .lib .left .list {padding: 8px 4px;}
   .blog .lib .left .item .move {display: none;}
+  .blog .lib .left .option .item {padding: 12px;}
 
   .blog .lib .right .post ul li {width: 100%; margin: 0px 0px 24px 0;}
 
@@ -143,13 +144,10 @@
   .blog .lib .right .container {margin-top: 32px;}
   .blog .lib .right .container .contents {width: 100%; margin-bottom: 0px; margin-right:0px; min-height: 400px;}
   .blog .lib .right .container .aside {display: none;}
-
-  .blog .lib .left .option .item {padding: 12px;}
-
-  .blog .lib .right .series ul li {flex-direction: column; margin: 0px 0px 24px 0;}
-  .blog .lib .right .series ul li .thumb {width: 100%;}
-  .blog .lib .right .series ul li .description {width: 100%;}
-
+  .blog .lib .right .container .contents .posts ul li {flex-direction: column; margin: 0px 0px 24px 0;}
+  .blog .lib .right .container .contents .posts ul .thumb {width: 100%;}
+  .blog .lib .right .container .contents .posts ul .description {width: 100%;}
+  
   .blog .lib .right .tag a {font-size:12px; padding: 4px 8px; margin: 0px 8px 12px 0px;}
 
   /* ----- 회원 ----- */

@@ -88,7 +88,14 @@
                 <img src="{{thumbnail}}">
               </div>
               <div class="contents">
-                <span class="name">{{name}}</span>
+                <span class="name">
+                  {{name}}
+                  {{#if email}}
+                  <span class="email {{#if marketing}}active{{/if}}" data-tippy-content="{{email}}">
+                    <i class="mdi mdi-email"></i>
+                  </span>
+                  {{/if}}
+                </span>
               </div>
               <div class="option">
                 <div class="status">
@@ -102,6 +109,7 @@
                   {{/if}}
                   {{/if}}
                 </div>
+
                 <div class="platform">
                   {{#eq platform 'GIT'}}
                   <i class="mdi mdi-github-circle"></i>
@@ -115,6 +123,7 @@
                 </div>
                 <div class="date">{{parseDate reg 'YYYY.MM.DD'}}</div>
               </div>
+
             </li>
             {{else}}
             {{#if query}}

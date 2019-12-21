@@ -1,6 +1,4 @@
 import express from "express";
-import bcrypt from "bcrypt";
-import randomString from "random-string";
 
 import { txrtfn } from "../../core/tx";
 import sessionCtx from "../../core/session";
@@ -59,6 +57,26 @@ router.post(
     req.session.member = { ...member, marketing };
 
     res.status(200).json({ message: `마케팅 수신 동의가 변경되었습니다` });
+  })
+);
+
+router.put(
+  "/active/:idx",
+  sessionCtx.isAdmin(),
+  validator.params({
+    idx: Joi.number().required()
+  }),
+  validator.body({
+    active: Joi.boolean().required()
+  }),
+  txrtfn(async (req, res, next, conn) => {
+    const { idx } = req.params;
+    const { active } = req.body;
+
+    const MEMBER = Member(conn);
+    await MEMBER.updateOne({ active }, idx);
+
+    res.status(200).json({ message: `활성화 정보가 변경되었습니다` });
   })
 );
 

@@ -477,11 +477,13 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .member .lib .right .list ul li .thumbnail {margin-right: 8px;}
 .member .lib .right .list ul li .thumbnail img {width: 40px; border-radius: 100%;}
 .member .lib .right .list ul li .contents .name {font-size: 16px;}
+.member .lib .right .list ul li .contents .name .date {font-size: 10px;}
 .member .lib .right .list ul li .contents .name .email {margin-left: 4px; font-size: 12px; color: #ff4040; cursor: pointer;}
 .member .lib .right .list ul li .contents .name .email.active {color: #004abf;}
 .member .lib .right .list ul li .option {position: absolute; right: 0px;}
 .member .lib .right .list ul li .option div {display: inline-block;}
 .member .lib .right .list ul li .option div + div {margin-left: 4px;}
+.member .lib .right .list ul li .option .status {cursor: pointer;}
 .member .lib .right .list ul li .option .status .withdraw {color: #ff4040;}
 .member .lib .right .list ul li .option .status .active {color: #004abf;}
 .member .lib .right .list ul li .option .status .disabled {color: #ff4040;}

@@ -90,6 +90,9 @@
               <div class="contents">
                 <span class="name">
                   {{name}}
+                  <span class="date">
+                    ({{parseDiffDate login}})
+                  </span>
                   {{#if email}}
                   <span class="email {{#if marketing}}active{{/if}}" data-tippy-content="{{email}}">
                     <i class="mdi mdi-email"></i>
@@ -103,13 +106,12 @@
                   <span class="withdraw"><i class="mdi mdi-block-helper"></i></span>
                   {{else}}
                   {{#if active}}
-                  <span class="active"><i class="mdi mdi-check"></i></span>
+                  <span class="active" onclick="APP.updateDisabled({{idx}})"><i class="mdi mdi-check"></i></span>
                   {{else}}
-                  <span class="disabled"><i class="mdi mdi-close"></i></span>
+                  <span class="disabled" onclick="APP.updateActive({{idx}})"><i class="mdi mdi-close"></i></span>
                   {{/if}}
                   {{/if}}
                 </div>
-
                 <div class="platform">
                   {{#eq platform 'GIT'}}
                   <i class="mdi mdi-github-circle"></i>
@@ -123,7 +125,6 @@
                 </div>
                 <div class="date">{{parseDate reg 'YYYY.MM.DD'}}</div>
               </div>
-
             </li>
             {{else}}
             {{#if query}}

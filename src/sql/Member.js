@@ -60,6 +60,7 @@ export default function(conn) {
     async selectPage(query = "", category = "", page = 1, limit = 20) {
       let offset = (parseInt(page) - 1) * limit;
       const sql = conn(table)
+        .whereNot("role", "ADMIN")
         .orderBy("idx", "desc")
         .limit(limit)
         .offset(offset);
@@ -95,7 +96,7 @@ export default function(conn) {
      * @return {int} 해당 게시글 갯수
      */
     async selectPageInfo(query = "", category = "", page = 1, limit = 20) {
-      const sql = conn(table);
+      const sql = conn(table).whereNot("role", "ADMIN");
 
       if (query) {
         sql.where(builder => {

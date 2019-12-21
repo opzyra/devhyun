@@ -159,27 +159,6 @@ const isUser = () => {
   };
 };
 
-// 마스터 관리자 이상 권한
-const isGeMaster = () => {
-  return (req, res, next) => {
-    if (req.session.member) {
-      let roles = ["SUPER_ADMIN", "MASTER_ADMIN"];
-      for (let i = 0; i < roles.length; i++) {
-        if (req.session.member.role == roles[i]) {
-          next();
-          return;
-        }
-      }
-    }
-
-    if (req.is("json") || req.is("multipart/form-data")) {
-      res.status(401).json({ message: "접근 권한이 없습니다." });
-    } else {
-      res.render("error/401", { layout: false });
-    }
-  };
-};
-
 // 지정 권한
 const hasRole = (...roles) => {
   return (req, res, next) => {
@@ -210,6 +189,5 @@ export default {
   isUser,
   isAnonymous,
   isAuthenticated,
-  isGeMaster,
   hasRole
 };

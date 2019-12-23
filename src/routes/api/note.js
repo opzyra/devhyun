@@ -4,7 +4,7 @@ import sessionCtx from "../../core/session";
 import { txrtfn } from "../../core/tx";
 
 import validator, { Joi } from "../../lib/validator";
-import { safeMarkdown } from "../../lib/utils";
+import { safeMarkdown, anchorConvert } from "../../lib/utils";
 
 import Note from "../../sql/Note";
 
@@ -53,14 +53,17 @@ router.post(
     contents: Joi.string().required()
   }),
   txrtfn(async (req, res, next, conn) => {
-    const { note_group_idx, title, contents } = req.body;
+    let { note_group_idx, title, contents } = req.body;
 
     const NOTE = Note(conn);
+
+    contents = safeMarkdown(contents);
+    contents = anchorConvert(contents);
 
     const note = await NOTE.insertOne({
       note_group_idx,
       title,
-      contents: safeMarkdown(contents)
+      contents
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note });
@@ -80,7 +83,7 @@ router.put(
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
-    const { note_group_idx, title, contents } = req.body;
+    let { note_group_idx, title, contents } = req.body;
 
     const NOTE = Note(conn);
 
@@ -91,11 +94,14 @@ router.put(
       return;
     }
 
+    contents = safeMarkdown(contents);
+    contents = anchorConvert(contents);
+
     await NOTE.updateOne(
       {
         note_group_idx,
         title,
-        contents: safeMarkdown(contents)
+        contents
       },
       idx
     );

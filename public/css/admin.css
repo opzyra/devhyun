@@ -380,6 +380,7 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .blog .lib .right .post ul li .description h3 a:hover {color:#004abf;}
 .blog .lib .right .post ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
 .blog .lib .right .post ul li .description div {margin: 16px 0 0 0;}
+.blog .lib .right .post ul li .description div span::before {color: #adb5bd; padding: 0px 2px; content: "\B7";}
 
 .blog .lib .right .series ul {margin: 16px 0px;}
 .blog .lib .right .series ul li {display:flex; width: 100%; margin: 0 0 36px 0;}

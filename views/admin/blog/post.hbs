@@ -72,7 +72,13 @@
               <div class="description">
                 <h3><a href="/admin/blog/post/{{idx}}">{{title}}</a></h3>
                 <p>{{parseMarkdown contents 89}}</p>
-                <div>{{parseDate reg 'YYYY.MM.DD'}}</div>
+                <div>
+                  {{parseDate reg 'YYYY.MM.DD'}}
+                  {{#if comment}}
+                  <span>{{comment}}개의 댓글</span>
+                  {{/if}}
+                  <span>조회수 {{hit}}</span>
+                </div>
               </div>
             </li>
             {{else}}

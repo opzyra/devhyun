@@ -11,6 +11,7 @@ import validator, { Joi } from "../../lib/validator";
 import PostTag from "../../sql/PostTag";
 import BoardPost from "../../sql/BoardPost";
 import BoardSeries from "../../sql/BoardSeries";
+import Comment from "../../sql/Comment";
 import Temp from "../../sql/Temp";
 
 const router = express.Router();
@@ -22,9 +23,28 @@ router.get(
     const { query, page } = req.query;
 
     const BOARD_POST = BoardPost(conn);
+    const COMMENT = Comment(conn);
 
     let posts = await BOARD_POST.selectPage(query, page);
     let postPage = await BOARD_POST.selectPageInfo(query, page);
+
+    const comments = await COMMENT.countGroupBoard(
+      "post",
+      posts.map(post => post.idx)
+    );
+
+    posts = go(
+      posts,
+      map(post => {
+        const comment = comments.find(
+          comment => comment.board_idx === post.idx
+        ) || { count: 0 };
+        return {
+          ...post,
+          comment: comment.count
+        };
+      })
+    );
 
     store(res).setState({
       postPage

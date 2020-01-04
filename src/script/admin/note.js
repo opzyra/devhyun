@@ -230,15 +230,7 @@ export const note = {
     );
     if (value) {
       const { message } = await AJAX.delete(`/group/note/${idx}`);
-
-      if (group == idx) {
-        location.href = "/admin/note";
-        return;
-      }
-
-      $(`#noteGroup [data-idx=${idx}]`).remove();
-
-      TOAST.success(message);
+      message && (location.href = "/admin/note");
     }
   },
   async modalNoteGroup(idx = null) {
@@ -354,7 +346,7 @@ export const nodeDetail = {
     const { value } = await ALERT.confirm("해당 노트를 삭제할까요?");
     if (value) {
       const result = await AJAX.delete(`/note/${idx}`);
-      if (result) location.href = "/admin/note";
+      result && (location.href = "/admin/note");
     }
   },
   init() {

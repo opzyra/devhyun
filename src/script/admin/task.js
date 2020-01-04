@@ -344,15 +344,7 @@ export const task = {
     );
     if (value) {
       const { message } = await AJAX.delete(`/group/task/${idx}`);
-
-      if (group == idx) {
-        location.href = "/admin/task";
-        return;
-      }
-
-      $(`#taskGroup [data-idx=${idx}]`).remove();
-
-      TOAST.success(message);
+      message && (location.href = "/admin/task");
     }
   },
   async createTask() {

@@ -36,7 +36,7 @@ export const main = {
         prevEl: ".swiper-prev"
       },
       breakpoints: {
-        480: {
+        1000: {
           slidesPerView: 1,
           spaceBetween: 30
         }

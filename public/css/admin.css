@@ -281,7 +281,7 @@ main .lib .right {width: 100%; margin-left: 30px;}
 .note .lib .right .list {overflow: hidden; margin: 0px -12px;}
 .note .lib .right .list ul {display: flex; flex-wrap: wrap; justify-content: flex-start;}
 .note .lib .right .list ul a {width: calc(33.333% - 24px); margin: 16px 12px; padding: 24px 32px; border:1px solid #dedede; position: relative; background: #fff;}
-.note .lib .right .list ul a > span{content: ""; width: 80px; height: 80px; border: transparent; border-left: 1px solid #dedede; position: absolute; bottom: -40px; right: -40px; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); background: #fff;} 
+.note .lib .right .list ul a > span{content: ""; width: 80px; height: 80px; border: transparent; border-left: 1px solid #dedede; position: absolute; bottom: -40px; right: -40px; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); background: #fafcfe;} 
 .note .lib .right .list ul a h2 {font-weight: 500; margin: 12px 0px; min-height: 54px; position: relative}
 .note .lib .right .list ul a h2 span.bar {position: absolute; height: 2px; width: 40px; top: -4px; left:0px;}
 .note .lib .right .list ul a p {margin-bottom: 8px; min-height: 114px;}

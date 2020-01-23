@@ -18,7 +18,7 @@ router.get(
     const MEMBER = Member(conn);
 
     const members = await go(
-      MEMBER.selectPage(query, category, query, page),
+      MEMBER.selectPage(query, category, page),
       map(member => {
         const [platform, ...rest] = member.id.split("_");
         return {
@@ -28,7 +28,7 @@ router.get(
       })
     );
 
-    let memberPage = await MEMBER.selectPageInfo(query, category, query, page);
+    let memberPage = await MEMBER.selectPageInfo(query, category, page);
     let title = (() => {
       switch (category) {
         case "active":

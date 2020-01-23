@@ -66,8 +66,8 @@ export const init = () => {
 
   // 검색창 열기
   $("#searchFilter").click(function() {
-    var search = $("#searchFilter").next();
-    var icon = $("#searchFilter > i");
+    let search = $("#searchFilter").next();
+    let icon = $("#searchFilter > i");
     if (search.hasClass("show")) {
       icon.removeClass().addClass("mdi mdi-filter");
     } else {

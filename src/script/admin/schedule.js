@@ -6,7 +6,7 @@ export const schedule = {
   cal: null,
   caldedars: [],
   findCalendar(id) {
-    var found;
+    let found;
 
     APP.caldedars.forEach(function(calendar) {
       if (calendar.id === id) {
@@ -17,8 +17,8 @@ export const schedule = {
     return found || APP.caldedars[0];
   },
   getTimeTemplate(schedule, isAllDay) {
-    var html = [];
-    var start = moment(schedule.start.toUTCString());
+    let html = [];
+    let start = moment(schedule.start.toUTCString());
     if (!isAllDay) {
       html.push("<strong>" + start.format("HH:mm") + "</strong> ");
     }
@@ -41,10 +41,10 @@ export const schedule = {
     return html.join("");
   },
   onClickMenu(e) {
-    var target = $(e.target).closest('a[role="menuitem"]')[0];
-    var action = APP.getDataAction(target);
-    var options = APP.cal.getOptions();
-    var viewName = "";
+    let target = $(e.target).closest('a[role="menuitem"]')[0];
+    let action = APP.getDataAction(target);
+    let options = APP.cal.getOptions();
+    let viewName = "";
 
     switch (action) {
       case "toggle-daily":
@@ -97,7 +97,7 @@ export const schedule = {
     APP.setRenderRangeText();
   },
   async onClickNavi(e) {
-    var action = APP.getDataAction(e.target);
+    let action = APP.getDataAction(e.target);
 
     switch (action) {
       case "move-prev":
@@ -117,14 +117,14 @@ export const schedule = {
     await APP.setSchedules();
   },
   onChangeNewScheduleCalendar(e) {
-    var target = $(e.target).closest('a[role="menuitem"]')[0];
-    var calendarId = getDataAction(target);
+    let target = $(e.target).closest('a[role="menuitem"]')[0];
+    let calendarId = getDataAction(target);
     APP.changeNewScheduleCalendar(calendarId);
   },
   changeNewScheduleCalendar(calendarId) {
-    var calendarNameElement = document.getElementById("calendarName");
-    var calendar = APP.findCalendar(calendarId);
-    var html = [];
+    let calendarNameElement = document.getElementById("calendarName");
+    let calendar = APP.findCalendar(calendarId);
+    let html = [];
 
     html.push(
       '<span class="calendar-bar" style="background-color: ' +
@@ -140,8 +140,8 @@ export const schedule = {
     selectedCalendar = calendar;
   },
   createNewSchedule(event) {
-    var start = event.start ? new Date(event.start.getTime()) : new Date();
-    var end = event.end
+    let start = event.start ? new Date(event.start.getTime()) : new Date();
+    let end = event.end
       ? new Date(event.end.getTime())
       : moment()
           .add(1, "hours")
@@ -153,19 +153,19 @@ export const schedule = {
     });
   },
   onChangeCalendars(e) {
-    var calendarId = e.target.value;
-    var checked = e.target.checked;
-    var viewAll = document.querySelector(".lnb-calendars-item input");
-    var calendarElements = Array.prototype.slice.call(
+    let calendarId = e.target.value;
+    let checked = e.target.checked;
+    let viewAll = document.querySelector(".lnb-calendars-item input");
+    let calendarElements = Array.prototype.slice.call(
       document.querySelectorAll("#calendarList input")
     );
-    var allCheckedCalendars = true;
+    let allCheckedCalendars = true;
 
     if (calendarId === "all") {
       allCheckedCalendars = checked;
 
       calendarElements.forEach(function(input) {
-        var span = input.parentNode;
+        let span = input.parentNode;
         input.checked = checked;
         span.style.backgroundColor = checked
           ? span.style.borderColor
@@ -192,10 +192,10 @@ export const schedule = {
     APP.refreshScheduleVisibility();
   },
   refreshScheduleVisibility() {
-    var cal = this.cal || APP.cal;
-    var caldedars = this.caldedars || APP.caldedars;
+    let cal = this.cal || APP.cal;
+    let caldedars = this.caldedars || APP.caldedars;
 
-    var calendarElements = Array.prototype.slice.call(
+    let calendarElements = Array.prototype.slice.call(
       document.querySelectorAll("#calendarList input")
     );
 
@@ -206,18 +206,18 @@ export const schedule = {
     cal.render(true);
 
     for (const cldrEl of calendarElements) {
-      var span = cldrEl.nextElementSibling;
+      let span = cldrEl.nextElementSibling;
       span.style.backgroundColor = cldrEl.checked
         ? span.style.borderColor
         : "transparent";
     }
   },
   setDropdownCalendarType() {
-    var calendarTypeName = document.getElementById("calendarTypeName");
-    var calendarTypeIcon = document.getElementById("calendarTypeIcon");
-    var options = cal.getOptions();
-    var type = cal.getViewName();
-    var iconClassName;
+    let calendarTypeName = document.getElementById("calendarTypeName");
+    let calendarTypeIcon = document.getElementById("calendarTypeIcon");
+    let options = cal.getOptions();
+    let type = cal.getViewName();
+    let iconClassName;
 
     if (type === "day") {
       type = "일 단위";
@@ -240,10 +240,10 @@ export const schedule = {
     calendarTypeIcon.className = iconClassName;
   },
   setRenderRangeText() {
-    var renderRange = document.getElementById("renderRange");
-    var options = cal.getOptions();
-    var viewName = cal.getViewName();
-    var html = [];
+    let renderRange = document.getElementById("renderRange");
+    let options = cal.getOptions();
+    let viewName = cal.getViewName();
+    let html = [];
     if (viewName === "day") {
       html.push(moment(cal.getDate().getTime()).format("YYYY.MM.DD"));
     } else if (
@@ -278,9 +278,9 @@ export const schedule = {
       : target.getAttribute("data-action");
   },
   setCalendarGroupRender() {
-    var calendarList = document.getElementById("calendarList");
+    let calendarList = document.getElementById("calendarList");
     calendarList.innerHTML = "";
-    var html = [];
+    let html = [];
     this.caldedars.forEach(function(calendar) {
       html.push(
         `
@@ -290,7 +290,7 @@ export const schedule = {
           <span style="border-color: ${calendar.borderColor}; background-color: ${calendar.borderColor};"></span>
           <span>${calendar.name}</span>
           </label>
-          <span class="move"><i class="mdi mdi-drag-variant"></i></span>
+          <span class="move"><i class="mdi mdi-drag-letiant"></i></span>
           <span class="edit" onclick="APP.scheduleGroupModal(${calendar.id})">
           <i class="mdi mdi-pen"></i>
           </span>
@@ -304,14 +304,16 @@ export const schedule = {
     calendarList.innerHTML = html.join("\n");
   },
   setCalendarSortable() {
-    $('#calendarList').sortable({
+    $("#calendarList").sortable({
       handle: ".move",
       update: async (event, ui) => {
         let calendars = [];
-        $("#calendarList .lnb-calendars-item .tui-full-calendar-checkbox-round").each((i, e) => {
+        $(
+          "#calendarList .lnb-calendars-item .tui-full-calendar-checkbox-round"
+        ).each((i, e) => {
           calendars.push(parseInt(e.value));
         });
-        await AJAX.post('/group/schedule/odr', {calendars});
+        await AJAX.post("/group/schedule/odr", { calendars });
       }
     });
   },
@@ -524,7 +526,7 @@ export const schedule = {
           });
 
         if (schedule) {
-          var calendarInfo = ctrl.calendars.filter(function(e) {
+          let calendarInfo = ctrl.calendars.filter(function(e) {
             return e.id == calendarId;
           });
 

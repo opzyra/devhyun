@@ -1,18 +1,18 @@
-import express from "express";
+import express from 'express';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
 
-import { anchorConvert, safeMarkdown } from "../../lib/utils";
-import validator, { Joi } from "../../lib/validator";
+import { anchorConvert, safeMarkdown } from '../../lib/utils';
+import validator, { Joi } from '../../lib/validator';
 
-import PostTag from "../../sql/PostTag";
-import BoardPost from "../../sql/BoardPost";
+import PostTag from '../../sql/PostTag';
+import BoardPost from '../../sql/BoardPost';
 
 const router = express.Router();
 
 router.get(
-  "/",
+  '/',
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
     const BOARD_POST = BoardPost(conn);
@@ -20,15 +20,15 @@ router.get(
     const items = await BOARD_POST.selectAll();
 
     res.status(200).json(items);
-  })
+  }),
 );
 
 router.post(
-  "/",
+  '/',
   sessionCtx.isAdmin(),
   validator.body({
     title: Joi.string().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     let { title, contents, tags, thumbnail } = req.body;
@@ -41,31 +41,31 @@ router.post(
     const insertId = await BOARD_POST.insertOne({
       title,
       contents,
-      thumbnail
+      thumbnail,
     });
 
     if (tags) {
       for (let i = 0; i < tags.length; i++) {
         await POST_TAG.insertOne({
           post_idx: insertId,
-          tag: tags[i]
+          tag: tags[i],
         });
       }
     }
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  })
+  }),
 );
 
 router.put(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     title: Joi.string().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -81,9 +81,9 @@ router.put(
       {
         title,
         contents,
-        thumbnail
+        thumbnail,
       },
-      idx
+      idx,
     );
 
     await POST_TAG.deleteRelatedPost(idx);
@@ -92,20 +92,20 @@ router.put(
       for (let i = 0; i < tags.length; i++) {
         await POST_TAG.insertOne({
           post_idx: idx,
-          tag: tags[i]
+          tag: tags[i],
         });
       }
     }
 
     res.status(200).json({ message: `수정이 완료 되었습니다`, idx: insertId });
-  })
+  }),
 );
 
 router.delete(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -118,7 +118,7 @@ router.delete(
     await POST_TAG.deleteRelatedPost(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 export default router;

@@ -1,36 +1,37 @@
-import "./env";
+import './env';
 
-import express from "express";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
-import compression from "compression";
-import helmet from "helmet";
+import express from 'express';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import helmet from 'helmet';
 
-import hbs from "express-handlebars";
-import helpers from "handlebars-helpers";
+import hbs from 'express-handlebars';
+import helpers from 'handlebars-helpers';
 
-import hbsCtx from "./core/hbs";
-import sessionCtx from "./core/session";
-import { endpoint, error } from "./core/error";
+import hbshelper from './lib/hbshelper';
+import sessionCtx from './lib/session';
+import debug from './middleware/debug';
+import { endpoint, error } from './middleware/error';
 
-import routes from "./routes";
+import routes from './routes';
 
 const app = express();
 
 // 뷰 엔진
 app.engine(
-  "hbs",
+  'hbs',
   hbs({
-    extname: "hbs",
-    partialsDir: "views/partials/",
-    helpers: Object.assign(helpers(), hbsCtx)
-  })
+    extname: 'hbs',
+    partialsDir: 'views/partials/',
+    helpers: Object.assign(helpers(), hbshelper),
+  }),
 );
 
-app.set("view engine", "hbs");
+app.set('view engine', 'hbs');
 
-if (process.env.NODE_ENV == "production") {
-  app.enable("view cache");
+if (process.env.NODE_ENV == 'production') {
+  app.enable('view cache');
   app.use(compression());
 }
 
@@ -38,8 +39,8 @@ if (process.env.NODE_ENV == "production") {
 app.use(helmet());
 
 // 정적파일
-app.use(express.static("public"));
-app.use("/uploads", express.static("uploads"));
+app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 // 바디파서
 app.use(bodyParser.json());
@@ -47,6 +48,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // 쿠키파서
 app.use(cookieParser());
+
+// 디버거
+app.use(debug);
 
 // 세션
 app.use(sessionCtx.config);

@@ -2,7 +2,7 @@ import express from "express";
 import htmlToc from "html-toc";
 import { go, map, filter, uniqueBy } from "fxjs";
 
-import store from "../../core/store";
+import store from "../../lib/store";
 import { txrtfn } from "../../core/tx";
 import { clinfo } from "../../lib/utils";
 import validator, { Joi } from "../../lib/validator";

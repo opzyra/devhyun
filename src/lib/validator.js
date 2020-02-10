@@ -1,5 +1,5 @@
-import Joi from "@hapi/joi";
-import { debugLogger } from "../core/logger";
+import Joi from '@hapi/joi';
+import logger from '../lib/logger';
 
 export { Joi };
 
@@ -14,13 +14,13 @@ export default {
         return;
       }
 
-      if (req.is("json") || req.is("multipart/form-data")) {
+      if (req.is('json') || req.is('multipart/form-data')) {
         res.status(400).json({
-          message: "잘못된 접근입니다.",
-          payload: result.error
+          message: '잘못된 접근입니다.',
+          payload: result.error,
         });
       } else {
-        res.render("error/404", { layout: false });
+        res.render('error/404', { layout: false });
       }
     };
   },
@@ -34,13 +34,13 @@ export default {
         return;
       }
 
-      if (req.is("json") || req.is("multipart/form-data")) {
+      if (req.is('json') || req.is('multipart/form-data')) {
         res.status(400).json({
-          message: "잘못된 접근입니다.",
-          payload: result.error
+          message: '잘못된 접근입니다.',
+          payload: result.error,
         });
       } else {
-        res.render("error/404", { layout: false });
+        res.render('error/404', { layout: false });
       }
     };
   },
@@ -53,7 +53,7 @@ export default {
         data[e] = req.body[e];
       });
 
-      debugLogger.info(`REQUEST BODY - ${JSON.stringify(data)}`);
+      logger.debug(`REQUEST BODY - ${JSON.stringify(data)}`);
 
       const result = schema.validate(req.body, { allowUnknown: true });
 
@@ -62,14 +62,14 @@ export default {
         return;
       }
 
-      if (req.is("json") || req.is("multipart/form-data")) {
+      if (req.is('json') || req.is('multipart/form-data')) {
         res.status(400).json({
-          message: "데이터 검증에서 오류가 발생했습니다.",
-          payload: result.error
+          message: '데이터 검증에서 오류가 발생했습니다.',
+          payload: result.error,
         });
       } else {
-        res.render("error/404", { layout: false });
+        res.render('error/404', { layout: false });
       }
     };
-  }
+  },
 };

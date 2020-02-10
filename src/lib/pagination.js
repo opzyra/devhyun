@@ -4,6 +4,6 @@ export const pagination = (rowCount, limit, page) => {
   return {
     rowCount,
     totalPages,
-    page
+    page,
   };
 };

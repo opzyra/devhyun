@@ -1,20 +1,20 @@
-import express from "express";
-import xssFilter from "xssfilter";
+import express from 'express';
+import xssFilter from 'xssfilter';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
 
-import validator, { Joi } from "../../lib/validator";
+import validator, { Joi } from '../../lib/validator';
 
-import Comment from "../../sql/Comment";
+import Comment from '../../sql/Comment';
 
 const router = express.Router();
 
 router.get(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAuthenticated(),
   validator.params({
-    idx: Joi.string().required()
+    idx: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -23,16 +23,16 @@ router.get(
     const item = await COMMENT.selectOne(idx);
 
     res.status(200).json(item);
-  })
+  }),
 );
 
 router.post(
-  "/",
+  '/',
   sessionCtx.isAuthenticated(),
   validator.body({
     board: Joi.string().required(),
     board_idx: Joi.number().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     let { board, board_idx, target_idx, contents } = req.body;
@@ -46,24 +46,24 @@ router.post(
       board,
       board_idx,
       member_idx,
-      target_idx: target_idx == "" ? null : target_idx,
-      contents
+      target_idx: target_idx == '' ? null : target_idx,
+      contents,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  })
+  }),
 );
 
 router.put(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAuthenticated(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     board: Joi.string().required(),
     board_idx: Joi.number().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -77,7 +77,7 @@ router.put(
     const comment = await COMMENT.selectOne(idx);
 
     if (comment.member_idx != member_idx) {
-      throw new Error("잘못된 접근입니다");
+      throw new Error('잘못된 접근입니다');
     }
 
     const insertId = await COMMENT.updateOne(
@@ -85,21 +85,21 @@ router.put(
         board,
         board_idx,
         member_idx,
-        target_idx: target_idx == "" ? null : target_idx,
-        contents
+        target_idx: target_idx == '' ? null : target_idx,
+        contents,
       },
-      idx
+      idx,
     );
 
     res.status(200).json({ message: `수정이 완료 되었습니다`, idx: insertId });
-  })
+  }),
 );
 
 router.delete(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAuthenticated(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -110,13 +110,13 @@ router.delete(
     const comment = await COMMENT.selectOne(idx);
 
     if (comment.member_idx != member_idx) {
-      throw new Error("잘못된 접근입니다");
+      throw new Error('잘못된 접근입니다');
     }
 
     await COMMENT.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 export default router;

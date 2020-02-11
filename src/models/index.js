@@ -3,8 +3,6 @@ import path from 'path';
 import Sequelize from 'sequelize';
 
 export default {
-  sequelize: null,
-  models: [],
   init() {
     const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 

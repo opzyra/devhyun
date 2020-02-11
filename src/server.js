@@ -11,6 +11,7 @@ const runServer = async () => {
 
   try {
     if (process.env.NODE_ENV !== 'production') {
+      await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
       await db.sync({ force: true });
     }
   } catch (e) {
@@ -33,5 +34,5 @@ runServer()
     logger.info(`DOMAIN: ${process.env.APP_DOMAIN}`);
   })
   .catch(e => {
-    logger.error(`Unable run`, e);
+    logger.error(`Unable run`, e.stack);
   });

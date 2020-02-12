@@ -1,18 +1,18 @@
-import express from "express";
+import express from 'express';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
 
-import validator, { Joi } from "../../lib/validator";
+import validator, { Joi } from '../../lib/validator';
 
-import ScheduleGroup from "../../sql/ScheduleGroup";
-import TaskGroup from "../../sql/TaskGroup";
-import NoteGroup from "../../sql/NoteGroup";
+import ScheduleGroup from '../../sql/ScheduleGroup';
+import TaskGroup from '../../sql/TaskGroup';
+import NoteGroup from '../../sql/NoteGroup';
 
 const router = express.Router();
 
 router.get(
-  "/schedule",
+  '/schedule',
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
     const SCHEDULE_GROUP = ScheduleGroup(conn);
@@ -20,14 +20,14 @@ router.get(
     const items = await SCHEDULE_GROUP.selectAll();
 
     res.status(200).json(items);
-  })
+  }),
 );
 
 router.get(
-  "/schedule/:idx",
+  '/schedule/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -42,15 +42,15 @@ router.get(
     }
 
     res.status(200).json(item);
-  })
+  }),
 );
 
 router.post(
-  "/schedule",
+  '/schedule',
   sessionCtx.isAdmin(),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { name, color } = req.body;
@@ -69,22 +69,22 @@ router.post(
     await SCHEDULE_GROUP.insertOne({
       name,
       color,
-      odr: count+1
+      odr: count + 1,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.put(
-  "/schedule/:idx",
+  '/schedule/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -95,14 +95,14 @@ router.put(
     await SCHEDULE_GROUP.updateOne({ name, color }, idx);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.delete(
-  "/schedule/:idx",
+  '/schedule/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -112,11 +112,11 @@ router.delete(
     await SCHEDULE_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 router.post(
-  "/schedule/odr",
+  '/schedule/odr',
   sessionCtx.isAdmin(),
   validator.body({
     calendars: Joi.array().required(),
@@ -126,17 +126,17 @@ router.post(
 
     const SCHEDULE_GROUP = ScheduleGroup(conn);
 
-    for(let i = 0; i < calendars.length; i++) {
+    for (let i = 0; i < calendars.length; i++) {
       const idx = calendars[i];
-      await SCHEDULE_GROUP.updateOne({odr: i+1}, idx);
+      await SCHEDULE_GROUP.updateOne({ odr: i + 1 }, idx);
     }
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.get(
-  "/task",
+  '/task',
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
     const TASK_GROUP = TaskGroup(conn);
@@ -144,14 +144,14 @@ router.get(
     const items = await TASK_GROUP.selectAll();
 
     res.status(200).json(items);
-  })
+  }),
 );
 
 router.get(
-  "/task/:idx",
+  '/task/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -166,15 +166,15 @@ router.get(
     }
 
     res.status(200).json(item);
-  })
+  }),
 );
 
 router.post(
-  "/task",
+  '/task',
   sessionCtx.isAdmin(),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { name, color } = req.body;
@@ -193,22 +193,22 @@ router.post(
     const task = await TASK_GROUP.insertOne({
       name,
       color,
-      odr: count+1
+      odr: count + 1,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: task });
-  })
+  }),
 );
 
 router.put(
-  "/task/:idx",
+  '/task/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -219,14 +219,14 @@ router.put(
     await TASK_GROUP.updateOne({ name, color }, idx);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.delete(
-  "/task/:idx",
+  '/task/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -236,11 +236,11 @@ router.delete(
     await TASK_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 router.post(
-  "/task/odr",
+  '/task/odr',
   sessionCtx.isAdmin(),
   validator.body({
     taskGroup: Joi.array().required(),
@@ -250,17 +250,17 @@ router.post(
 
     const TASK_GROUP = TaskGroup(conn);
 
-    for(let i = 0; i < taskGroup.length; i++) {
+    for (let i = 0; i < taskGroup.length; i++) {
       const idx = taskGroup[i];
-      await TASK_GROUP.updateOne({odr: i+1}, idx);
+      await TASK_GROUP.updateOne({ odr: i + 1 }, idx);
     }
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.get(
-  "/note",
+  '/note',
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
     const NOTE_GROUP = NoteGroup(conn);
@@ -268,14 +268,14 @@ router.get(
     const items = await NOTE_GROUP.selectAll();
 
     res.status(200).json(items);
-  })
+  }),
 );
 
 router.get(
-  "/note/:idx",
+  '/note/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -290,15 +290,15 @@ router.get(
     }
 
     res.status(200).json(item);
-  })
+  }),
 );
 
 router.post(
-  "/note",
+  '/note',
   sessionCtx.isAdmin(),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { name, color } = req.body;
@@ -317,22 +317,22 @@ router.post(
     const note = await NOTE_GROUP.insertOne({
       name,
       color,
-      odr: count+1
+      odr: count + 1,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note });
-  })
+  }),
 );
 
 router.put(
-  "/note/:idx",
+  '/note/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     name: Joi.string().required(),
-    color: Joi.string().required()
+    color: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -343,14 +343,14 @@ router.put(
     await NOTE_GROUP.updateOne({ name, color }, idx);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.delete(
-  "/note/:idx",
+  '/note/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -360,11 +360,11 @@ router.delete(
     await NOTE_GROUP.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 router.post(
-  "/note/odr",
+  '/note/odr',
   sessionCtx.isAdmin(),
   validator.body({
     noteGroup: Joi.array().required(),
@@ -374,13 +374,13 @@ router.post(
 
     const NOTE_GROUP = NoteGroup(conn);
 
-    for(let i = 0; i < noteGroup.length; i++) {
+    for (let i = 0; i < noteGroup.length; i++) {
       const idx = noteGroup[i];
-      await NOTE_GROUP.updateOne({odr: i+1}, idx);
+      await NOTE_GROUP.updateOne({ odr: i + 1 }, idx);
     }
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 export default router;

@@ -1,19 +1,19 @@
-import express from "express";
+import express from 'express';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
 
-import validator, { Joi } from "../../lib/validator";
+import validator, { Joi } from '../../lib/validator';
 
-import Schedule from "../../sql/Schedule";
+import Schedule from '../../sql/Schedule';
 
 const router = express.Router();
 
 router.get(
-  "/",
+  '/',
   validator.query({
     start: Joi.date().required(),
-    end: Joi.date().required()
+    end: Joi.date().required(),
   }),
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
@@ -24,13 +24,13 @@ router.get(
     const items = await SCHEDULE.selectAllPeriod({ start, end });
 
     res.status(200).json(items);
-  })
+  }),
 );
 
 router.get(
-  "/count/:idx",
+  '/count/:idx',
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
@@ -41,11 +41,11 @@ router.get(
     const rowCount = await SCHEDULE.countRelatedGroup(idx);
 
     res.status(200).json(rowCount);
-  })
+  }),
 );
 
 router.post(
-  "/",
+  '/',
   sessionCtx.isAdmin(),
   validator.body({
     schedule_group_idx: Joi.number().required(),
@@ -53,7 +53,7 @@ router.post(
     state: Joi.string().required(),
     all_day: Joi.boolean().required(),
     start: Joi.date().required(),
-    end: Joi.date().required()
+    end: Joi.date().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const {
@@ -63,7 +63,7 @@ router.post(
       state,
       all_day,
       start,
-      end
+      end,
     } = req.body;
 
     const SCHEDULE = Schedule(conn);
@@ -75,18 +75,18 @@ router.post(
       state,
       all_day,
       start,
-      end
+      end,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: schedule });
-  })
+  }),
 );
 
 router.put(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     schedule_group_idx: Joi.number().required(),
@@ -94,7 +94,7 @@ router.put(
     state: Joi.string().required(),
     all_day: Joi.boolean().required(),
     start: Joi.date().required(),
-    end: Joi.date().required()
+    end: Joi.date().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -105,7 +105,7 @@ router.put(
       state,
       all_day,
       start,
-      end
+      end,
     } = req.body;
 
     const SCHEDULE = Schedule(conn);
@@ -125,20 +125,20 @@ router.put(
         state,
         all_day,
         start,
-        end
+        end,
       },
-      idx
+      idx,
     );
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.delete(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -155,7 +155,7 @@ router.delete(
     await SCHEDULE.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 export default router;

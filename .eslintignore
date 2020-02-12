@@ -1,0 +1,6 @@
+/logs/**
+/build/**
+/public/**
+/node_modules/**
+
+/src/script/**

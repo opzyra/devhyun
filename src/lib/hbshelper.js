@@ -1,8 +1,8 @@
-import moment from "moment";
-import htmlToText2 from "html-to-text2";
-import { formatDistance, format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { go, map, reduce } from "fxjs";
+import moment from 'moment';
+import htmlToText2 from 'html-to-text2';
+import { formatDistance, format } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { go, map, reduce } from 'fxjs';
 
 const core = {
   config: function(scope, namespace) {
@@ -16,77 +16,24 @@ const core = {
         ? {
             name: session.member.name,
             role_name: session.member.role_name,
-            thumbnail: session.member.thumbnail
+            thumbnail: session.member.thumbnail,
           }
-        : "guest",
-      ...states
+        : 'guest',
+      ...states,
     });
 
     return `<script>STATE=${state};</script>`;
-  }
+  },
 };
 
 const check = {
   isNull: function(v1) {
-    return !!!v1;
+    return !v1;
   },
   ifNullDef: function(value, def) {
     if (value == null || value == undefined) return def;
     else return value;
-  }
-};
-
-const math = {
-  /**
-   * 순번 넘버링
-   * IN: 전체 수(INTEGER), 페이지 수(INTEGER), 페이지에 보여주는 갯수(INTEGER), 정렬 기준(desc || asc)
-   * OUT: 정수(INTEGER)
-   */
-  numIdx: function(odr, option) {
-    if (!option) {
-      option = odr;
-      odr = "asc";
-    }
-    if (odr && odr.toLowerCase() == "desc") {
-      return value - option.data.index;
-    }
-
-    return option.data.index + 1;
   },
-  /**
-   * 페이지 순번 넘버링
-   * IN: 전체 수(INTEGER), 페이지 수(INTEGER), 페이지에 보여주는 갯수(INTEGER), 정렬 기준(desc || asc)
-   * OUT: 정수(INTEGER)
-   */
-  pageIdx: function(row, page, size, odr, option) {
-    if (!option) {
-      option = odr;
-      odr = "asc";
-    }
-
-    if (odr && odr.toLowerCase() == "desc") {
-      return row - size * page - option.data.index;
-    }
-
-    return size * page + option.data.index + 1;
-  },
-  /**
-   * 퍼센트 계산
-   * IN: 부분(INTEGER), 전체(INTEGER), 역계산(BOOLEAN=FALSE)
-   * OUT: 정수(INTEGER)
-   */
-  percent: function(v1, v2, reverse, option) {
-    if (!option) {
-      option = reverse;
-      reverse = false;
-    }
-
-    if (reverse) {
-      return Math.floor((1 - v2 / v1) * 100);
-    }
-
-    return Math.floor((v2 / v1) * 100);
-  }
 };
 
 const convert = {
@@ -96,7 +43,7 @@ const convert = {
    * OUT: 문자(STRING)
    */
   parseDate: function(value, format) {
-    if (value == 0 || !value || value == "") return "-";
+    if (value == 0 || !value || value == '') return '-';
     return moment(value).format(format);
   },
   /**
@@ -109,16 +56,16 @@ const convert = {
     const givenDate = new Date(date);
     const diff = now - givenDate;
     if (diff < 1000 * 60) {
-      return "방금 전";
+      return '방금 전';
     }
     if (diff < 1000 * 60 * 60 * 24 * 7) {
       const distanceString = formatDistance(givenDate, now, {
         locale: ko,
-        addSuffix: true
+        addSuffix: true,
       });
       return distanceString;
     }
-    return format(givenDate, "yyyy.MM.dd");
+    return format(givenDate, 'yyyy.MM.dd');
   },
   /**
    * 핸드폰 연락처 분할 처리
@@ -129,13 +76,13 @@ const convert = {
     if (
       !phone ||
       !phone.match(
-        /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-[0-9]{3,4}-[0-9]{4}$/
+        /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-[0-9]{3,4}-[0-9]{4}$/,
       ) ||
       (!index && index != 0)
     ) {
-      return "-";
+      return '-';
     }
-    return phone.split("-")[index];
+    return phone.split('-')[index];
   },
   /**
    * 성별을 텍스트로 변환
@@ -143,7 +90,7 @@ const convert = {
    * OUT: 성별 텍스트(STRING)
    */
   parseGender: function(value) {
-    return value == 0 ? "남성" : "여성";
+    return value == 0 ? '남성' : '여성';
   },
   /**
    * 나이 계산
@@ -151,9 +98,9 @@ const convert = {
    * OUT: 나이(INTEGER)
    */
   parseAge: function(value) {
-    if (value == 0) return "";
+    if (value == 0) return '';
     let year = value.substring(0, 4);
-    let now = moment().format("YYYY");
+    let now = moment().format('YYYY');
 
     return parseInt(now) - parseInt(year) + 1;
   },
@@ -163,17 +110,17 @@ const convert = {
    * OUT: 만 나이(INTEGER)
    */
   parseRealAge: function(birth) {
-    if (birth == 0) return "";
+    if (birth == 0) return '';
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
 
-    if (month < 10) month = "0" + month;
-    if (day < 10) day = "0" + day;
+    if (month < 10) month = '0' + month;
+    if (day < 10) day = '0' + day;
 
     let monthDay = month + day;
-    birth = birth.replace("-", "").replace("-", "");
+    birth = birth.replace('-', '').replace('-', '');
 
     let birthdayy = birth.substr(0, 4);
     let birthdaymd = birth.substr(4, 4);
@@ -186,17 +133,17 @@ const convert = {
    * OUT: 일반 문자열(STRING)
    */
   parseMarkdown: function(markdown, wordwrap) {
-    markdown = markdown.replace(/(?:\r\n|\r|\n)/g, " ");
-    markdown = markdown.replace(/(<code data).*(<\/code>)/g, "");
+    markdown = markdown.replace(/(?:\r\n|\r|\n)/g, ' ');
+    markdown = markdown.replace(/(<code data).*(<\/code>)/g, '');
 
     let text = htmlToText2.fromString(markdown, {
       ignoreHref: true,
-      ignoreImage: true
+      ignoreImage: true,
     });
 
-    text = text.replace(/(?:\r\n|\r|\n)/g, " ");
+    text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
     return string.cutString(text, wordwrap).trim();
-  }
+  },
 };
 
 const string = {
@@ -206,8 +153,8 @@ const string = {
    * OUT: 콤마가 삽입된 문자열(STRING)
    */
   decimal: function(value) {
-    if (!value) return "";
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (!value) return '';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   },
   /**
    * 문자 사이에 문자 삽입
@@ -228,7 +175,7 @@ const string = {
       max = value.length;
       isOver = false;
     }
-    return value.substring(0, max) + (isOver ? "..." : "");
+    return value.substring(0, max) + (isOver ? '...' : '');
   },
   /**
    * 문자열 자르기
@@ -236,9 +183,9 @@ const string = {
    * OUT: 잘린 문자열(STRING)
    */
   subString: function(value, start, end) {
-    if (!value) return "";
+    if (!value) return '';
     return value.substring(start, end);
-  }
+  },
 };
 
 const array = {
@@ -254,12 +201,12 @@ const array = {
     for (let i = 0; i < max && i < ary.length; ++i)
       result.push(options.fn(ary[i]));
 
-    return result.join("");
+    return result.join('');
   },
   length: function(ary) {
     if (!ary || !(ary instanceof Array)) return 0;
     return ary.length;
-  }
+  },
 };
 
 const html = {
@@ -269,21 +216,21 @@ const html = {
    * OUT: 문자열(STRING)
    */
   checkbox: function(value) {
-    return value == 1 ? 'checked=""' : "";
+    return value == 1 ? 'checked=""' : '';
   },
   selected: function(v1, v2) {
     let vs1 = String(v1);
     let vs2 = String(v2);
-    let rs = "";
+    let rs = '';
     if (vs1 == vs2) {
       rs = 'selected=""';
     }
     return rs;
   },
   lineBreak: function(value, count) {
-    if (!value || value == "") return "-";
-    return value.replace(/(\n|\r\n)/g, "<br>");
-  }
+    if (!value || value == '') return '-';
+    return value.replace(/(\n|\r\n)/g, '<br>');
+  },
 };
 
 const condition = {
@@ -306,7 +253,7 @@ const condition = {
     return options.inverse(this);
   },
   isAdmin: function(member, options) {
-    if (member && member.role.indexOf("ADMIN") >= 0) {
+    if (member && member.role.indexOf('ADMIN') >= 0) {
       return options.fn(this);
     }
     return options.inverse(this);
@@ -316,7 +263,7 @@ const condition = {
       return options.fn(this);
     }
     return options.inverse(this);
-  }
+  },
 };
 
 const client = {
@@ -328,10 +275,10 @@ const client = {
   },
   isNewPost: function(value, options) {
     let target = moment(value);
-    let max = moment().format("YYYY-MM-DD HH:mm:ss");
+    let max = moment().format('YYYY-MM-DD HH:mm:ss');
     let min = moment()
-      .subtract(5, "days")
-      .format("YYYY-MM-DD HH:mm:ss");
+      .subtract(5, 'days')
+      .format('YYYY-MM-DD HH:mm:ss');
 
     if (target.isBetween(min, max)) {
       return options.fn(this);
@@ -345,9 +292,9 @@ const client = {
     return options.inverse(this);
   },
   memberIdEllipse: function(value, options) {
-    const [platform, id] = value.split("_");
+    const [platform, id] = value.split('_');
     return `${platform}_${id.substring(0, 2)}*****`;
-  }
+  },
 };
 
 const admin = {
@@ -358,14 +305,14 @@ const admin = {
   restPercent: function(date) {
     const serverDate = moment(date);
     const restDays = Math.floor(
-      moment.duration(serverDate.diff(moment())).asDays()
+      moment.duration(serverDate.diff(moment())).asDays(),
     );
     return 100 - Math.floor((restDays / 365) * 100);
   },
   restDonut: function(date) {
     const serverDate = moment(date);
     const restDays = Math.floor(
-      moment.duration(serverDate.diff(moment())).asDays()
+      moment.duration(serverDate.diff(moment())).asDays(),
     );
 
     return `${365 - restDays}/365`;
@@ -376,23 +323,22 @@ const admin = {
         groups,
         map(
           e =>
-            `.note .lib .right .list ul a.group${e.idx}:hover {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx}:hover span {border-color: ${e.color};}`
+            `.note .lib .right .list ul a.group${e.idx}:hover {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx}:hover span {border-color: ${e.color};}`,
         ),
-        reduce((a, b) => `${a}${b}`)
+        reduce((a, b) => `${a}${b}`),
       )}
     </style>`;
-  }
+  },
 };
 
 export default Object.assign(
   core,
   check,
-  math,
   convert,
   string,
   array,
   html,
   condition,
   client,
-  admin
+  admin,
 );

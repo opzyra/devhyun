@@ -1,17 +1,17 @@
-import express from "express";
-import { go, filter } from "fxjs";
+import express from 'express';
+import { go, filter } from 'fxjs';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
-import store from "../../core/store";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
+import store from '../../lib/store';
 
-import Task from "../../sql/Task";
-import TaskGroup from "../../sql/TaskGroup";
+import Task from '../../sql/Task';
+import TaskGroup from '../../sql/TaskGroup';
 
 const router = express.Router();
 
 router.get(
-  "/task",
+  '/task',
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
     const { group, query, page } = req.query;
@@ -24,7 +24,7 @@ router.get(
     const [ctxGroup] = go(taskGroups, filter(e => e.idx == group));
 
     if (group && !ctxGroup) {
-      throw new Error("잘못된 접근입니다");
+      throw new Error('잘못된 접근입니다');
     }
 
     let taskGroup = ctxGroup;
@@ -33,18 +33,18 @@ router.get(
     let taskPage = await TASK.selectPageInfo(query, group, page);
 
     store(res).setState({
-      taskPage
+      taskPage,
     });
 
-    res.render("admin/task", {
+    res.render('admin/task', {
       query,
       tasks,
       taskPage,
       taskGroup,
       taskGroups,
-      layout: false
+      layout: false,
     });
-  })
+  }),
 );
 
 export default router;

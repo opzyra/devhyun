@@ -15,8 +15,8 @@ rss.xml
 # Dependency directories
 node_modules/
 
-# TypeScript v1 declaration files
-typings/
+# Build directories
+build/
 
 # webpack
 public/js/module.js

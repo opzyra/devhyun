@@ -1,19 +1,19 @@
-import express from "express";
+import express from 'express';
 
-import sessionCtx from "../../core/session";
-import { txrtfn } from "../../core/tx";
+import sessionCtx from '../../lib/session';
+import { txrtfn } from '../../core/tx';
 
-import validator, { Joi } from "../../lib/validator";
-import { safeMarkdown, anchorConvert } from "../../lib/utils";
+import validator, { Joi } from '../../lib/validator';
+import { safeMarkdown, anchorConvert } from '../../lib/utils';
 
-import Note from "../../sql/Note";
+import Note from '../../sql/Note';
 
 const router = express.Router();
 
 router.get(
-  "/:idx",
+  '/:idx',
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
@@ -24,13 +24,13 @@ router.get(
     const item = await NOTE.selectOne(idx);
 
     res.status(200).json(item);
-  })
+  }),
 );
 
 router.get(
-  "/count/:idx",
+  '/count/:idx',
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   sessionCtx.isAdmin(),
   txrtfn(async (req, res, next, conn) => {
@@ -41,16 +41,16 @@ router.get(
     const rowCount = await NOTE.countRelatedGroup(idx);
 
     res.status(200).json(rowCount);
-  })
+  }),
 );
 
 router.post(
-  "/",
+  '/',
   sessionCtx.isAdmin(),
   validator.body({
     note_group_idx: Joi.number().required(),
     title: Joi.string().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     let { note_group_idx, title, contents } = req.body;
@@ -63,23 +63,23 @@ router.post(
     const note = await NOTE.insertOne({
       note_group_idx,
       title,
-      contents
+      contents,
     });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note });
-  })
+  }),
 );
 
 router.put(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
     note_group_idx: Joi.number().required(),
     title: Joi.string().required(),
-    contents: Joi.string().required()
+    contents: Joi.string().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -101,23 +101,23 @@ router.put(
       {
         note_group_idx,
         title,
-        contents
+        contents,
       },
-      idx
+      idx,
     );
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.put(
-  "/group/:idx",
+  '/group/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   validator.body({
-    note_group_idx: Joi.number().required()
+    note_group_idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -128,14 +128,14 @@ router.put(
     await NOTE.updateOne({ note_group_idx }, idx);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  })
+  }),
 );
 
 router.delete(
-  "/:idx",
+  '/:idx',
   sessionCtx.isAdmin(),
   validator.params({
-    idx: Joi.number().required()
+    idx: Joi.number().required(),
   }),
   txrtfn(async (req, res, next, conn) => {
     const { idx } = req.params;
@@ -152,7 +152,7 @@ router.delete(
     await NOTE.deleteOne(idx);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  })
+  }),
 );
 
 export default router;

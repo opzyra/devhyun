@@ -36,59 +36,6 @@ const check = {
   },
 };
 
-const math = {
-  /**
-   * 순번 넘버링
-   * IN: 전체 수(INTEGER), 페이지 수(INTEGER), 페이지에 보여주는 갯수(INTEGER), 정렬 기준(desc || asc)
-   * OUT: 정수(INTEGER)
-   */
-  numIdx: function(odr, option) {
-    if (!option) {
-      option = odr;
-      odr = 'asc';
-    }
-    if (odr && odr.toLowerCase() == 'desc') {
-      return value - option.data.index;
-    }
-
-    return option.data.index + 1;
-  },
-  /**
-   * 페이지 순번 넘버링
-   * IN: 전체 수(INTEGER), 페이지 수(INTEGER), 페이지에 보여주는 갯수(INTEGER), 정렬 기준(desc || asc)
-   * OUT: 정수(INTEGER)
-   */
-  pageIdx: function(row, page, size, odr, option) {
-    if (!option) {
-      option = odr;
-      odr = 'asc';
-    }
-
-    if (odr && odr.toLowerCase() == 'desc') {
-      return row - size * page - option.data.index;
-    }
-
-    return size * page + option.data.index + 1;
-  },
-  /**
-   * 퍼센트 계산
-   * IN: 부분(INTEGER), 전체(INTEGER), 역계산(BOOLEAN=FALSE)
-   * OUT: 정수(INTEGER)
-   */
-  percent: function(v1, v2, reverse, option) {
-    if (!option) {
-      option = reverse;
-      reverse = false;
-    }
-
-    if (reverse) {
-      return Math.floor((1 - v2 / v1) * 100);
-    }
-
-    return Math.floor((v2 / v1) * 100);
-  },
-};
-
 const convert = {
   /**
    * 날짜를 문자열로 변환
@@ -387,7 +334,6 @@ const admin = {
 export default Object.assign(
   core,
   check,
-  math,
   convert,
   string,
   array,

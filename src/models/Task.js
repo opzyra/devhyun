@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Comment extends Sequelize.Model {
+export default class Task extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -9,7 +9,11 @@ export default class Comment extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
+        title: { type: Sequelize.STRING(200) },
         contents: { type: Sequelize.TEXT('medium') },
+        completed: { type: Sequelize.BOOLEAN },
+        startAt: { type: Sequelize.DATE, field: 'start_at' },
+        endAt: { type: Sequelize.DATE, field: 'end_at' },
       },
       {
         sequelize,
@@ -18,12 +22,6 @@ export default class Comment extends Sequelize.Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Member, {
-      as: 'member',
-    });
-
-    this.belongsTo(models.Member, {
-      as: 'target',
-    });
+    this.belongsTo(models.TaskGroup);
   }
 }

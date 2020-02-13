@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Comment extends Sequelize.Model {
+export default class Tag extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -9,21 +9,21 @@ export default class Comment extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        contents: { type: Sequelize.TEXT('medium') },
+        tag: { type: Sequelize.STRING(100) },
       },
       {
+        timestamps: false,
+        indexes: [
+          {
+            fields: ['tag'],
+          },
+        ],
         sequelize,
       },
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Member, {
-      as: 'member',
-    });
-
-    this.belongsTo(models.Member, {
-      as: 'target',
-    });
+    this.belongsTo(models.Post);
   }
 }

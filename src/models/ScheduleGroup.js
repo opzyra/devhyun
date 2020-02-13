@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Post extends Sequelize.Model {
+export default class ScheduleGroup extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -9,17 +9,17 @@ export default class Post extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        title: { type: Sequelize.STRING(100) },
-        thumbnail: { type: Sequelize.STRING(200) },
-        contents: { type: Sequelize.TEXT('medium') },
-        hit: { type: Sequelize.INTEGER(11) },
+        name: { type: Sequelize.STRING(100), unique: true },
+        color: { type: Sequelize.STRING(10) },
+        odr: { type: Sequelize.INTEGER(11) },
       },
       {
+        tableName: 'schedule_group',
+        timestamps: false,
         sequelize,
       },
     );
   }
 
-  // eslint-disable-next-line no-unused-vars
   static associate(models) {}
 }

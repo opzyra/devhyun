@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class App extends Sequelize.Model {
+export default class Application extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -16,11 +16,12 @@ export default class App extends Sequelize.Model {
         expiredServer: { type: Sequelize.DATE, field: 'expired_server' },
         expiredDomain: { type: Sequelize.DATE, field: 'expired_domain' },
       },
-      { sequelize },
+      {
+        sequelize,
+      },
     );
   }
 
-  static associate(models) {
-    // models.User.hasMany(models);
-  }
+  // eslint-disable-next-line no-unused-vars
+  static associate(models) {}
 }

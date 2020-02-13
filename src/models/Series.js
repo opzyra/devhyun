@@ -11,14 +11,17 @@ export default class Series extends Sequelize.Model {
         },
         title: { type: Sequelize.STRING(100) },
         thumbnail: { type: Sequelize.STRING(200) },
-        contents: { type: Sequelize.TEXT },
+        contents: { type: Sequelize.TEXT('medium') },
         hit: { type: Sequelize.INTEGER(11) },
       },
-      { sequelize },
+      {
+        sequelize,
+      },
     );
   }
 
+  // eslint-disable-next-line no-unused-vars
   static associate(models) {
-    // models.User.hasMany(models);
+    this.hasMany(models.Post);
   }
 }

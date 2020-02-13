@@ -23,9 +23,12 @@ export default class Member extends Sequelize.Model {
         active: { type: Sequelize.BOOLEAN, defaultValue: true },
         loginAt: { type: Sequelize.DATE, field: 'login_at' },
       },
-      { sequelize },
+      {
+        sequelize,
+      },
     );
   }
 
+  // eslint-disable-next-line no-unused-vars
   static associate(models) {}
 }

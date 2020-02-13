@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Post extends Sequelize.Model {
+export default class Hit extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -9,12 +9,17 @@ export default class Post extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        title: { type: Sequelize.STRING(100) },
-        thumbnail: { type: Sequelize.STRING(200) },
-        contents: { type: Sequelize.TEXT('medium') },
-        hit: { type: Sequelize.INTEGER(11) },
+        ip: { type: Sequelize.STRING(30) },
+        type: { type: Sequelize.STRING(30) },
+        key: { type: Sequelize.INTEGER(11) },
       },
       {
+        indexes: [
+          {
+            unique: true,
+            fields: ['ip', 'type', 'key'],
+          },
+        ],
         sequelize,
       },
     );

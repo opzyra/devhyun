@@ -5,7 +5,8 @@
 [https://devhyun.com](https://devhyun.com)
 
 **데브현은 개인 브랜딩, 개발 블로그, 자기관리 기능이 포함된 웹 애플리케이션입니다.**  
-AWS EC2에 배포하였으며 자세한 기술 스택은 아래를 참고해주세요.
+AWS EC2에 배포하였으며 자세한 기술 스택은 아래를 참고해주세요.  
+현재 프로젝트는 리펙토링되고 있습니다. 기존 코드는 [legacy branch](https://github.com/opzyra/devhyun/tree/legacy)를 참고해주세요.
 
 ## 기술스택
 

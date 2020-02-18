@@ -1,4 +1,24 @@
 {
-  "presets": ["@babel/preset-env"],
-  "plugins": ["@babel/transform-runtime"]
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/transform-runtime",
+    [
+      "module-resolver",
+      {
+        "root": ["./src"],
+        "alias": {
+          "@": "./src"
+        }
+      }
+    ]
+  ]
 }

@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Post extends Sequelize.Model {
+export default class Temp extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -12,7 +12,6 @@ export default class Post extends Sequelize.Model {
         title: { type: Sequelize.STRING(100) },
         thumbnail: { type: Sequelize.STRING(200) },
         contents: { type: Sequelize.TEXT('medium') },
-        hit: { type: Sequelize.INTEGER(11) },
       },
       {
         sequelize,
@@ -22,13 +21,4 @@ export default class Post extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
-
-  // 메인화면에 제공하는 최신글 조회
-  static async selectLatest(limit = 5, transaction) {
-    return await this.findAll({
-      order: [['idx', 'desc']],
-      limit,
-      transaction,
-    });
-  }
 }

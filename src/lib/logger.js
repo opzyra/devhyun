@@ -14,7 +14,7 @@ const errorLogger = winston.createLogger({
       ),
     }),
     new winston.transports.DailyRotateFile({
-      filename: 'logs/error.log',
+      filename: 'logs/error/error.log',
       zippedArchive: true,
       format: winston.format.printf(
         info =>

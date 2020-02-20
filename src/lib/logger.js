@@ -2,7 +2,7 @@ import winston from 'winston';
 import moment from 'moment';
 import 'winston-daily-rotate-file';
 
-const errorLogger = winston.createLogger({
+export const errorLogger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: 'error',
@@ -26,7 +26,7 @@ const errorLogger = winston.createLogger({
   ],
 });
 
-const infoLogger = winston.createLogger({
+export const infoLogger = winston.createLogger({
   transports: [
     new winston.transports.Console({
       level: 'info',
@@ -39,10 +39,10 @@ const infoLogger = winston.createLogger({
   ],
 });
 
-const debugLogger = winston.createLogger({
+export const debugLogger = winston.createLogger({
   transports: [
     new winston.transports.Console({
-      level: process.env.NODE_ENV === 'production' ? 'debug' : 'info',
+      level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
       format: winston.format.printf(
         info =>
           `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} [DEBUG]: ${

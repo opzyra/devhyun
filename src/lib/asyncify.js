@@ -42,6 +42,24 @@ const wrap = asyncFunc => {
   };
 };
 
-export default function router() {
-  return asyncify(express.Router());
+export default function controller() {
+  return {
+    router: asyncify(express.Router()),
+    get(url, ...middle) {
+      this.router.get(url, ...middle);
+      return [...middle];
+    },
+    post(url, ...middle) {
+      this.router.post(url, ...middle);
+      return [...middle];
+    },
+    put(url, ...middle) {
+      this.router.put(url, ...middle);
+      return [...middle];
+    },
+    delete(url, ...middle) {
+      this.router.delete(url, ...middle);
+      return [...middle];
+    },
+  };
 }

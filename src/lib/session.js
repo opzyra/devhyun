@@ -46,6 +46,7 @@ const listener = () => {
             e.member.id == member.id &&
             e.id != req.session.id
           ) {
+            // eslint-disable-next-line no-unused-vars
             store.destroy(e.id, error => {});
           }
         }

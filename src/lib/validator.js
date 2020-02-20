@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import logger from '../lib/logger';
+import logger from '@/lib/logger';
 
 export { Joi };
 

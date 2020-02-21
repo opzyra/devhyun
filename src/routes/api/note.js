@@ -3,7 +3,7 @@ import express from 'express';
 import sessionCtx from '../../lib/session';
 import { txrtfn } from '../../core/tx';
 
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 import { safeMarkdown, anchorConvert } from '../../lib/utils';
 
 import Note from '../../sql/Note';

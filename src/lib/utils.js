@@ -51,3 +51,13 @@ export const parseMarkdown = (markdown, wordwrap) => {
   text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
   return cutString(text, wordwrap).trim();
 };
+
+export const pagination = (rowCount, limit, page) => {
+  let totalPages = Math.floor(rowCount / limit);
+  if (rowCount % limit > 0) totalPages++;
+  return {
+    rowCount,
+    totalPages,
+    page,
+  };
+};

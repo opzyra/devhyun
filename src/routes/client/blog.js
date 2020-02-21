@@ -1,372 +1,373 @@
-import express from "express";
-import htmlToc from "html-toc";
-import { go, map, filter, uniqueBy } from "fxjs";
+import htmlToc from 'html-toc';
+import { go, map, filter, uniqueBy } from 'fxjs';
 
-import store from "../../lib/store";
-import { txrtfn } from "../../core/tx";
-import { clinfo } from "../../lib/utils";
-import validator, { Joi } from "../../lib/validator";
+import asyncify from '@/lib/asyncify';
+import store from '@/lib/store';
+import validator, { Joi } from '@/middleware/validator';
 
-import BoardPost from "../../sql/BoardPost";
-import PostTag from "../../sql/PostTag";
-import BoardSeries from "../../sql/BoardSeries";
-import HitBoard from "../../sql/HitBoard";
-import Comment from "../../sql/Comment";
-import Member from "../../sql/Member";
+import Post from '@/models/Post';
 
-const router = express.Router();
+import BoardPost from '../../sql/BoardPost';
+import PostTag from '../../sql/PostTag';
+import BoardSeries from '../../sql/BoardSeries';
+import HitBoard from '../../sql/HitBoard';
+import Comment from '../../sql/Comment';
+import Member from '../../sql/Member';
 
-router.get(
-  "/blog/post",
-  txrtfn(async (req, res, next, conn) => {
-    const { query, page } = req.query;
+const controller = asyncify();
 
-    const BOARD_POST = BoardPost(conn);
-    const POST_TAG = PostTag(conn);
-    const COMMENT = Comment(conn);
+export const posts = controller.get('/blog/post', async (req, res) => {
+  const { transaction } = req;
+  const { query, page } = req.query;
 
-    let posts = await BOARD_POST.selectPage(query, page);
-    const postPage = await BOARD_POST.selectPageInfo(query, page);
+  let posts = await Post.selectPaginated(query, page)(transaction);
 
-    const post_count = await BOARD_POST.countAll();
-    const tag_count = await POST_TAG.countDistinct();
+  console.log(posts);
 
-    const comments = await COMMENT.countGroupBoard(
-      "post",
-      posts.map(post => post.idx)
-    );
+  // const BOARD_POST = BoardPost(conn);
+  // const POST_TAG = PostTag(conn);
+  // const COMMENT = Comment(conn);
 
-    posts = go(
-      posts,
-      map(post => {
-        const comment = comments.find(
-          comment => comment.board_idx === post.idx
-        ) || { count: 0 };
-        return {
-          ...post,
-          comment: comment.count
-        };
-      })
-    );
+  // const postPage = await BOARD_POST.selectPageInfo(query, page);
 
-    store(res).setState({
-      postPage
-    });
+  // const post_count = await BOARD_POST.countAll();
+  // const tag_count = await POST_TAG.countDistinct();
 
-    res.render("client/blog/post", {
-      posts,
-      postPage,
-      queryRow: query ? postPage.rowCount : null,
-      countPostTag: {
-        post_count,
-        tag_count
-      },
-      layout: false
-    });
-  })
-);
+  // const comments = await COMMENT.countGroupBoard(
+  //   'post',
+  //   posts.map(post => post.idx),
+  // );
 
-router.get(
-  "/blog/post/:idx",
-  validator.params({ idx: Joi.number().required() }),
-  txrtfn(async (req, res, next, conn) => {
-    const { idx } = req.params;
+  // posts = go(
+  //   posts,
+  //   map(post => {
+  //     const comment = comments.find(
+  //       comment => comment.board_idx === post.idx,
+  //     ) || { count: 0 };
+  //     return {
+  //       ...post,
+  //       comment: comment.count,
+  //     };
+  //   }),
+  // );
 
-    const BOARD_POST = BoardPost(conn);
-    const BOARD_SERIES = BoardSeries(conn);
-    const HIT_BOARD = HitBoard(conn);
-    const POST_TAG = PostTag(conn);
+  store(res).setState({
+    // postPage,
+  });
 
-    const MEMBER = Member(conn);
-    const COMMENT = Comment(conn);
+  res.render('client/blog/post', {
+    posts,
+    // postPage,
+    // queryRow: query ? postPage.rowCount : null,
+    // countPostTag: {
+    //   post_count,
+    //   tag_count,
+    // },
+    layout: false,
+  });
+});
 
-    const post = await BOARD_POST.selectOne(idx);
+// router.get(
+//   '/blog/post/:idx',
+//   validator.params({ idx: Joi.number().required() }),
+//   txrtfn(async (req, res, next, conn) => {
+//     const { idx } = req.params;
 
-    if (!post) {
-      throw new Error("잘못된 접근입니다.");
-    }
+//     const BOARD_POST = BoardPost(conn);
+//     const BOARD_SERIES = BoardSeries(conn);
+//     const HIT_BOARD = HitBoard(conn);
+//     const POST_TAG = PostTag(conn);
 
-    let contents = htmlToc(`<div id="toc"></div>${post.contents}`, {
-      selectors: "h1, h2, h3, h4, h5",
-      anchors: false,
-      slugger: function(text) {
-        const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-        return decodeURI(text)
-          .toLowerCase()
-          .trim()
-          .replace(re, "")
-          .replace(/\s/g, "_");
-      }
-    });
+//     const MEMBER = Member(conn);
+//     const COMMENT = Comment(conn);
 
-    let [toc, ...rest] = contents.match(
-      /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/
-    );
-    post.contents = contents.replace(toc, "");
+//     const post = await BOARD_POST.selectOne(idx);
 
-    // 태그
-    const tags = await go(
-      POST_TAG.selectReletedPost(idx),
-      map(e => `${e.tag}`)
-    );
+//     if (!post) {
+//       throw new Error('잘못된 접근입니다.');
+//     }
 
-    const seriesRs = await BOARD_SERIES.selectRelatedSeriesPost(idx);
+//     let contents = htmlToc(`<div id="toc"></div>${post.contents}`, {
+//       selectors: 'h1, h2, h3, h4, h5',
+//       anchors: false,
+//       slugger: function(text) {
+//         const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
+//         return decodeURI(text)
+//           .toLowerCase()
+//           .trim()
+//           .replace(re, '')
+//           .replace(/\s/g, '_');
+//       },
+//     });
 
-    const series = Object.values(
-      seriesRs.reduce((a, v) => {
-        a[String(v.series_idx)] = a[String(v.series_idx)] || {};
-        a[String(v.series_idx)].series_idx = v.series_idx;
-        a[String(v.series_idx)].title = v.sb_title;
-        a[String(v.series_idx)].thumbnail = v.sb_thumbnail;
-        a[String(v.series_idx)].list = a[String(v.series_idx)].list || [];
-        a[String(v.series_idx)].list.push({
-          post_idx: v.post_idx,
-          title: v.pb_title,
-          thumbnail: v.pb_thumbnauil,
-          contents: v.pb_contents
-        });
-        return a;
-      }, Object.create(null))
-    );
+//     let [toc, ...rest] = contents.match(
+//       /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
+//     );
+//     post.contents = contents.replace(toc, '');
 
-    // 연관 포스트
-    let relation = tags
-      ? await BOARD_POST.selectRelatedTagPost(tags)
-      : await BOARD_POST.selectPopularPost();
+//     // 태그
+//     const tags = await go(
+//       POST_TAG.selectReletedPost(idx),
+//       map(e => `${e.tag}`),
+//     );
 
-    // 조회수 처리
-    const client = clinfo(req);
-    if (!client.robot && client.device != "undefined") {
-      const { affectedRows } = await HIT_BOARD.insertIgonre({
-        ip: client.ip,
-        board: "post",
-        board_idx: idx
-      });
+//     const seriesRs = await BOARD_SERIES.selectRelatedSeriesPost(idx);
 
-      if (affectedRows != 0) await BOARD_POST.updateHit(idx);
-    }
+//     const series = Object.values(
+//       seriesRs.reduce((a, v) => {
+//         a[String(v.series_idx)] = a[String(v.series_idx)] || {};
+//         a[String(v.series_idx)].series_idx = v.series_idx;
+//         a[String(v.series_idx)].title = v.sb_title;
+//         a[String(v.series_idx)].thumbnail = v.sb_thumbnail;
+//         a[String(v.series_idx)].list = a[String(v.series_idx)].list || [];
+//         a[String(v.series_idx)].list.push({
+//           post_idx: v.post_idx,
+//           title: v.pb_title,
+//           thumbnail: v.pb_thumbnauil,
+//           contents: v.pb_contents,
+//         });
+//         return a;
+//       }, Object.create(null)),
+//     );
 
-    // 댓글 처리
-    const members = await MEMBER.selectAll();
-    const comments = await COMMENT.selectBoardAll("post", idx);
+//     // 연관 포스트
+//     let relation = tags
+//       ? await BOARD_POST.selectRelatedTagPost(tags)
+//       : await BOARD_POST.selectPopularPost();
 
-    const post_comments = await go(
-      comments,
-      map(comment => {
-        let target_member = members.find(
-          member => member.idx == comment.target_idx
-        );
-        return {
-          ...comment,
-          target_name: target_member ? target_member.name : ""
-        };
-      })
-    );
+//     // 조회수 처리
+//     const client = clinfo(req);
+//     if (!client.robot && client.device != 'undefined') {
+//       const { affectedRows } = await HIT_BOARD.insertIgonre({
+//         ip: client.ip,
+//         board: 'post',
+//         board_idx: idx,
+//       });
 
-    const comments_member = go(
-      post_comments,
-      filter(comment => {
-        if (req.session.member) {
-          return comment.member_idx !== req.session.member.idx;
-        }
-        return true;
-      }),
-      uniqueBy(u => u.member_idx),
-      map(comment => ({
-        idx: comment.member_idx,
-        name: comment.name
-      }))
-    );
+//       if (affectedRows != 0) await BOARD_POST.updateHit(idx);
+//     }
 
-    res.render("client/blog/post/detail", {
-      post,
-      toc,
-      tags,
-      series,
-      relation,
-      comments: post_comments,
-      comments_member,
-      layout: false
-    });
-  })
-);
+//     // 댓글 처리
+//     const members = await MEMBER.selectAll();
+//     const comments = await COMMENT.selectBoardAll('post', idx);
 
-router.get(
-  "/blog/series",
-  txrtfn(async (req, res, next, conn) => {
-    const { query, page } = req.query;
+//     const post_comments = await go(
+//       comments,
+//       map(comment => {
+//         let target_member = members.find(
+//           member => member.idx == comment.target_idx,
+//         );
+//         return {
+//           ...comment,
+//           target_name: target_member ? target_member.name : '',
+//         };
+//       }),
+//     );
 
-    const BOARD_POST = BoardPost(conn);
-    const BOARD_SERIES = BoardSeries(conn);
-    const POST_TAG = PostTag(conn);
+//     const comments_member = go(
+//       post_comments,
+//       filter(comment => {
+//         if (req.session.member) {
+//           return comment.member_idx !== req.session.member.idx;
+//         }
+//         return true;
+//       }),
+//       uniqueBy(u => u.member_idx),
+//       map(comment => ({
+//         idx: comment.member_idx,
+//         name: comment.name,
+//       })),
+//     );
 
-    const series = await BOARD_SERIES.selectPage(query, page);
-    const seriesPage = await BOARD_SERIES.selectPageInfo(query, page);
+//     res.render('client/blog/post/detail', {
+//       post,
+//       toc,
+//       tags,
+//       series,
+//       relation,
+//       comments: post_comments,
+//       comments_member,
+//       layout: false,
+//     });
+//   }),
+// );
 
-    const post_count = await BOARD_POST.countAll();
-    const tag_count = await POST_TAG.countDistinct();
+// router.get(
+//   '/blog/series',
+//   txrtfn(async (req, res, next, conn) => {
+//     const { query, page } = req.query;
 
-    store(res).setState({
-      seriesPage
-    });
+//     const BOARD_POST = BoardPost(conn);
+//     const BOARD_SERIES = BoardSeries(conn);
+//     const POST_TAG = PostTag(conn);
 
-    res.render("client/blog/series", {
-      series,
-      seriesPage,
-      queryRow: query ? seriesPage.rowCount : null,
-      countPostTag: {
-        post_count,
-        tag_count
-      },
-      layout: false
-    });
-  })
-);
+//     const series = await BOARD_SERIES.selectPage(query, page);
+//     const seriesPage = await BOARD_SERIES.selectPageInfo(query, page);
 
-router.get(
-  "/blog/series/:idx",
-  validator.params({ idx: Joi.number().required() }),
-  txrtfn(async (req, res, next, conn) => {
-    const { idx } = req.params;
+//     const post_count = await BOARD_POST.countAll();
+//     const tag_count = await POST_TAG.countDistinct();
 
-    const BOARD_SERIES = BoardSeries(conn);
-    const HIT_BOARD = HitBoard(conn);
+//     store(res).setState({
+//       seriesPage,
+//     });
 
-    const series = await BOARD_SERIES.selectOne(idx);
-    if (!series) {
-      throw new Error("잘못된 접근입니다.");
-    }
+//     res.render('client/blog/series', {
+//       series,
+//       seriesPage,
+//       queryRow: query ? seriesPage.rowCount : null,
+//       countPostTag: {
+//         post_count,
+//         tag_count,
+//       },
+//       layout: false,
+//     });
+//   }),
+// );
 
-    let contents = htmlToc(`<div id="toc"></div>${series.contents}`, {
-      selectors: "h1, h2, h3, h4, h5",
-      anchors: false,
-      slugger: function(text) {
-        const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-        return decodeURI(text)
-          .toLowerCase()
-          .trim()
-          .replace(re, "")
-          .replace(/\s/g, "_");
-      }
-    });
+// router.get(
+//   '/blog/series/:idx',
+//   validator.params({ idx: Joi.number().required() }),
+//   txrtfn(async (req, res, next, conn) => {
+//     const { idx } = req.params;
 
-    let [toc, ...rest] = contents.match(
-      /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/
-    );
-    series.contents = contents.replace(toc, "");
+//     const BOARD_SERIES = BoardSeries(conn);
+//     const HIT_BOARD = HitBoard(conn);
 
-    // 관련 포스트
-    const post = await BOARD_SERIES.selectRelatedPost(idx);
+//     const series = await BOARD_SERIES.selectOne(idx);
+//     if (!series) {
+//       throw new Error('잘못된 접근입니다.');
+//     }
 
-    // 포스트 네비바 처리
-    let tocPostItems = "";
-    post.forEach((e, i) => {
-      tocPostItems += `<li><a href="/blog/post/${e.idx}">${e.title}</a></li>`;
-    });
+//     let contents = htmlToc(`<div id="toc"></div>${series.contents}`, {
+//       selectors: 'h1, h2, h3, h4, h5',
+//       anchors: false,
+//       slugger: function(text) {
+//         const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
+//         return decodeURI(text)
+//           .toLowerCase()
+//           .trim()
+//           .replace(re, '')
+//           .replace(/\s/g, '_');
+//       },
+//     });
 
-    let tocPost = `<li><a href="#postList">관련 포스트</a><ul class="nav">${tocPostItems}</ul></li>`;
+//     let [toc, ...rest] = contents.match(
+//       /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
+//     );
+//     series.contents = contents.replace(toc, '');
 
-    if (toc == '<div id="toc"></div>') {
-      toc = '<div id="toc"><ul class="nav sidenav"></ul></div>';
-    }
+//     // 관련 포스트
+//     const post = await BOARD_SERIES.selectRelatedPost(idx);
 
-    toc = toc.replace("</ul></div>", tocPost + "</ul></div>");
+//     // 포스트 네비바 처리
+//     let tocPostItems = '';
+//     post.forEach((e, i) => {
+//       tocPostItems += `<li><a href="/blog/post/${e.idx}">${e.title}</a></li>`;
+//     });
 
-    // 조회수 처리
-    const client = clinfo(req);
-    if (!client.robot && client.device != "undefined") {
-      const { affectedRows } = await HIT_BOARD.insertIgonre({
-        ip: client.ip,
-        board: "series",
-        board_idx: idx
-      });
-      if (affectedRows != 0) await BOARD_SERIES.updateHit(idx);
-    }
+//     let tocPost = `<li><a href="#postList">관련 포스트</a><ul class="nav">${tocPostItems}</ul></li>`;
 
-    res.render("client/blog/series/detail", {
-      series,
-      toc,
-      post,
-      layout: false
-    });
-  })
-);
+//     if (toc == '<div id="toc"></div>') {
+//       toc = '<div id="toc"><ul class="nav sidenav"></ul></div>';
+//     }
 
-router.get(
-  "/blog/tag",
-  txrtfn(async (req, res, next, conn) => {
-    const BOARD_POST = BoardPost(conn);
-    const POST_TAG = PostTag(conn);
+//     toc = toc.replace('</ul></div>', tocPost + '</ul></div>');
 
-    const tags = await POST_TAG.selectDistinctTagGroupCount();
+//     // 조회수 처리
+//     const client = clinfo(req);
+//     if (!client.robot && client.device != 'undefined') {
+//       const { affectedRows } = await HIT_BOARD.insertIgonre({
+//         ip: client.ip,
+//         board: 'series',
+//         board_idx: idx,
+//       });
+//       if (affectedRows != 0) await BOARD_SERIES.updateHit(idx);
+//     }
 
-    const post_count = await BOARD_POST.countAll();
-    const tag_count = await POST_TAG.countDistinct();
+//     res.render('client/blog/series/detail', {
+//       series,
+//       toc,
+//       post,
+//       layout: false,
+//     });
+//   }),
+// );
 
-    res.render("client/blog/tag", {
-      countPostTag: {
-        post_count,
-        tag_count
-      },
-      tags,
-      layout: false
-    });
-  })
-);
+// router.get(
+//   '/blog/tag',
+//   txrtfn(async (req, res, next, conn) => {
+//     const BOARD_POST = BoardPost(conn);
+//     const POST_TAG = PostTag(conn);
 
-router.get(
-  "/blog/tag/:query",
-  validator.params({ query: Joi.required() }),
-  txrtfn(async (req, res, next, conn) => {
-    const { query } = req.params;
-    const { page } = req.query;
+//     const tags = await POST_TAG.selectDistinctTagGroupCount();
 
-    const BOARD_POST = BoardPost(conn);
-    const POST_TAG = PostTag(conn);
-    const COMMENT = Comment(conn);
+//     const post_count = await BOARD_POST.countAll();
+//     const tag_count = await POST_TAG.countDistinct();
 
-    let tags = await BOARD_POST.selectPageRelatedTagPost(query, page);
-    const tagPage = await BOARD_POST.selectPageRelatedTagPostInfo(query, page);
+//     res.render('client/blog/tag', {
+//       countPostTag: {
+//         post_count,
+//         tag_count,
+//       },
+//       tags,
+//       layout: false,
+//     });
+//   }),
+// );
 
-    const post_count = await BOARD_POST.countAll();
-    const tag_count = await POST_TAG.countDistinct();
+// router.get(
+//   '/blog/tag/:query',
+//   validator.params({ query: Joi.required() }),
+//   txrtfn(async (req, res, next, conn) => {
+//     const { query } = req.params;
+//     const { page } = req.query;
 
-    if (tags.length !== 0) {
-      const comments = await COMMENT.countGroupBoard(
-        "post",
-        tags.map(tag => tag.idx)
-      );
+//     const BOARD_POST = BoardPost(conn);
+//     const POST_TAG = PostTag(conn);
+//     const COMMENT = Comment(conn);
 
-      tags = go(
-        tags,
-        map(tag => {
-          const comment = comments.find(
-            comment => comment.board_idx === tag.idx
-          ) || { count: 0 };
-          return {
-            ...tag,
-            comment: comment.count
-          };
-        })
-      );
-    }
+//     let tags = await BOARD_POST.selectPageRelatedTagPost(query, page);
+//     const tagPage = await BOARD_POST.selectPageRelatedTagPostInfo(query, page);
 
-    store(res).setState({
-      tagPage
-    });
+//     const post_count = await BOARD_POST.countAll();
+//     const tag_count = await POST_TAG.countDistinct();
 
-    res.render("client/blog/tag/detail", {
-      tags,
-      tagPage,
-      countPostTag: {
-        post_count,
-        tag_count
-      },
-      query,
-      queryRow: query ? tagPage.rowCount : null,
-      layout: false
-    });
-  })
-);
+//     if (tags.length !== 0) {
+//       const comments = await COMMENT.countGroupBoard(
+//         'post',
+//         tags.map(tag => tag.idx),
+//       );
 
-export default router;
+//       tags = go(
+//         tags,
+//         map(tag => {
+//           const comment = comments.find(
+//             comment => comment.board_idx === tag.idx,
+//           ) || { count: 0 };
+//           return {
+//             ...tag,
+//             comment: comment.count,
+//           };
+//         }),
+//       );
+//     }
+
+//     store(res).setState({
+//       tagPage,
+//     });
+
+//     res.render('client/blog/tag/detail', {
+//       tags,
+//       tagPage,
+//       countPostTag: {
+//         post_count,
+//         tag_count,
+//       },
+//       query,
+//       queryRow: query ? tagPage.rowCount : null,
+//       layout: false,
+//     });
+//   }),
+// );
+
+export default controller.router;

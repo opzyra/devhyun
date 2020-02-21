@@ -9,12 +9,12 @@ import helmet from 'helmet';
 import hbs from 'express-handlebars';
 import helpers from 'handlebars-helpers';
 
-import hbshelper from './lib/hbshelper';
-import sessionCtx from './lib/session';
-import debug from './middleware/debug';
-import { endpoint, error } from './middleware/error';
+import hbshelper from '@/lib/hbshelper';
+import session from '@/lib/session';
+import debug from '@/middleware/debug';
+import { endpoint, error } from '@/middleware/error';
 
-import routes from './routes';
+import routes from '@/routes';
 
 const app = express();
 
@@ -53,8 +53,8 @@ app.use(cookieParser());
 app.use(debug);
 
 // 세션
-app.use(sessionCtx.config);
-app.use(sessionCtx.listener());
+app.use(session.config);
+app.use(session.listener());
 
 // 라우터
 app.use(routes);

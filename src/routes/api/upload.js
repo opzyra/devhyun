@@ -8,7 +8,7 @@ import mkdirs from 'node-mkdirs';
 
 import sessionCtx from '../../lib/session';
 import { txrtfn } from '../../core/tx';
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 
 import Upload from '../../sql/Upload';
 

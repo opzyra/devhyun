@@ -1,11 +1,11 @@
-import express from "express";
+import asyncify from '@/lib/asyncify';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get("/policy", (req, res) => {
-  res.render("client/policy", {
-    layout: false
+export const index = controller.get('/policy', (req, res) => {
+  res.render('client/policy', {
+    layout: false,
   });
 });
 
-export default router;
+export default controller.router;

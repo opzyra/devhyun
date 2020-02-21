@@ -6,7 +6,7 @@ import sessionCtx from '../../lib/session';
 import { rtfn, txrtfn } from '../../core/tx';
 import store from '../../lib/store';
 
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 
 import PostTag from '../../sql/PostTag';
 import BoardPost from '../../sql/BoardPost';

@@ -1,16 +1,11 @@
-import express from "express";
+import asyncify from '@/lib/asyncify';
 
-import { rtfn } from "../../core/tx";
+const controller = asyncify();
 
-const router = express.Router();
+export const about = controller.get('/about', (req, res) => {
+  res.render('client/about', {
+    layout: false,
+  });
+});
 
-router.get(
-  "/about",
-  rtfn(async (req, res, next) => {
-    res.render("client/about", {
-      layout: false
-    });
-  })
-);
-
-export default router;
+export default controller.router;

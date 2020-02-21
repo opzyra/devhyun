@@ -1,6 +1,6 @@
 import express from 'express';
 
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 import sessionCtx from '../../lib/session';
 import oauth, { loginUrl } from '../../lib/oauth';
 

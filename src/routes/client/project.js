@@ -1,43 +1,32 @@
-import express from "express";
+import asyncify from '@/lib/asyncify';
 
-import { rtfn } from "../../core/tx";
+const controller = asyncify();
 
-const router = express.Router();
+export const project = controller.get('/project', (req, res) => {
+  res.render('client/project', {
+    layout: false,
+  });
+});
 
-router.get(
-  "/project",
-  rtfn(async (req, res, next) => {
-    res.render("client/project", {
-      layout: false
+export const aboutperiod = controller.get(
+  '/project/aboutperiod',
+  (req, res) => {
+    res.render('client/project/aboutperiod', {
+      layout: false,
     });
-  })
+  },
 );
 
-router.get(
-  "/project/aboutperiod",
-  rtfn(async (req, res, next) => {
-    res.render("client/project/aboutperiod", {
-      layout: false
-    });
-  })
-);
+export const codepresso = controller.get('/project/codepresso', (req, res) => {
+  res.render('client/project/codepresso', {
+    layout: false,
+  });
+});
 
-router.get(
-  "/project/codepresso",
-  rtfn(async (req, res, next) => {
-    res.render("client/project/codepresso", {
-      layout: false
-    });
-  })
-);
+export const jabis = controller.get('/project/jabis', (req, res) => {
+  res.render('client/project/jabis', {
+    layout: false,
+  });
+});
 
-router.get(
-  "/project/jabis",
-  rtfn(async (req, res, next) => {
-    res.render("client/project/jabis", {
-      layout: false
-    });
-  })
-);
-
-export default router;
+export default controller.router;

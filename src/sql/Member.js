@@ -1,6 +1,6 @@
-import Knex from "knex";
+import Knex from 'knex';
 
-import { pagination } from "../lib/pagination";
+import { pagination } from '../lib/utils';
 /**
  * member 테이블의 SQL메서드에 접근하기 위한 인스턴스
  * @class Member
@@ -8,7 +8,7 @@ import { pagination } from "../lib/pagination";
  * @return 하단의 메서드 오브젝트
  */
 export default function(conn) {
-  let table = "member";
+  let table = 'member';
   return {
     /**
      * postTag 테이블 생성
@@ -35,7 +35,7 @@ export default function(conn) {
             PRIMARY KEY (idx),
             UNIQUE INDEX id (id)
           )
-          `
+          `,
         );
         console.log(`CREATED TABLE ${table}`);
       }
@@ -57,29 +57,29 @@ export default function(conn) {
      * @param {int} offset 한 페이지당 회원정보 수 (default = 20)
      * @return {Array<Member>} 해당 회원정보
      */
-    async selectPage(query = "", category = "", page = 1, limit = 20) {
+    async selectPage(query = '', category = '', page = 1, limit = 20) {
       let offset = (parseInt(page) - 1) * limit;
       const sql = conn(table)
-        .whereNot("role", "ADMIN")
-        .orderBy("idx", "desc")
+        .whereNot('role', 'ADMIN')
+        .orderBy('idx', 'desc')
         .limit(limit)
         .offset(offset);
 
       if (query) {
         sql.where(builder => {
-          builder.where("name", "like", `%${query}%`);
+          builder.where('name', 'like', `%${query}%`);
         });
       }
 
-      if (category === "active" || category === "disabled") {
-        const value = category === "active" ? 1 : 0;
+      if (category === 'active' || category === 'disabled') {
+        const value = category === 'active' ? 1 : 0;
         sql.where(builder => {
-          builder.where("active", value).andWhere("withdraw", 0);
+          builder.where('active', value).andWhere('withdraw', 0);
         });
       }
 
-      if (category === "withdraw") {
-        sql.where("withdraw", 1);
+      if (category === 'withdraw') {
+        sql.where('withdraw', 1);
       }
 
       const items = await sql.select();
@@ -95,27 +95,27 @@ export default function(conn) {
      * @param {int} offset 한 페이지당 게시글 수 (default = 20)
      * @return {int} 해당 게시글 갯수
      */
-    async selectPageInfo(query = "", category = "", page = 1, limit = 20) {
-      const sql = conn(table).whereNot("role", "ADMIN");
+    async selectPageInfo(query = '', category = '', page = 1, limit = 20) {
+      const sql = conn(table).whereNot('role', 'ADMIN');
 
       if (query) {
         sql.where(builder => {
-          builder.where("name", "like", `%${query}%`);
+          builder.where('name', 'like', `%${query}%`);
         });
       }
 
-      if (category === "active" || category === "disabled") {
-        const value = category === "active" ? 1 : 0;
+      if (category === 'active' || category === 'disabled') {
+        const value = category === 'active' ? 1 : 0;
         sql.where(builder => {
-          builder.where("active", value).andWhere("withdraw", 0);
+          builder.where('active', value).andWhere('withdraw', 0);
         });
       }
 
-      if (category === "withdraw") {
-        sql.where("withdraw", 1);
+      if (category === 'withdraw') {
+        sql.where('withdraw', 1);
       }
 
-      const [{ rowCount }] = await sql.count({ rowCount: "*" });
+      const [{ rowCount }] = await sql.count({ rowCount: '*' });
 
       return pagination(rowCount, limit, page);
     },
@@ -127,7 +127,7 @@ export default function(conn) {
      */
     async selectById(id) {
       const [item] = await conn(table)
-        .where("id", id)
+        .where('id', id)
         .select();
       return item;
     },
@@ -142,7 +142,7 @@ export default function(conn) {
           .returning()
           .insert(item)
           .toString()
-          .replace("insert", "INSERT IGNORE")
+          .replace('insert', 'INSERT IGNORE'),
       );
       return data;
     },
@@ -155,8 +155,8 @@ export default function(conn) {
      */
     async updateOne(item, idx) {
       return await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .update(item);
-    }
+    },
   };
 }

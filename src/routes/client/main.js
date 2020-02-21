@@ -1,24 +1,17 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
 
-import { txrtfn } from '../../core/tx';
+import Post from '@/models/Post';
 
-import BoardPost from '../../sql/BoardPost';
+const controller = asyncify();
 
-const router = express.Router();
+export const index = controller.get('/', async (req, res) => {
+  const { transaction } = req;
+  const latestPosts = await Post.selectLatest(5, transaction);
 
-router.get(
-  '/',
-  txrtfn(async (req, res, next, conn) => {
-    // const POST = BoardPost(conn);
+  res.render('client/index', {
+    latestPosts,
+    layout: false,
+  });
+});
 
-    // 각 내용 ellipsis 처리
-    // const latestPosts = await POST.selectLatest();
-
-    res.render('client/index', {
-      // latestPosts,
-      layout: false,
-    });
-  }),
-);
-
-export default router;
+export default controller.router;

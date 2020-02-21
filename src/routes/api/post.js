@@ -4,7 +4,7 @@ import sessionCtx from '../../lib/session';
 import { txrtfn } from '../../core/tx';
 
 import { anchorConvert, safeMarkdown } from '../../lib/utils';
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 
 import PostTag from '../../sql/PostTag';
 import BoardPost from '../../sql/BoardPost';

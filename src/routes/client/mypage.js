@@ -1,18 +1,16 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+const controller = asyncify();
 
-const router = express.Router();
-
-router.get(
+export const mypage = controller.get(
   '/mypage',
-  sessionCtx.isAuthenticated(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAuthenticated(),
+  (req, res) => {
     res.render('client/mypage', {
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

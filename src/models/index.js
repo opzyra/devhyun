@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
+import logger from '@/lib/logger';
 
-export default {
+class Database {
   init() {
     const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
@@ -22,6 +23,7 @@ export default {
         acquire: 30000,
         idle: 10000,
       },
+      logging: msg => logger.debug(msg),
     });
 
     const models = Object.assign(
@@ -52,5 +54,9 @@ export default {
     this.models = models;
 
     return sequelize;
-  },
-};
+  }
+}
+
+const database = new Database();
+
+export default database;

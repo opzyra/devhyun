@@ -3,7 +3,7 @@ import express from 'express';
 import { txrtfn } from '../../core/tx';
 import sessionCtx from '../../lib/session';
 
-import validator, { Joi } from '../../lib/validator';
+import validator, { Joi } from '@/middleware/validator';
 
 import Member from '../../sql/Member';
 

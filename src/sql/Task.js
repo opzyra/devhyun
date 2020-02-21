@@ -1,6 +1,6 @@
-import Knex from "knex";
+import Knex from 'knex';
 
-import { pagination } from "../lib/pagination";
+import { pagination } from '../lib/utils';
 /**
  * task 테이블의 SQL메서드에 접근하기 위한 인스턴스
  * @class Task
@@ -8,7 +8,7 @@ import { pagination } from "../lib/pagination";
  * @return 하단의 메서드 오브젝트
  */
 export default function(conn) {
-  let table = "task";
+  let table = 'task';
   return {
     /**
      * task 테이블 생성
@@ -32,7 +32,7 @@ export default function(conn) {
             INDEX FK_task_task_group (task_group_idx),
             CONSTRAINT FK_task_task_group FOREIGN KEY (task_group_idx) REFERENCES task_group (idx) ON UPDATE CASCADE ON DELETE CASCADE
           )
-          `
+          `,
         );
         console.log(`CREATED TABLE ${table}`);
       }
@@ -44,10 +44,10 @@ export default function(conn) {
      * @return {Task} 해당 객체
      */
     async selectOne(idx) {
-      const [item] = await conn({ t: "task", tg: "task_group" })
-        .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
-        .where("t.idx", idx)
-        .select("t.*", "tg.color");
+      const [item] = await conn({ t: 'task', tg: 'task_group' })
+        .whereRaw('??=??', ['t.task_group_idx', 'tg.idx'])
+        .where('t.idx', idx)
+        .select('t.*', 'tg.color');
       return item;
     },
     /**
@@ -56,14 +56,14 @@ export default function(conn) {
      * @return {Array<Task>} 해당 리스트
      */
     async selectAll() {
-      return await conn({ t: "task", tg: "task_group" })
-        .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
+      return await conn({ t: 'task', tg: 'task_group' })
+        .whereRaw('??=??', ['t.task_group_idx', 'tg.idx'])
         .orderBy([
-          { column: "completed" },
-          { column: "odr" },
-          { column: "end" }
+          { column: 'completed' },
+          { column: 'odr' },
+          { column: 'end' },
         ])
-        .select("t.*", "tg.color");
+        .select('t.*', 'tg.color');
     },
     /**
      * 페이지 처리된 태스크 조회
@@ -74,31 +74,31 @@ export default function(conn) {
      * @param {int} group 태스크 그룹
      * @return {Array<Task>} 해당 리스트
      */
-    async selectPage(query = "", group = "", page = 1, limit = 20) {
+    async selectPage(query = '', group = '', page = 1, limit = 20) {
       let offset = (parseInt(page) - 1) * limit;
-      const sql = conn({ t: "task", tg: "task_group" })
-        .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
+      const sql = conn({ t: 'task', tg: 'task_group' })
+        .whereRaw('??=??', ['t.task_group_idx', 'tg.idx'])
         .orderBy([
-          { column: "completed" },
-          { column: "odr" },
-          { column: "end" }
+          { column: 'completed' },
+          { column: 'odr' },
+          { column: 'end' },
         ])
         .limit(limit)
         .offset(offset);
 
       if (group) {
-        sql.andWhere("t.task_group_idx", group);
+        sql.andWhere('t.task_group_idx', group);
       }
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      return await sql.select("t.*", "tg.color");
+      return await sql.select('t.*', 'tg.color');
     },
     /**
      * 페이지 처리 정보 조회
@@ -109,22 +109,22 @@ export default function(conn) {
      * @param {int} group 태스크 그룹
      * @return {int} 해당 게시글 갯수
      */
-    async selectPageInfo(query = "", group = "", page = 1, limit = 20) {
+    async selectPageInfo(query = '', group = '', page = 1, limit = 20) {
       const sql = conn(table);
 
       if (group) {
-        sql.andWhere("task_group_idx", group);
+        sql.andWhere('task_group_idx', group);
       }
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      const [{ rowCount }] = await sql.count({ rowCount: "*" });
+      const [{ rowCount }] = await sql.count({ rowCount: '*' });
 
       return pagination(rowCount, limit, page);
     },
@@ -134,15 +134,15 @@ export default function(conn) {
      * @return {Array<Task>} 해당 리스트
      */
     async selectAllNotCompleted() {
-      return await conn({ t: "task", tg: "task_group" })
-        .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
-        .where("t.completed", false)
+      return await conn({ t: 'task', tg: 'task_group' })
+        .whereRaw('??=??', ['t.task_group_idx', 'tg.idx'])
+        .where('t.completed', false)
         .orderBy([
-          { column: "completed" },
-          { column: "start" },
-          { column: "end" }
+          { column: 'completed' },
+          { column: 'start' },
+          { column: 'end' },
         ])
-        .select("t.*", "tg.color");
+        .select('t.*', 'tg.color');
     },
     /**
      * 특정 그룹 태스크 조회
@@ -150,11 +150,11 @@ export default function(conn) {
      * @return {Array<Task>} 해당 리스트
      */
     async selectAllGroup(idx) {
-      return await conn({ t: "task", tg: "task_group" })
-        .whereRaw("??=??", ["t.task_group_idx", "tg.idx"])
-        .where("task_group_idx", idx)
-        .orderBy([{ column: "completed" }, { column: "end" }])
-        .select("t.*", "tg.color");
+      return await conn({ t: 'task', tg: 'task_group' })
+        .whereRaw('??=??', ['t.task_group_idx', 'tg.idx'])
+        .where('task_group_idx', idx)
+        .orderBy([{ column: 'completed' }, { column: 'end' }])
+        .select('t.*', 'tg.color');
     },
     /**
      * 연관된 그룹의 태스크 갯수
@@ -163,8 +163,8 @@ export default function(conn) {
      */
     async countRelatedGroup(idx) {
       const [{ rowCount }] = await conn(table)
-        .where("task_group_idx", idx)
-        .count({ rowCount: "*" });
+        .where('task_group_idx', idx)
+        .count({ rowCount: '*' });
       return rowCount;
     },
     /**
@@ -186,7 +186,7 @@ export default function(conn) {
      */
     async updateOne(item, idx) {
       return await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .update(item);
     },
     /**
@@ -196,8 +196,8 @@ export default function(conn) {
      */
     async deleteOne(idx) {
       await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .delete();
-    }
+    },
   };
 }

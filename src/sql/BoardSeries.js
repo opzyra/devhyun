@@ -1,6 +1,6 @@
-import Knex from "knex";
+import Knex from 'knex';
 
-import { pagination } from "../lib/pagination";
+import { pagination } from '../lib/utils';
 
 /**
  * board_series 테이블의 SQL메서드에 접근하기 위한 인스턴스
@@ -9,7 +9,7 @@ import { pagination } from "../lib/pagination";
  * @return 하단의 메서드 오브젝트
  */
 export default function(conn) {
-  let table = "board_series";
+  let table = 'board_series';
   return {
     /**
      * boardSeries 테이블 생성
@@ -29,7 +29,7 @@ export default function(conn) {
             reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (idx)
           )
-          `
+          `,
         );
         console.log(`CREATED TABLE ${table}`);
       }
@@ -54,27 +54,27 @@ export default function(conn) {
      * @param {int} offset 한 페이지당 게시글 수 (default = 9)
      * @return {Pagination} 페이징 정보가 포함된 시리즈 + 해당 포스트의 갯수 데이터
      */
-    async selectPage(query = "", page = 1, limit = 9) {
+    async selectPage(query = '', page = 1, limit = 9) {
       let offset = (parseInt(page) - 1) * limit;
-      const sql = conn({ bs: "board_series", sp: "series_post" })
-        .orderBy("idx", "desc")
+      const sql = conn({ bs: 'board_series', sp: 'series_post' })
+        .orderBy('idx', 'desc')
         .count({
-          post_count: ["idx"]
+          post_count: ['idx'],
         })
-        .whereRaw("?? = ??", ["bs.idx", "sp.series_idx"])
-        .groupBy("bs.idx")
+        .whereRaw('?? = ??', ['bs.idx', 'sp.series_idx'])
+        .groupBy('bs.idx')
         .limit(limit)
         .offset(offset);
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      const items = await sql.select("bs.*");
+      const items = await sql.select('bs.*');
 
       return items;
     },
@@ -86,18 +86,18 @@ export default function(conn) {
      * @param {int} offset 한 페이지당 게시글 수 (default = 9)
      * @return {Pagination} 페이징 정보가 포함된 시리즈 + 해당 포스트의 갯수 데이터
      */
-    async selectPageInfo(query = "", page = 1, limit = 9) {
+    async selectPageInfo(query = '', page = 1, limit = 9) {
       const sql = conn(table);
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      const [{ rowCount }] = await sql.count({ rowCount: "*" });
+      const [{ rowCount }] = await sql.count({ rowCount: '*' });
 
       return pagination(rowCount, limit, page);
     },
@@ -120,7 +120,7 @@ export default function(conn) {
         AND 
         EXISTS (SELECT * FROM series_post AS sp2 WHERE sp1.series_idx = sp2.series_idx AND sp2.post_idx = ?)
       `,
-        [idx]
+        [idx],
       );
       return data;
     },
@@ -131,11 +131,11 @@ export default function(conn) {
      * @return {Array<Post>} 시리즈에 속해있는 모든 포스트 정보
      */
     async selectRelatedPost(idx) {
-      return await conn({ sp: "series_post", bp: "board_post" })
-        .whereRaw("??=??", ["sp.post_idx", "bp.idx"])
-        .andWhere("sp.series_idx", idx)
-        .orderBy("sp.odr")
-        .select("bp.*");
+      return await conn({ sp: 'series_post', bp: 'board_post' })
+        .whereRaw('??=??', ['sp.post_idx', 'bp.idx'])
+        .andWhere('sp.series_idx', idx)
+        .orderBy('sp.odr')
+        .select('bp.*');
     },
     /**
      * 시리즈 등록
@@ -156,7 +156,7 @@ export default function(conn) {
      */
     async updateOne(item, idx) {
       return await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .returning()
         .update(item);
     },
@@ -171,7 +171,7 @@ export default function(conn) {
         `
           UPDATE board_series set hit = hit + 1 where idx = ?
         `,
-        [idx]
+        [idx],
       );
       return changedRows == 1;
     },
@@ -182,8 +182,8 @@ export default function(conn) {
      */
     async deleteOne(idx) {
       await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .delete();
-    }
+    },
   };
 }

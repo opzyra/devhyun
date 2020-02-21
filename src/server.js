@@ -1,5 +1,5 @@
 import app from './app';
-import batch from './batch';
+// import batch from './batch';
 import sequelize from './models';
 
 import logger from './lib/logger';
@@ -7,13 +7,13 @@ import logger from './lib/logger';
 const runServer = async () => {
   const db = sequelize.init();
   const server = app.listen(process.env.APP_PORT, () => {});
-  batch.initialize();
+  // batch.initialize();
 
   try {
-    if (process.env.NODE_ENV !== 'production') {
-      await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
-      await db.sync({ force: true });
-    }
+    // if (process.env.NODE_ENV !== 'production') {
+    //   await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
+    //   await db.sync({ force: true });
+    // }
   } catch (e) {
     stopServer(server, db);
     throw e;

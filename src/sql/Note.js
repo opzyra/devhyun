@@ -1,6 +1,6 @@
-import Knex from "knex";
+import Knex from 'knex';
 
-import { pagination } from "../lib/pagination";
+import { pagination } from '../lib/utils';
 /**
  * note 테이블의 SQL메서드에 접근하기 위한 인스턴스
  * @class Note
@@ -8,7 +8,7 @@ import { pagination } from "../lib/pagination";
  * @return 하단의 메서드 오브젝트
  */
 export default function(conn) {
-  let table = "note";
+  let table = 'note';
   return {
     /**
      * note 테이블 생성
@@ -27,7 +27,7 @@ export default function(conn) {
             reg DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (idx)
           )
-          `
+          `,
         );
         console.log(`CREATED TABLE ${table}`);
       }
@@ -39,10 +39,10 @@ export default function(conn) {
      * @return {Note} 해당 객체
      */
     async selectOne(idx) {
-      const [item] = await conn({ n: "note", ng: "note_group" })
-        .whereRaw("??=??", ["n.note_group_idx", "ng.idx"])
-        .where("n.idx", idx)
-        .select("n.*", "ng.color");
+      const [item] = await conn({ n: 'note', ng: 'note_group' })
+        .whereRaw('??=??', ['n.note_group_idx', 'ng.idx'])
+        .where('n.idx', idx)
+        .select('n.*', 'ng.color');
       return item;
     },
     /**
@@ -51,10 +51,10 @@ export default function(conn) {
      * @return {Array<Note>} 해당 리스트
      */
     async selectAll() {
-      return await conn({ n: "note", ng: "note_group" })
-        .whereRaw("??=??", ["n.note_group_idx", "ng.idx"])
-        .orderBy([{ column: "reg", order: "desc" }])
-        .select("n.*", "ng.color");
+      return await conn({ n: 'note', ng: 'note_group' })
+        .whereRaw('??=??', ['n.note_group_idx', 'ng.idx'])
+        .orderBy([{ column: 'reg', order: 'desc' }])
+        .select('n.*', 'ng.color');
     },
     /**
      * 특정 그룹 노트 조회
@@ -62,11 +62,11 @@ export default function(conn) {
      * @return {Array<Note>} 해당 리스트
      */
     async selectAllGroup(idx) {
-      return await conn({ n: "note", ng: "note_group" })
-        .whereRaw("??=??", ["n.note_group_idx", "ng.idx"])
-        .where("note_group_idx", idx)
-        .orderBy([{ column: "reg", order: "desc" }])
-        .select("n.*", "ng.color");
+      return await conn({ n: 'note', ng: 'note_group' })
+        .whereRaw('??=??', ['n.note_group_idx', 'ng.idx'])
+        .where('note_group_idx', idx)
+        .orderBy([{ column: 'reg', order: 'desc' }])
+        .select('n.*', 'ng.color');
     },
     /**
      * 페이지 처리된 노트 조회
@@ -77,27 +77,27 @@ export default function(conn) {
      * @param {int} group 노트 그룹
      * @return {Array<Task>} 해당 리스트
      */
-    async selectPage(query = "", group = "", page = 1, limit = 20) {
+    async selectPage(query = '', group = '', page = 1, limit = 20) {
       let offset = (parseInt(page) - 1) * limit;
-      const sql = conn({ n: "note", ng: "note_group" })
-        .whereRaw("??=??", ["n.note_group_idx", "ng.idx"])
-        .orderBy([{ column: "odr" }, { column: "reg", order: "desc" }])
+      const sql = conn({ n: 'note', ng: 'note_group' })
+        .whereRaw('??=??', ['n.note_group_idx', 'ng.idx'])
+        .orderBy([{ column: 'odr' }, { column: 'reg', order: 'desc' }])
         .limit(limit)
         .offset(offset);
 
       if (group) {
-        sql.andWhere("n.note_group_idx", group);
+        sql.andWhere('n.note_group_idx', group);
       }
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      return await sql.select("n.*", "ng.color");
+      return await sql.select('n.*', 'ng.color');
     },
     /**
      * 페이지 처리 정보 조회
@@ -108,22 +108,22 @@ export default function(conn) {
      * @param {int} group 노트 그룹
      * @return {int} 해당 게시글 갯수
      */
-    async selectPageInfo(query = "", group = "", page = 1, limit = 20) {
+    async selectPageInfo(query = '', group = '', page = 1, limit = 20) {
       const sql = conn(table);
 
       if (group) {
-        sql.andWhere("note_group_idx", group);
+        sql.andWhere('note_group_idx', group);
       }
 
       if (query) {
         sql.andWhere(builder => {
           builder
-            .where("title", "like", `%${query}%`)
-            .orWhere("contents", "like", `%${query}%`);
+            .where('title', 'like', `%${query}%`)
+            .orWhere('contents', 'like', `%${query}%`);
         });
       }
 
-      const [{ rowCount }] = await sql.count({ rowCount: "*" });
+      const [{ rowCount }] = await sql.count({ rowCount: '*' });
 
       return pagination(rowCount, limit, page);
     },
@@ -134,8 +134,8 @@ export default function(conn) {
      */
     async countRelatedGroup(idx) {
       const [{ rowCount }] = await conn(table)
-        .where("note_group_idx", idx)
-        .count({ rowCount: "*" });
+        .where('note_group_idx', idx)
+        .count({ rowCount: '*' });
       return rowCount;
     },
     /**
@@ -157,7 +157,7 @@ export default function(conn) {
      */
     async updateOne(item, idx) {
       return await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .update(item);
     },
     /**
@@ -167,8 +167,8 @@ export default function(conn) {
      */
     async deleteOne(idx) {
       await conn(table)
-        .where("idx", idx)
+        .where('idx', idx)
         .delete();
-    }
+    },
   };
 }

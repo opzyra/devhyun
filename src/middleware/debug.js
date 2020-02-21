@@ -1,4 +1,4 @@
-import logger from '../lib/logger';
+import logger from '@/lib/logger';
 
 export default function(req, res, next) {
   const date = new Date();

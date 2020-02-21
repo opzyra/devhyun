@@ -1,4 +1,4 @@
-import logger from '../lib/logger';
+import logger from '@/lib/logger';
 
 // eslint-disable-next-line no-unused-vars
 export const endpoint = (req, res, next) => {

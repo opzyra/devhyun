@@ -1,5 +1,6 @@
 import session from 'express-session';
 import connectRedis from 'connect-redis';
+import ipware from 'ipware';
 
 const RedisStore = connectRedis(session);
 const store = new RedisStore({
@@ -57,6 +58,9 @@ const listener = () => {
       const [platform, ...rest] = member.id.split('_');
       member.platform = platform;
     }
+
+    // 클라이언트 IP 주입
+    req.ipware = ipware().get_ip(req);
 
     // 템플릿 엔진에서 사용하기 위한 세션 주입
     res.locals.session = req.session;

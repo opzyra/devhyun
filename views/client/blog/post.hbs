@@ -41,11 +41,11 @@
 						<ul>
 							<li>
 								<h3>발행 포스트</h3>
-								<p>{{countPostTag.post_count}} <span>건</span></p>
+								<p>{{countPostTag.postCount}} <span>건</span></p>
 							</li>
 							<li>
 								<h3>관련 태그</h3>
-								<p>{{countPostTag.tag_count}} <span>개</span></p>
+								<p>{{countPostTag.tagCount}} <span>개</span></p>
 							</li>
 						</ul>
 					</div>
@@ -93,7 +93,7 @@
 								<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
 								<p>{{parseMarkdown contents 89}}</p>
 								<div>
-									{{parseDate reg 'YYYY.MM.DD'}}
+									{{parseDate createdAt 'YYYY.MM.DD'}}
 									{{#if comment}}
 									<span>{{comment}}개의 댓글</span>
 									{{/if}}

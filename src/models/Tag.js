@@ -26,4 +26,11 @@ export default class Tag extends Sequelize.Model {
   static associate(models) {
     this.belongsTo(models.Post);
   }
+
+  // 중복제외된 태그의 수 조회
+  static countDistinct() {
+    return async transaction => {
+      return await this.count({ distinct: true, col: 'tag', transaction });
+    };
+  }
 }

@@ -2,6 +2,8 @@ import Sequelize from 'sequelize';
 
 import { pagination } from '@/lib/utils';
 
+import Comment from '@/models/Comment';
+
 export default class Post extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -23,7 +25,9 @@ export default class Post extends Sequelize.Model {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+  static associate(models) {
+    this.belongsToMany(models.Comment, { through: 'post_comment' });
+  }
 
   // 페이지 처리된 포스트 조회
   static selectPaginated(query, page = 1, limit = 9) {
@@ -33,6 +37,7 @@ export default class Post extends Sequelize.Model {
         limit,
         offset,
         order: [['idx', 'desc']],
+        raw: true,
         transaction,
       };
 
@@ -61,11 +66,20 @@ export default class Post extends Sequelize.Model {
   }
 
   // 메인화면에 제공하는 최신글 조회
-  static async selectLatest(limit = 5, transaction) {
-    return await this.findAll({
-      order: [['idx', 'desc']],
-      limit,
-      transaction,
-    });
+  static selectLatest(limit = 5) {
+    return async transaction => {
+      return await this.findAll({
+        order: [['idx', 'desc']],
+        limit,
+        transaction,
+      });
+    };
+  }
+
+  // 포스트 전체 갯수 조회
+  static countAll() {
+    return async transaction => {
+      return await this.count({ transaction });
+    };
   }
 }

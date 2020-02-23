@@ -10,10 +10,10 @@ const runServer = async () => {
   // batch.initialize();
 
   try {
-    // if (process.env.NODE_ENV !== 'production') {
-    //   await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
-    //   await db.sync({ force: true });
-    // }
+    if (process.env.NODE_ENV !== 'production') {
+      await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
+      await db.sync({});
+    }
   } catch (e) {
     stopServer(server, db);
     throw e;

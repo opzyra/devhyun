@@ -6,12 +6,13 @@ import store from '@/lib/store';
 import validator, { Joi } from '@/middleware/validator';
 
 import Post from '@/models/Post';
+import Tag from '@/models/Tag';
+import Comment from '@/models/Comment';
 
 import BoardPost from '../../sql/BoardPost';
 import PostTag from '../../sql/PostTag';
 import BoardSeries from '../../sql/BoardSeries';
 import HitBoard from '../../sql/HitBoard';
-import Comment from '../../sql/Comment';
 import Member from '../../sql/Member';
 
 const controller = asyncify();
@@ -20,49 +21,41 @@ export const posts = controller.get('/blog/post', async (req, res) => {
   const { transaction } = req;
   const { query, page } = req.query;
 
-  let posts = await Post.selectPaginated(query, page)(transaction);
+  let { posts, postPage } = await Post.selectPaginated(query, page)(
+    transaction,
+  );
+  const postCount = await Post.countAll()(transaction);
+  const tagCount = await Tag.countDistinct()(transaction);
 
-  console.log(posts);
+  const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
+    transaction,
+  );
 
-  // const BOARD_POST = BoardPost(conn);
-  // const POST_TAG = PostTag(conn);
-  // const COMMENT = Comment(conn);
-
-  // const postPage = await BOARD_POST.selectPageInfo(query, page);
-
-  // const post_count = await BOARD_POST.countAll();
-  // const tag_count = await POST_TAG.countDistinct();
-
-  // const comments = await COMMENT.countGroupBoard(
-  //   'post',
-  //   posts.map(post => post.idx),
-  // );
-
-  // posts = go(
-  //   posts,
-  //   map(post => {
-  //     const comment = comments.find(
-  //       comment => comment.board_idx === post.idx,
-  //     ) || { count: 0 };
-  //     return {
-  //       ...post,
-  //       comment: comment.count,
-  //     };
-  //   }),
-  // );
+  posts = go(
+    posts,
+    map(post => {
+      const comment = comments.find(
+        comment => comment.post_idx === post.idx,
+      ) || { count: 0 };
+      return {
+        ...post,
+        comment: comment.count,
+      };
+    }),
+  );
 
   store(res).setState({
-    // postPage,
+    postPage,
   });
 
   res.render('client/blog/post', {
     posts,
-    // postPage,
-    // queryRow: query ? postPage.rowCount : null,
-    // countPostTag: {
-    //   post_count,
-    //   tag_count,
-    // },
+    postPage,
+    queryRow: query ? postPage.rowCount : null,
+    countPostTag: {
+      postCount,
+      tagCount,
+    },
     layout: false,
   });
 });

@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize';
 
+import SeriesPost from '@/models/SeriesPost';
+
 export default class Series extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -15,6 +17,7 @@ export default class Series extends Sequelize.Model {
         hit: { type: Sequelize.INTEGER(11) },
       },
       {
+        tableName: 'series',
         sequelize,
       },
     );
@@ -22,6 +25,11 @@ export default class Series extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {
-    this.hasMany(models.Post);
+    this.belongsToMany(models.Post, {
+      through: {
+        model: SeriesPost,
+      },
+      timestamps: false,
+    });
   }
 }

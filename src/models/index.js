@@ -38,7 +38,6 @@ class Database {
         )
         .map(file => {
           const model = require(path.join(__dirname, file)).default;
-
           return {
             [model.name]: model.init(sequelize),
           };

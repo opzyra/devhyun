@@ -1,19 +1,15 @@
-import htmlToc from 'html-toc';
 import { go, map, filter, uniqueBy } from 'fxjs';
 
 import asyncify from '@/lib/asyncify';
 import store from '@/lib/store';
 import validator, { Joi } from '@/middleware/validator';
+import { parseToc } from '@/lib/utils';
 
+import Member from '@/models/Member';
 import Post from '@/models/Post';
 import Tag from '@/models/Tag';
 import Comment from '@/models/Comment';
-
-import BoardPost from '../../sql/BoardPost';
-import PostTag from '../../sql/PostTag';
-import BoardSeries from '../../sql/BoardSeries';
-import HitBoard from '../../sql/HitBoard';
-import Member from '../../sql/Member';
+import Hit from '@/models/Hit';
 
 const controller = asyncify();
 
@@ -24,6 +20,7 @@ export const posts = controller.get('/blog/post', async (req, res) => {
   let { posts, postPage } = await Post.selectPaginated(query, page)(
     transaction,
   );
+
   const postCount = await Post.countAll()(transaction);
   const tagCount = await Tag.countDistinct()(transaction);
 
@@ -60,130 +57,91 @@ export const posts = controller.get('/blog/post', async (req, res) => {
   });
 });
 
-// router.get(
-//   '/blog/post/:idx',
-//   validator.params({ idx: Joi.number().required() }),
-//   txrtfn(async (req, res, next, conn) => {
-//     const { idx } = req.params;
+export const postDetail = controller.get(
+  '/blog/post/:idx',
+  validator.params({ idx: Joi.number().required() }),
+  async (req, res) => {
+    const { transaction } = req;
+    const { idx } = req.params;
 
-//     const BOARD_POST = BoardPost(conn);
-//     const BOARD_SERIES = BoardSeries(conn);
-//     const HIT_BOARD = HitBoard(conn);
-//     const POST_TAG = PostTag(conn);
+    let post = await Post.selectOne(idx)(transaction);
 
-//     const MEMBER = Member(conn);
-//     const COMMENT = Comment(conn);
+    if (!post) {
+      throw new Error('잘못된 접근입니다.');
+    }
 
-//     const post = await BOARD_POST.selectOne(idx);
+    post = post.toJSON();
 
-//     if (!post) {
-//       throw new Error('잘못된 접근입니다.');
-//     }
+    const [content, toc] = parseToc(post.contents);
+    post.contents = content.replace(toc, '');
 
-//     let contents = htmlToc(`<div id="toc"></div>${post.contents}`, {
-//       selectors: 'h1, h2, h3, h4, h5',
-//       anchors: false,
-//       slugger: function(text) {
-//         const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-//         return decodeURI(text)
-//           .toLowerCase()
-//           .trim()
-//           .replace(re, '')
-//           .replace(/\s/g, '_');
-//       },
-//     });
+    // 연관 포스트
+    let relation =
+      post.Tags.length !== 0
+        ? await Post.selectRelatedTagPost(post.Tags.map(item => item.idx))(
+            transaction,
+          )
+        : await Post.selectPopularPost()(transaction);
 
-//     let [toc, ...rest] = contents.match(
-//       /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
-//     );
-//     post.contents = contents.replace(toc, '');
+    // 조회수 처리
+    if (!req.info.robot && req.info.device !== 'undefined') {
+      const hit = {
+        ip: req.info.ip,
+        type: 'post',
+        key: post.idx,
+      };
 
-//     // 태그
-//     const tags = await go(
-//       POST_TAG.selectReletedPost(idx),
-//       map(e => `${e.tag}`),
-//     );
+      const hitLog = await Hit.selectOne(hit)(transaction);
 
-//     const seriesRs = await BOARD_SERIES.selectRelatedSeriesPost(idx);
+      if (!hitLog) {
+        await Hit.insertIgonre(hit)(transaction);
+        await Post.updateHit(post.idx)(transaction);
+      }
+    }
 
-//     const series = Object.values(
-//       seriesRs.reduce((a, v) => {
-//         a[String(v.series_idx)] = a[String(v.series_idx)] || {};
-//         a[String(v.series_idx)].series_idx = v.series_idx;
-//         a[String(v.series_idx)].title = v.sb_title;
-//         a[String(v.series_idx)].thumbnail = v.sb_thumbnail;
-//         a[String(v.series_idx)].list = a[String(v.series_idx)].list || [];
-//         a[String(v.series_idx)].list.push({
-//           post_idx: v.post_idx,
-//           title: v.pb_title,
-//           thumbnail: v.pb_thumbnauil,
-//           contents: v.pb_contents,
-//         });
-//         return a;
-//       }, Object.create(null)),
-//     );
+    // 댓글 처리
+    const members = await Member.selectAll()(transaction);
 
-//     // 연관 포스트
-//     let relation = tags
-//       ? await BOARD_POST.selectRelatedTagPost(tags)
-//       : await BOARD_POST.selectPopularPost();
+    const comments = await go(
+      post.Comments,
+      map(comment => {
+        let target_member = members.find(
+          member => member.idx == comment.target_idx,
+        );
+        return {
+          ...comment,
+          target_name: target_member ? target_member.name : '',
+        };
+      }),
+    );
 
-//     // 조회수 처리
-//     const client = clinfo(req);
-//     if (!client.robot && client.device != 'undefined') {
-//       const { affectedRows } = await HIT_BOARD.insertIgonre({
-//         ip: client.ip,
-//         board: 'post',
-//         board_idx: idx,
-//       });
+    const commentsMember = go(
+      post.Comments,
+      filter(comment => {
+        if (req.session.member) {
+          return comment.member_idx !== req.session.member.idx;
+        }
+        return true;
+      }),
+      uniqueBy(u => u.member_idx),
+      map(comment => ({
+        idx: comment.member_idx,
+        name: comment.name,
+      })),
+    );
 
-//       if (affectedRows != 0) await BOARD_POST.updateHit(idx);
-//     }
-
-//     // 댓글 처리
-//     const members = await MEMBER.selectAll();
-//     const comments = await COMMENT.selectBoardAll('post', idx);
-
-//     const post_comments = await go(
-//       comments,
-//       map(comment => {
-//         let target_member = members.find(
-//           member => member.idx == comment.target_idx,
-//         );
-//         return {
-//           ...comment,
-//           target_name: target_member ? target_member.name : '',
-//         };
-//       }),
-//     );
-
-//     const comments_member = go(
-//       post_comments,
-//       filter(comment => {
-//         if (req.session.member) {
-//           return comment.member_idx !== req.session.member.idx;
-//         }
-//         return true;
-//       }),
-//       uniqueBy(u => u.member_idx),
-//       map(comment => ({
-//         idx: comment.member_idx,
-//         name: comment.name,
-//       })),
-//     );
-
-//     res.render('client/blog/post/detail', {
-//       post,
-//       toc,
-//       tags,
-//       series,
-//       relation,
-//       comments: post_comments,
-//       comments_member,
-//       layout: false,
-//     });
-//   }),
-// );
+    res.render('client/blog/post/detail', {
+      post,
+      toc,
+      tags: post.Tags,
+      series: post.Series,
+      relation,
+      comments,
+      commentsMember,
+      layout: false,
+    });
+  },
+);
 
 // router.get(
 //   '/blog/series',

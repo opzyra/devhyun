@@ -1,14 +1,12 @@
 import Sequelize from 'sequelize';
 
+import Post from '@/models/Post';
+import Series from '@/models/Series';
+
 export default class SeriesPost extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
         odr: { type: Sequelize.INTEGER(11) },
       },
       {
@@ -20,8 +18,5 @@ export default class SeriesPost extends Sequelize.Model {
   }
 
   // eslint-disable-next-line no-unused-vars
-  static associate(models) {
-    this.belongsTo(models.Series);
-    this.belongsTo(models.Post);
-  }
+  static associate(models) {}
 }

@@ -24,6 +24,7 @@ export default class Member extends Sequelize.Model {
         loginAt: { type: Sequelize.DATE, field: 'login_at' },
       },
       {
+        tableName: 'member',
         sequelize,
       },
     );
@@ -31,4 +32,11 @@ export default class Member extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  // 전체 회원 조회
+  static selectAll() {
+    return async transaction => {
+      return await this.findAll({ raw: true, transaction });
+    };
+  }
 }

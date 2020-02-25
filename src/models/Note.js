@@ -13,6 +13,7 @@ export default class Note extends Sequelize.Model {
         contents: { type: Sequelize.TEXT('medium') },
       },
       {
+        tableName: 'note',
         sequelize,
       },
     );

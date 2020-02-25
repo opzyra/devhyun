@@ -14,6 +14,7 @@ export default class Temp extends Sequelize.Model {
         contents: { type: Sequelize.TEXT('medium') },
       },
       {
+        tableName: 'temp',
         sequelize,
       },
     );

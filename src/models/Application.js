@@ -17,6 +17,7 @@ export default class Application extends Sequelize.Model {
         expiredDomain: { type: Sequelize.DATE, field: 'expired_domain' },
       },
       {
+        tableName: 'application',
         sequelize,
       },
     );

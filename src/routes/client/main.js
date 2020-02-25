@@ -6,7 +6,7 @@ const controller = asyncify();
 
 export const index = controller.get('/', async (req, res) => {
   const { transaction } = req;
-  const latestPosts = await Post.selectLatest(5, transaction);
+  const latestPosts = await Post.selectLatest(5)(transaction);
 
   res.render('client/index', {
     latestPosts,

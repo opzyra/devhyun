@@ -16,6 +16,7 @@ export default class Upload extends Sequelize.Model {
         src: { type: Sequelize.STRING(300) },
       },
       {
+        tableName: 'upload',
         sequelize,
       },
     );

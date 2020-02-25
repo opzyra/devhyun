@@ -17,6 +17,7 @@ export default class Schedule extends Sequelize.Model {
         endAt: { type: Sequelize.DATE, field: 'end_at' },
       },
       {
+        tableName: 'schedule',
         sequelize,
       },
     );

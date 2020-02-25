@@ -3,6 +3,10 @@ import Sequelize from 'sequelize';
 import { pagination } from '@/lib/utils';
 
 import Comment from '@/models/Comment';
+import Series from '@/models/Series';
+import Tag from '@/models/Tag';
+
+import SeriesPost from '@/models/SeriesPost';
 
 export default class Post extends Sequelize.Model {
   static init(sequelize) {
@@ -19,6 +23,7 @@ export default class Post extends Sequelize.Model {
         hit: { type: Sequelize.INTEGER(11) },
       },
       {
+        tableName: 'post',
         sequelize,
       },
     );
@@ -26,7 +31,22 @@ export default class Post extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {
-    this.belongsToMany(models.Comment, { through: 'post_comment' });
+    this.belongsToMany(models.Comment, {
+      through: 'post_comment',
+      timestamps: false,
+    });
+
+    this.belongsToMany(models.Tag, {
+      through: 'post_tag',
+      timestamps: false,
+    });
+
+    this.belongsToMany(models.Series, {
+      through: {
+        model: SeriesPost,
+      },
+      timestamps: false,
+    });
   }
 
   // 페이지 처리된 포스트 조회
@@ -65,6 +85,45 @@ export default class Post extends Sequelize.Model {
     };
   }
 
+  // 하나의 포스트 조회
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findOne({
+        where: { idx },
+        transaction,
+        include: [
+          {
+            model: Comment,
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Tag,
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Series,
+            through: {
+              attributes: [],
+            },
+            include: [
+              {
+                model: Post,
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          },
+        ],
+        nest: true,
+      });
+    };
+  }
+
   // 메인화면에 제공하는 최신글 조회
   static selectLatest(limit = 5) {
     return async transaction => {
@@ -80,6 +139,50 @@ export default class Post extends Sequelize.Model {
   static countAll() {
     return async transaction => {
       return await this.count({ transaction });
+    };
+  }
+
+  // 태그에 대한 연관 포스트 (기본값 5개)
+  static selectRelatedTagPost(tags = []) {
+    return async transaction => {
+      return await this.findAll({
+        include: [
+          {
+            model: Tag,
+            where: {
+              idx: {
+                [Sequelize.Op.in]: tags,
+              },
+            },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+        limit: 5,
+        transaction,
+      });
+    };
+  }
+
+  // 조회수가 많은 포스트 조회 (기본값 5개)
+  static selectPopularPost(limit = 5) {
+    return async transaction => {
+      return await this.findAll({
+        order: [['idx', 'desc']],
+        limit,
+        transaction,
+      });
+    };
+  }
+
+  // 조회수 업데이트
+  static updateHit(idx) {
+    return async transaction => {
+      return await this.update(
+        { hit: Sequelize.literal('hit + 1') },
+        { where: { idx }, transaction, silent: true },
+      );
     };
   }
 }

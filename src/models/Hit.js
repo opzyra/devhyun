@@ -14,6 +14,7 @@ export default class Hit extends Sequelize.Model {
         key: { type: Sequelize.INTEGER(11) },
       },
       {
+        tableName: 'hit',
         indexes: [
           {
             unique: true,
@@ -27,4 +28,25 @@ export default class Hit extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  // 게시글 조회 정도 조회
+  static selectOne(hit) {
+    return async transaction => {
+      return await this.findOne({
+        where: hit,
+        transaction,
+      });
+    };
+  }
+
+  // 게시글 조회 정보 등록
+  static insertIgonre(hit) {
+    return async transaction => {
+      return await this.create(hit, {
+        ignoreDuplicates: true,
+        transaction,
+        isNewRecord: true,
+      });
+    };
+  }
 }

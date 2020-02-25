@@ -12,6 +12,7 @@ export default class Comment extends Sequelize.Model {
         contents: { type: Sequelize.TEXT('medium') },
       },
       {
+        tableName: 'comment',
         sequelize,
       },
     );
@@ -26,7 +27,10 @@ export default class Comment extends Sequelize.Model {
       as: 'target',
     });
 
-    this.belongsToMany(models.Post, { through: 'post_comment' });
+    this.belongsToMany(models.Post, {
+      through: 'post_comment',
+      timestamps: false,
+    });
   }
 
   static countGroupPost(posts) {

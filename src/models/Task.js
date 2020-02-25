@@ -16,6 +16,7 @@ export default class Task extends Sequelize.Model {
         endAt: { type: Sequelize.DATE, field: 'end_at' },
       },
       {
+        tableName: 'task',
         sequelize,
       },
     );

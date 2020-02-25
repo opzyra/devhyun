@@ -9,22 +9,21 @@ export default class Tag extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        tag: { type: Sequelize.STRING(100) },
+        tag: { type: Sequelize.STRING(100), unique: true },
       },
       {
+        tableName: 'tag',
         timestamps: false,
-        indexes: [
-          {
-            fields: ['tag'],
-          },
-        ],
         sequelize,
       },
     );
   }
 
   static associate(models) {
-    this.belongsTo(models.Post);
+    this.belongsToMany(models.Post, {
+      through: 'post_tag',
+      timestamps: false,
+    });
   }
 
   // 중복제외된 태그의 수 조회

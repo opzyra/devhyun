@@ -7,6 +7,7 @@ import { parseToc } from '@/lib/utils';
 
 import Member from '@/models/Member';
 import Post from '@/models/Post';
+import Series from '@/models/Series';
 import Tag from '@/models/Tag';
 import Comment from '@/models/Comment';
 import Hit from '@/models/Hit';
@@ -143,37 +144,32 @@ export const postDetail = controller.get(
   },
 );
 
-// router.get(
-//   '/blog/series',
-//   txrtfn(async (req, res, next, conn) => {
-//     const { query, page } = req.query;
+export const series = controller.get('/blog/series', async (req, res) => {
+  const { transaction } = req;
+  const { query, page } = req.query;
 
-//     const BOARD_POST = BoardPost(conn);
-//     const BOARD_SERIES = BoardSeries(conn);
-//     const POST_TAG = PostTag(conn);
+  let { series, seriesPage } = await Series.selectPaginated(query, page)(
+    transaction,
+  );
 
-//     const series = await BOARD_SERIES.selectPage(query, page);
-//     const seriesPage = await BOARD_SERIES.selectPageInfo(query, page);
+  const postCount = await Post.countAll()(transaction);
+  const tagCount = await Tag.countDistinct()(transaction);
 
-//     const post_count = await BOARD_POST.countAll();
-//     const tag_count = await POST_TAG.countDistinct();
+  store(res).setState({
+    seriesPage,
+  });
 
-//     store(res).setState({
-//       seriesPage,
-//     });
-
-//     res.render('client/blog/series', {
-//       series,
-//       seriesPage,
-//       queryRow: query ? seriesPage.rowCount : null,
-//       countPostTag: {
-//         post_count,
-//         tag_count,
-//       },
-//       layout: false,
-//     });
-//   }),
-// );
+  res.render('client/blog/series', {
+    series,
+    seriesPage,
+    queryRow: query ? seriesPage.rowCount : null,
+    countPostTag: {
+      postCount,
+      tagCount,
+    },
+    layout: false,
+  });
+});
 
 // router.get(
 //   '/blog/series/:idx',

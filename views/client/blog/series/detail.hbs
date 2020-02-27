@@ -42,7 +42,7 @@
 					<h2>
 						{{series.title}}
 					</h2>
-					<div class="date">{{parseDate series.reg 'YYYY.MM.DD'}}
+					<div class="date">{{parseDate series.createdAt 'YYYY.MM.DD'}}
 						<div class="icon">
 							{{#isNewPost series.reg}}
 							<img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
@@ -77,14 +77,14 @@
 						<div class="post">
 							<h2 id="postList">관련 포스트</h2>
 							<ul>
-								{{#each post}}
+								{{#each series.Posts}}
 								<li>
 									<a class="thumb" href="/blog/post/{{idx}}">
 										<img src="{{thumbnail}}">
 										<div class="white-mask"></div>
 									</a>
 									<div class="description">
-										<span>{{parseDate reg 'YYYY.MM.DD'}}</span>
+										<span>{{parseDate createdAt 'YYYY.MM.DD'}}</span>
 										<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
 										<p class="visual_pc">{{parseMarkdown contents 200}}</p>
 										<p class="visual_mobile">{{parseMarkdown contents 80}}</p>

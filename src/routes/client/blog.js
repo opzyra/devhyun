@@ -171,74 +171,58 @@ export const series = controller.get('/blog/series', async (req, res) => {
   });
 });
 
-// router.get(
-//   '/blog/series/:idx',
-//   validator.params({ idx: Joi.number().required() }),
-//   txrtfn(async (req, res, next, conn) => {
-//     const { idx } = req.params;
+export const seriesDetail = controller.get(
+  '/blog/series/:idx',
+  validator.params({ idx: Joi.number().required() }),
+  async (req, res) => {
+    const { transaction } = req;
+    const { idx } = req.params;
 
-//     const BOARD_SERIES = BoardSeries(conn);
-//     const HIT_BOARD = HitBoard(conn);
+    const series = await Series.selectOne(idx)(transaction);
+    if (!series) {
+      throw new Error('잘못된 접근입니다.');
+    }
 
-//     const series = await BOARD_SERIES.selectOne(idx);
-//     if (!series) {
-//       throw new Error('잘못된 접근입니다.');
-//     }
+    let [content, toc] = parseToc(series.contents);
+    series.contents = content.replace(toc, '');
 
-//     let contents = htmlToc(`<div id="toc"></div>${series.contents}`, {
-//       selectors: 'h1, h2, h3, h4, h5',
-//       anchors: false,
-//       slugger: function(text) {
-//         const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-//         return decodeURI(text)
-//           .toLowerCase()
-//           .trim()
-//           .replace(re, '')
-//           .replace(/\s/g, '_');
-//       },
-//     });
+    // 포스트 네비바 처리
+    let tocPostItems = '';
+    series.Posts.forEach(post => {
+      tocPostItems += `<li><a href="/blog/post/${post.idx}">${post.title}</a></li>`;
+    });
 
-//     let [toc, ...rest] = contents.match(
-//       /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
-//     );
-//     series.contents = contents.replace(toc, '');
+    let tocPost = `<li><a href="#postList">관련 포스트</a><ul class="nav">${tocPostItems}</ul></li>`;
 
-//     // 관련 포스트
-//     const post = await BOARD_SERIES.selectRelatedPost(idx);
+    if (toc == '<div id="toc"></div>') {
+      toc = '<div id="toc"><ul class="nav sidenav"></ul></div>';
+    }
 
-//     // 포스트 네비바 처리
-//     let tocPostItems = '';
-//     post.forEach((e, i) => {
-//       tocPostItems += `<li><a href="/blog/post/${e.idx}">${e.title}</a></li>`;
-//     });
+    toc = toc.replace('</ul></div>', tocPost + '</ul></div>');
 
-//     let tocPost = `<li><a href="#postList">관련 포스트</a><ul class="nav">${tocPostItems}</ul></li>`;
+    // 조회수 처리
+    if (!req.info.robot && req.info.device !== 'undefined') {
+      const hit = {
+        ip: req.info.ip,
+        type: 'series',
+        key: series.idx,
+      };
 
-//     if (toc == '<div id="toc"></div>') {
-//       toc = '<div id="toc"><ul class="nav sidenav"></ul></div>';
-//     }
+      const hitLog = await Hit.selectOne(hit)(transaction);
 
-//     toc = toc.replace('</ul></div>', tocPost + '</ul></div>');
+      if (!hitLog) {
+        await Hit.insertIgonre(hit)(transaction);
+        await Series.updateHit(series.idx)(transaction);
+      }
+    }
 
-//     // 조회수 처리
-//     const client = clinfo(req);
-//     if (!client.robot && client.device != 'undefined') {
-//       const { affectedRows } = await HIT_BOARD.insertIgonre({
-//         ip: client.ip,
-//         board: 'series',
-//         board_idx: idx,
-//       });
-//       if (affectedRows != 0) await BOARD_SERIES.updateHit(idx);
-//     }
-
-//     res.render('client/blog/series/detail', {
-//       series,
-//       toc,
-//       post,
-//       layout: false,
-//     });
-//   }),
-// );
+    res.render('client/blog/series/detail', {
+      series,
+      toc,
+      layout: false,
+    });
+  },
+);
 
 // router.get(
 //   '/blog/tag',

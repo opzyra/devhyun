@@ -81,4 +81,35 @@ export default class Series extends Sequelize.Model {
       return { series: rows, seriesPage };
     };
   }
+
+  // idx값을 가지고 하나의 시리즈 조회
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findOne({
+        where: {
+          idx,
+        },
+        include: [
+          {
+            model: Post,
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+        nest: true,
+        transaction,
+      });
+    };
+  }
+
+  // 조회수 업데이트
+  static updateHit(idx) {
+    return async transaction => {
+      return await this.update(
+        { hit: Sequelize.literal('hit + 1') },
+        { where: { idx }, transaction, silent: true },
+      );
+    };
+  }
 }

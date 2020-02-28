@@ -224,27 +224,23 @@ export const seriesDetail = controller.get(
   },
 );
 
-// router.get(
-//   '/blog/tag',
-//   txrtfn(async (req, res, next, conn) => {
-//     const BOARD_POST = BoardPost(conn);
-//     const POST_TAG = PostTag(conn);
+export const tag = controller.get('/blog/tag', async (req, res) => {
+  const { transaction } = req;
 
-//     const tags = await POST_TAG.selectDistinctTagGroupCount();
+  const tags = await Tag.selectDistinctTagGroupCount()(transaction);
 
-//     const post_count = await BOARD_POST.countAll();
-//     const tag_count = await POST_TAG.countDistinct();
+  const postCount = await Post.countAll()(transaction);
+  const tagCount = await Tag.countDistinct()(transaction);
 
-//     res.render('client/blog/tag', {
-//       countPostTag: {
-//         post_count,
-//         tag_count,
-//       },
-//       tags,
-//       layout: false,
-//     });
-//   }),
-// );
+  res.render('client/blog/tag', {
+    countPostTag: {
+      postCount,
+      tagCount,
+    },
+    tags,
+    layout: false,
+  });
+});
 
 // router.get(
 //   '/blog/tag/:query',

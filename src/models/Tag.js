@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize';
 
+import Post from '@/models/Post';
+
 export default class Tag extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -30,6 +32,33 @@ export default class Tag extends Sequelize.Model {
   static countDistinct() {
     return async transaction => {
       return await this.count({ distinct: true, col: 'tag', transaction });
+    };
+  }
+
+  // 중복제외된 태그와 태그별 갯수 조회
+  static selectDistinctTagGroupCount() {
+    return async transaction => {
+      return await this.findAll({
+        attributes: {
+          include: ['Tag.*', [Sequelize.fn('COUNT', '*'), 'count']],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: {
+              include: ['idx'],
+            },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+        group: ['idx'],
+        order: [[Sequelize.literal('count'), 'desc']],
+        raw: true,
+        nest: true,
+        transaction,
+      });
     };
   }
 }

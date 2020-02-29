@@ -85,6 +85,43 @@ export default class Post extends Sequelize.Model {
     };
   }
 
+  // 태그와 연관있는 포스트 조회
+  static selectPaginatedRelatedTag(query, page = 1, limit = 9) {
+    return async transaction => {
+      let offset = (parseInt(page) - 1) * limit;
+
+      let { count, rows } = await this.findAndCountAll({
+        limit,
+        offset,
+        order: [['idx', 'desc']],
+        include: [
+          {
+            model: Comment,
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Tag,
+            where: {
+              tag: query,
+            },
+            require: true,
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+        raw: true,
+        nest: true,
+        transaction,
+      });
+      let postPage = pagination(count, limit, page);
+
+      return { posts: rows, postPage };
+    };
+  }
+
   // 하나의 포스트 조회
   static selectOne(idx) {
     return async transaction => {

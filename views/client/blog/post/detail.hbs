@@ -91,13 +91,13 @@
 											<div class="mode">선택</div>
 										</div>
 										<div class="description">
-											<h4>{{name}}<span>{{parseDiffDate reg}}</span></h4>
-											{{#if target_idx}}<h5>@{{target_name}}</h5>{{/if}}
+											<h4>{{name}}<span>{{parseDiffDate createdAt}}</span></h4>
+											{{#if targetIdx}}<h5>@{{targetName}}</h5>{{/if}}
 											<p>{{{lineBreak contents}}}</p>
 											<div class="menu">
 												{{#if ../session.member}}
-												{{#neq ../session.member.idx member_idx}}
-												<a href="javascript:;" onclick="APP.reply({{member_idx}})"><i
+												{{#neq ../session.member.idx memberIdx}}
+												<a href="javascript:;" onclick="APP.reply({{memberIdx}})"><i
 														class="mdi mdi-plus-outline"></i>댓글</a>
 												{{else}}
 												<a href="javascript:;" onclick="APP.updateModeComment({{idx}})"><i
@@ -117,10 +117,10 @@
 									<input name="board_idx" type="hidden" value="{{post.idx}}">
 									<textarea name="contents" rows="1"></textarea>
 									<div class="submit">
-										{{#if comments_member}}
+										{{#if commentsMember}}
 										<select name="target_idx">
 											<option value="">글쓴이를 선택하세요</option>
-											{{#each comments_member}}
+											{{#each commentsMember}}
 											<option value="{{idx}}">{{name}}</option>
 											{{/each}}
 										</select>

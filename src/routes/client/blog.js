@@ -106,12 +106,16 @@ export const postDetail = controller.get(
     const comments = await go(
       post.Comments,
       map(comment => {
-        let target_member = members.find(
-          member => member.idx == comment.target_idx,
+        let member = members.find(member => member.idx == comment.memberIdx);
+
+        let targetMember = members.find(
+          member => member.idx == comment.targetIdx,
         );
         return {
           ...comment,
-          target_name: target_member ? target_member.name : '',
+          thumbnail: member.thumbnail,
+          name: member.name,
+          targetName: targetMember ? targetMember.name : '',
         };
       }),
     );
@@ -242,59 +246,37 @@ export const tag = controller.get('/blog/tag', async (req, res) => {
   });
 });
 
-// router.get(
-//   '/blog/tag/:query',
-//   validator.params({ query: Joi.required() }),
-//   txrtfn(async (req, res, next, conn) => {
-//     const { query } = req.params;
-//     const { page } = req.query;
+export const tagDetail = controller.get(
+  '/blog/tag/:query',
+  validator.params({ query: Joi.required() }),
+  async (req, res) => {
+    const { transaction } = req;
+    const { query } = req.params;
+    const { page } = req.query;
 
-//     const BOARD_POST = BoardPost(conn);
-//     const POST_TAG = PostTag(conn);
-//     const COMMENT = Comment(conn);
+    let { posts, postPage } = await Post.selectPaginatedRelatedTag(query, page)(
+      transaction,
+    );
 
-//     let tags = await BOARD_POST.selectPageRelatedTagPost(query, page);
-//     const tagPage = await BOARD_POST.selectPageRelatedTagPostInfo(query, page);
+    const postCount = await Post.countAll()(transaction);
+    const tagCount = await Tag.countDistinct()(transaction);
 
-//     const post_count = await BOARD_POST.countAll();
-//     const tag_count = await POST_TAG.countDistinct();
+    store(res).setState({
+      postPage,
+    });
 
-//     if (tags.length !== 0) {
-//       const comments = await COMMENT.countGroupBoard(
-//         'post',
-//         tags.map(tag => tag.idx),
-//       );
-
-//       tags = go(
-//         tags,
-//         map(tag => {
-//           const comment = comments.find(
-//             comment => comment.board_idx === tag.idx,
-//           ) || { count: 0 };
-//           return {
-//             ...tag,
-//             comment: comment.count,
-//           };
-//         }),
-//       );
-//     }
-
-//     store(res).setState({
-//       tagPage,
-//     });
-
-//     res.render('client/blog/tag/detail', {
-//       tags,
-//       tagPage,
-//       countPostTag: {
-//         post_count,
-//         tag_count,
-//       },
-//       query,
-//       queryRow: query ? tagPage.rowCount : null,
-//       layout: false,
-//     });
-//   }),
-// );
+    res.render('client/blog/tag/detail', {
+      posts,
+      postPage,
+      countPostTag: {
+        postCount,
+        tagCount,
+      },
+      query,
+      queryRow: query ? postPage.rowCount : null,
+      layout: false,
+    });
+  },
+);
 
 export default controller.router;

@@ -39,4 +39,25 @@ export default class Member extends Sequelize.Model {
       return await this.findAll({ raw: true, transaction });
     };
   }
+
+  static selectById(id) {
+    return async transaction => {
+      return await this.findOne({ where: { id }, raw: true, transaction });
+    };
+  }
+
+  static insertOne(member) {
+    return async transaction => {
+      return await this.create(member, { raw: true, transaction });
+    };
+  }
+
+  static updateOne(member) {
+    return async transaction => {
+      return await this.update(member, {
+        where: { idx: member.idx },
+        transaction,
+      });
+    };
+  }
 }

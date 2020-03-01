@@ -1,33 +1,34 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
 
 import validator, { Joi } from '@/middleware/validator';
-import sessionCtx from '../../lib/session';
-import oauth, { loginUrl } from '../../lib/oauth';
+import session from '@/lib/session';
+import oauth, { loginUrl } from '@/lib/oauth';
 
-import { txrtfn } from '../../core/tx';
+import Member from '@/models/Member';
 
-import Member from '../../sql/Member';
+const controller = asyncify();
 
-const router = express.Router();
+export const login = controller.get(
+  '/login',
+  session.isAnonymous(),
+  (req, res) => {
+    res.render('client/login', { loginUrl, layout: false });
+  },
+);
 
-router.get('/login', sessionCtx.isAnonymous(), (req, res) => {
-  res.render('client/login', { loginUrl, layout: false });
-});
-
-router.get(
+export const loginPlatform = controller.get(
   '/login/:platform',
-  sessionCtx.isAnonymous(),
+  session.isAnonymous(),
   validator.query({
     code: Joi.string().required(),
   }),
   validator.params({
     platform: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res) => {
+    const { transaction } = req;
     const { platform } = req.params;
     const { code } = req.query;
-
-    const MEMBER = Member(conn);
 
     const auth = oauth[platform];
 
@@ -35,35 +36,37 @@ router.get(
       throw new Error('platform error');
     }
 
-    const member = await auth(code);
+    let member = await auth(code);
 
-    const dbMember = await MEMBER.selectById(member.id);
+    const dbMember = await Member.selectById(member.id)(transaction);
 
     if (!dbMember) {
-      await MEMBER.insertOne(member);
+      member = await Member.insertOne(member)(transaction);
     } else {
-      await MEMBER.updateOne({ ...member, login: new Date() }, dbMember.idx);
+      member = {
+        ...dbMember,
+        login: new Date(),
+      };
+      await Member.updateOne(member)(transaction);
     }
 
-    const sessionMember = await MEMBER.selectById(member.id);
-
-    if (!sessionMember.active) {
+    if (!member.active) {
       res.redirect('/login?error=active');
       return;
     }
 
-    if (sessionMember.withdraw) {
+    if (member.withdraw) {
       res.redirect('/login?error=withdraw');
       return;
     }
 
-    req.session.member = sessionMember;
+    req.session.member = member;
 
     const redirect = req.cookies.redirect || '/';
     res.clearCookie('redirect');
 
     res.redirect(redirect);
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

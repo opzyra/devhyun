@@ -121,16 +121,16 @@ export const postDetail = controller.get(
     );
 
     const commentsMember = go(
-      post.Comments,
+      comments,
       filter(comment => {
         if (req.session.member) {
-          return comment.member_idx !== req.session.member.idx;
+          return comment.memberIdx !== req.session.member.idx;
         }
         return true;
       }),
-      uniqueBy(u => u.member_idx),
+      uniqueBy(u => u.memberIdx),
       map(comment => ({
-        idx: comment.member_idx,
+        idx: comment.memberIdx,
         name: comment.name,
       })),
     );

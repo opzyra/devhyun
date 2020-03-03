@@ -1,7 +1,7 @@
 import asyncify from '@/lib/asyncify';
 
-import validator, { Joi } from '@/middleware/validator';
 import session from '@/lib/session';
+import validator, { Joi } from '@/middleware/validator';
 import oauth, { loginUrl } from '@/lib/oauth';
 
 import Member from '@/models/Member';
@@ -25,8 +25,7 @@ export const loginPlatform = controller.get(
   validator.params({
     platform: Joi.string().required(),
   }),
-  async (req, res) => {
-    const { transaction } = req;
+  async (req, res, transaction) => {
     const { platform } = req.params;
     const { code } = req.query;
 

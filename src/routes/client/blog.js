@@ -14,55 +14,55 @@ import Hit from '@/models/Hit';
 
 const controller = asyncify();
 
-export const posts = controller.get('/blog/post', async (req, res) => {
-  const { transaction } = req;
-  const { query, page } = req.query;
+export const posts = controller.get(
+  '/blog/post',
+  async (req, res, transaction) => {
+    const { query, page } = req.query;
+    let { posts, postPage } = await Post.selectPaginated(query, page)(
+      transaction,
+    );
 
-  let { posts, postPage } = await Post.selectPaginated(query, page)(
-    transaction,
-  );
+    const postCount = await Post.countAll()(transaction);
+    const tagCount = await Tag.countDistinct()(transaction);
 
-  const postCount = await Post.countAll()(transaction);
-  const tagCount = await Tag.countDistinct()(transaction);
+    const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
+      transaction,
+    );
 
-  const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
-    transaction,
-  );
+    posts = go(
+      posts,
+      map(post => {
+        const comment = comments.find(
+          comment => comment.post_idx === post.idx,
+        ) || { count: 0 };
+        return {
+          ...post,
+          comment: comment.count,
+        };
+      }),
+    );
 
-  posts = go(
-    posts,
-    map(post => {
-      const comment = comments.find(
-        comment => comment.post_idx === post.idx,
-      ) || { count: 0 };
-      return {
-        ...post,
-        comment: comment.count,
-      };
-    }),
-  );
+    store(res).setState({
+      postPage,
+    });
 
-  store(res).setState({
-    postPage,
-  });
-
-  res.render('client/blog/post', {
-    posts,
-    postPage,
-    queryRow: query ? postPage.rowCount : null,
-    countPostTag: {
-      postCount,
-      tagCount,
-    },
-    layout: false,
-  });
-});
+    res.render('client/blog/post', {
+      posts,
+      postPage,
+      queryRow: query ? postPage.rowCount : null,
+      countPostTag: {
+        postCount,
+        tagCount,
+      },
+      layout: false,
+    });
+  },
+);
 
 export const postDetail = controller.get(
   '/blog/post/:idx',
   validator.params({ idx: Joi.number().required() }),
-  async (req, res) => {
-    const { transaction } = req;
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
     let post = await Post.selectOne(idx)(transaction);
@@ -148,38 +148,39 @@ export const postDetail = controller.get(
   },
 );
 
-export const series = controller.get('/blog/series', async (req, res) => {
-  const { transaction } = req;
-  const { query, page } = req.query;
+export const series = controller.get(
+  '/blog/series',
+  async (req, res, transaction) => {
+    const { query, page } = req.query;
 
-  let { series, seriesPage } = await Series.selectPaginated(query, page)(
-    transaction,
-  );
+    let { series, seriesPage } = await Series.selectPaginated(query, page)(
+      transaction,
+    );
 
-  const postCount = await Post.countAll()(transaction);
-  const tagCount = await Tag.countDistinct()(transaction);
+    const postCount = await Post.countAll()(transaction);
+    const tagCount = await Tag.countDistinct()(transaction);
 
-  store(res).setState({
-    seriesPage,
-  });
+    store(res).setState({
+      seriesPage,
+    });
 
-  res.render('client/blog/series', {
-    series,
-    seriesPage,
-    queryRow: query ? seriesPage.rowCount : null,
-    countPostTag: {
-      postCount,
-      tagCount,
-    },
-    layout: false,
-  });
-});
+    res.render('client/blog/series', {
+      series,
+      seriesPage,
+      queryRow: query ? seriesPage.rowCount : null,
+      countPostTag: {
+        postCount,
+        tagCount,
+      },
+      layout: false,
+    });
+  },
+);
 
 export const seriesDetail = controller.get(
   '/blog/series/:idx',
   validator.params({ idx: Joi.number().required() }),
-  async (req, res) => {
-    const { transaction } = req;
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
     const series = await Series.selectOne(idx)(transaction);
@@ -228,29 +229,29 @@ export const seriesDetail = controller.get(
   },
 );
 
-export const tag = controller.get('/blog/tag', async (req, res) => {
-  const { transaction } = req;
+export const tag = controller.get(
+  '/blog/tag',
+  async (req, res, transaction) => {
+    const tags = await Tag.selectDistinctTagGroupCount()(transaction);
 
-  const tags = await Tag.selectDistinctTagGroupCount()(transaction);
+    const postCount = await Post.countAll()(transaction);
+    const tagCount = await Tag.countDistinct()(transaction);
 
-  const postCount = await Post.countAll()(transaction);
-  const tagCount = await Tag.countDistinct()(transaction);
-
-  res.render('client/blog/tag', {
-    countPostTag: {
-      postCount,
-      tagCount,
-    },
-    tags,
-    layout: false,
-  });
-});
+    res.render('client/blog/tag', {
+      countPostTag: {
+        postCount,
+        tagCount,
+      },
+      tags,
+      layout: false,
+    });
+  },
+);
 
 export const tagDetail = controller.get(
   '/blog/tag/:query',
   validator.params({ query: Joi.required() }),
-  async (req, res) => {
-    const { transaction } = req;
+  async (req, res, transaction) => {
     const { query } = req.params;
     const { page } = req.query;
 

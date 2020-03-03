@@ -30,8 +30,7 @@ const delegate = (app, prop) => {
 const wrap = asyncFunc => {
   return async (req, res, next) => {
     const transaction = await database.sequelize.transaction();
-    req.transaction = transaction;
-    asyncFunc(req, res, next)
+    asyncFunc(req, res, transaction)
       .then(async () => {
         await transaction.commit();
       })

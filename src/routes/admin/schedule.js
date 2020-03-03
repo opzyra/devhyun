@@ -1,18 +1,17 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { rtfn } from '../../core/tx';
+import session from '@/lib/session';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const schedule = controller.get(
   '/schedule',
-  sessionCtx.isAdmin(),
-  rtfn(async (req, res, next) => {
+  session.isAdmin(),
+  (req, res) => {
     res.render('admin/schedule', {
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

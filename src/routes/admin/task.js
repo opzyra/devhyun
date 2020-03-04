@@ -1,25 +1,20 @@
-import express from 'express';
-import { go, filter } from 'fxjs';
+import { go, map, filter } from 'fxjs';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
+import store from '@/lib/store';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
-import store from '../../lib/store';
+import Task from '@/models/Task';
+import TaskGroup from '@/models/TaskGroup';
 
-import Task from '../../sql/Task';
-import TaskGroup from '../../sql/TaskGroup';
+const controller = asyncify();
 
-const router = express.Router();
-
-router.get(
+export const task = controller.get(
   '/task',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { group, query, page } = req.query;
 
-    const TASK = Task(conn);
-    const TASK_GROUP = TaskGroup(conn);
-
-    let taskGroups = await TASK_GROUP.selectAll();
+    let taskGroups = await TaskGroup.selectAll()(transaction);
 
     const [ctxGroup] = go(taskGroups, filter(e => e.idx == group));
 
@@ -29,8 +24,20 @@ router.get(
 
     let taskGroup = ctxGroup;
 
-    let tasks = await TASK.selectPage(query, group, page);
-    let taskPage = await TASK.selectPageInfo(query, group, page);
+    let { tasks, taskPage } = await Task.selectPaginated(query, group, page)(
+      transaction,
+    );
+
+    tasks = go(
+      tasks,
+      map(task => {
+        let group = taskGroups.find(group => group.idx == task.TaskGroupIdx);
+        return {
+          ...task,
+          color: group.color,
+        };
+      }),
+    );
 
     store(res).setState({
       taskPage,
@@ -44,7 +51,7 @@ router.get(
       taskGroups,
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

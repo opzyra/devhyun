@@ -1,5 +1,9 @@
 import Sequelize from 'sequelize';
 
+import { pagination } from '@/lib/utils';
+
+import TaskGroup from '@/models/TaskGroup';
+
 export default class Task extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -24,5 +28,48 @@ export default class Task extends Sequelize.Model {
 
   static associate(models) {
     this.belongsTo(models.TaskGroup);
+  }
+
+  // 페이지 처리된 포스트 조회
+  static selectPaginated(query, group, page = 1, limit = 20) {
+    return async transaction => {
+      let offset = (parseInt(page) - 1) * limit;
+      let option = {
+        limit,
+        offset,
+        order: [['completed', 'asc'], ['TaskGroupIdx', 'asc']],
+        raw: true,
+        transaction,
+      };
+
+      if (group) {
+        option.where = {
+          ...option.where,
+          TaskGroupIdx: group,
+        };
+      }
+
+      if (query) {
+        option.where = {
+          or: [
+            {
+              title: {
+                like: `%${query}%`,
+              },
+            },
+            {
+              contents: {
+                like: `%${query}%`,
+              },
+            },
+          ],
+        };
+      }
+
+      let { count, rows } = await this.findAndCountAll(option);
+      let taskPage = pagination(count, limit, page);
+
+      return { tasks: rows, taskPage };
+    };
   }
 }

@@ -1,8 +1,5 @@
 import Sequelize from 'sequelize';
 
-import Post from '@/models/Post';
-import Series from '@/models/Series';
-
 export default class SeriesPost extends Sequelize.Model {
   static init(sequelize) {
     return super.init(

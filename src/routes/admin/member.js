@@ -1,25 +1,29 @@
-import express from 'express';
 import { go, map } from 'fxjs';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
-import store from '../../lib/store';
+import session from '@/lib/session';
+import store from '@/lib/store';
 
-import Member from '../../sql/Member';
+import Member from '@/models/Member';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const member = controller.get(
   '/member',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { query, category, page } = req.query;
 
-    const MEMBER = Member(conn);
+    let { members, memberPage } = await Member.selectPaginated(
+      query,
+      category,
+      page,
+    )(transaction);
 
-    const members = await go(
-      MEMBER.selectPage(query, category, page),
+    members = await go(
+      members,
       map(member => {
+        // eslint-disable-next-line no-unused-vars
         const [platform, ...rest] = member.id.split('_');
         return {
           ...member,
@@ -28,7 +32,6 @@ router.get(
       }),
     );
 
-    let memberPage = await MEMBER.selectPageInfo(query, category, page);
     let title = (() => {
       switch (category) {
         case 'active':
@@ -54,7 +57,7 @@ router.get(
       title,
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

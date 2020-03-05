@@ -2,8 +2,6 @@ import Sequelize from 'sequelize';
 
 import { pagination } from '@/lib/utils';
 
-import TaskGroup from '@/models/TaskGroup';
-
 export default class Task extends Sequelize.Model {
   static init(sequelize) {
     return super.init(

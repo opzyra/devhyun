@@ -91,7 +91,7 @@
                 <span class="name">
                   {{name}}
                   <span class="date">
-                    ({{parseDiffDate login}})
+                    ({{parseDiffDate loginAt}})
                   </span>
                   {{#if email}}
                   <span class="email {{#if marketing}}active{{/if}}" data-tippy-content="{{email}}">
@@ -123,7 +123,7 @@
                   <i class="mdi mdi-facebook-box"></i>
                   {{/eq}}
                 </div>
-                <div class="date">{{parseDate reg 'YYYY.MM.DD'}}</div>
+                <div class="date">{{parseDate createdAt 'YYYY.MM.DD'}}</div>
               </div>
             </li>
             {{else}}

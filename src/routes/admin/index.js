@@ -14,6 +14,6 @@ const router = express.Router();
 router.use(task);
 // router.use(note);
 // router.use(blog);
-// router.use(member);
+router.use(member);
 
 export default router;

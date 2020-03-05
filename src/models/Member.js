@@ -1,5 +1,7 @@
 import Sequelize from 'sequelize';
 
+import { pagination } from '@/lib/utils';
+
 export default class Member extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -37,6 +39,57 @@ export default class Member extends Sequelize.Model {
   static selectAll() {
     return async transaction => {
       return await this.findAll({ raw: true, transaction });
+    };
+  }
+
+  // 페이지 처리된 포스트 조회
+  static selectPaginated(query, category, page = 1, limit = 20) {
+    return async transaction => {
+      let offset = (parseInt(page) - 1) * limit;
+      let option = {
+        limit,
+        offset,
+        order: [['idx', 'desc']],
+        raw: true,
+        transaction,
+      };
+
+      if (category === 'active' || category === 'disabled') {
+        const value = category === 'active' ? 1 : 0;
+        option.where = {
+          active: value,
+          withdraw: 0,
+        };
+      }
+
+      if (category === 'withdraw') {
+        option.where = {
+          withdraw: 1,
+        };
+      }
+
+      if (query) {
+        option.where = {
+          ...option.where,
+          or: [
+            {
+              title: {
+                like: `%${query}%`,
+              },
+            },
+            {
+              contents: {
+                like: `%${query}%`,
+              },
+            },
+          ],
+        };
+      }
+
+      let { count, rows } = await this.findAndCountAll(option);
+      let memberPage = pagination(count, limit, page);
+
+      return { members: rows, memberPage };
     };
   }
 

@@ -60,7 +60,7 @@
             {{series.title}}
           </span>
           <span class="info">
-            <span class="reg">등록일 {{parseDate series.reg 'YYYY.MM.DD'}}</span>
+            <span class="reg">등록일 {{parseDate series.createdAt 'YYYY.MM.DD'}}</span>
             <span class="hit">
               조회수 {{series.hit}}
             </span>
@@ -84,8 +84,8 @@
                     <div class="white-mask"></div>
                   </a>
                   <div class="description">
-                    <span>{{parseDate reg 'YYYY.MM.DD'}}</span>
-                    <h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
+                    <span>{{parseDate createdAt 'YYYY.MM.DD'}}</span>
+                    <h3><a href="/admin/blog/post/{{idx}}">{{title}}</a></h3>
                     <p class="visual_pc">{{parseMarkdown contents 200}}</p>
                     <p class="visual_mobile">{{parseMarkdown contents 80}}</p>
                   </div>

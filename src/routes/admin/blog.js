@@ -1,43 +1,39 @@
-import express from 'express';
 import { go, map } from 'fxjs';
-import htmlToc from 'html-toc';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { rtfn, txrtfn } from '../../core/tx';
-import store from '../../lib/store';
+import session from '@/lib/session';
+import store from '@/lib/store';
 
 import validator, { Joi } from '@/middleware/validator';
+import { parseToc } from '@/lib/utils';
 
-import PostTag from '../../sql/PostTag';
-import BoardPost from '../../sql/BoardPost';
-import BoardSeries from '../../sql/BoardSeries';
-import Comment from '../../sql/Comment';
-import Temp from '../../sql/Temp';
+import Member from '@/models/Member';
+import Post from '@/models/Post';
+import Series from '@/models/Series';
+import Comment from '@/models/Comment';
+import Temp from '@/models/Temp';
+import Tag from '@/models/Tag';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const post = controller.get(
   '/blog/post',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { query, page } = req.query;
+    let { posts, postPage } = await Post.selectPaginated(query, page)(
+      transaction,
+    );
 
-    const BOARD_POST = BoardPost(conn);
-    const COMMENT = Comment(conn);
-
-    let posts = await BOARD_POST.selectPage(query, page);
-    let postPage = await BOARD_POST.selectPageInfo(query, page);
-
-    const comments = await COMMENT.countGroupBoard(
-      'post',
-      posts.map(post => post.idx),
+    const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
+      transaction,
     );
 
     posts = go(
       posts,
       map(post => {
         const comment = comments.find(
-          comment => comment.board_idx === post.idx,
+          comment => comment.post_idx === post.idx,
         ) || { count: 0 };
         return {
           ...post,
@@ -56,120 +52,108 @@ router.get(
       postPage,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const postCreate = controller.get(
   '/blog/post/edit',
-  sessionCtx.isAdmin(),
-  rtfn(async (req, res, next) => {
+  session.isAdmin(),
+  async (req, res) => {
     res.render('admin/blog/post/edit', {
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const postEdit = controller.get(
   '/blog/post/edit/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const BOARD_POST = BoardPost(conn);
-    const POST_TAG = PostTag(conn);
-    const TEMP = Temp(conn);
-
-    let post = await BOARD_POST.selectOne(idx);
+    let post = await Post.selectOne(idx)(transaction);
 
     if (!post) {
       throw new Error('잘못된 접근입니다');
     }
 
-    const temp = await TEMP.selectByTitle(post.title);
-
-    // 태그
-    const tags = await go(
-      POST_TAG.selectReletedPost(idx),
-      map(e => `${e.tag}`),
-    );
+    const temp = await Temp.selectByTitle(post.title)(transaction);
 
     store(res).setState({
-      tags,
+      tags: post.Tags,
     });
 
     res.render('admin/blog/post/edit', {
       temp: temp && temp.idx,
       post,
-      tags,
+      tags: post.Tags,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const postDetail = controller.get(
   '/blog/post/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const BOARD_POST = BoardPost(conn);
-    const POST_TAG = PostTag(conn);
-
-    let post = await BOARD_POST.selectOne(idx);
+    let post = await Post.selectOne(idx)(transaction);
 
     if (!post) {
-      throw new Error('잘못된 접근입니다');
+      throw new Error('잘못된 접근입니다.');
     }
 
-    let contents = htmlToc(`<div id="toc"></div>${post.contents}`, {
-      selectors: 'h1, h2, h3, h4, h5',
-      anchors: false,
-      slugger: function(text) {
-        const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-        return decodeURI(text)
-          .toLowerCase()
-          .trim()
-          .replace(re, '')
-          .replace(/\s/g, '_');
-      },
-    });
+    post = post.toJSON();
 
-    let [toc, ...rest] = contents.match(
-      /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
-    );
-    post.contents = contents.replace(toc, '');
+    const [content, toc] = parseToc(post.contents);
+    post.contents = content.replace(toc, '');
 
-    // 태그
-    const tags = await go(
-      POST_TAG.selectReletedPost(idx),
-      map(e => `${e.tag}`),
-    );
+    // 댓글 처리
+    const members = await Member.selectAll()(transaction);
+
+    // TODO 관리자 페이지 댓글 보기 기능
+    // const comments = await go(
+    //   post.Comments,
+    //   map(comment => {
+    //     let member = members.find(member => member.idx == comment.memberIdx);
+
+    //     let targetMember = members.find(
+    //       member => member.idx == comment.targetIdx,
+    //     );
+    //     return {
+    //       ...comment,
+    //       thumbnail: member.thumbnail,
+    //       name: member.name,
+    //       targetName: targetMember ? targetMember.name : '',
+    //     };
+    //   }),
+    // );
 
     res.render('admin/blog/post/detail', {
       post,
       toc,
-      tags,
+      tags: post.Tags,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const series = controller.get(
   '/blog/series',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { query, page } = req.query;
 
-    const BOARD_SERIES = BoardSeries(conn);
-
-    let series = await BOARD_SERIES.selectPage(query, page);
-    let seriesPage = await BOARD_SERIES.selectPageInfo(query, page);
+    let { series, seriesPage } = await Series.selectPaginated(query, page)(
+      transaction,
+    );
 
     store(res).setState({
       seriesPage,
@@ -181,100 +165,69 @@ router.get(
       seriesPage,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const seriesCreate = controller.get(
   '/blog/series/edit',
-  sessionCtx.isAdmin(),
-  rtfn(async (req, res, next) => {
+  session.isAdmin(),
+  async (req, res) => {
     res.render('admin/blog/series/edit', {
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const seriesEdit = controller.get(
   '/blog/series/edit/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const BOARD_SERIES = BoardSeries(conn);
-    const TEMP = Temp(conn);
-
-    let series = await BOARD_SERIES.selectOne(idx);
-
+    const series = await Series.selectOne(idx)(transaction);
     if (!series) {
-      throw new Error('잘못된 접근입니다');
+      throw new Error('잘못된 접근입니다.');
     }
 
-    const temp = await TEMP.selectByTitle(series.title);
-
-    const posts = await go(
-      BOARD_SERIES.selectRelatedPost(idx),
-      map(e => {
-        return {
-          idx: e.idx,
-          title: e.title,
-        };
-      }),
-    );
+    const temp = await Temp.selectByTitle(series.title)(transaction);
 
     store(res).setState({
-      posts: map(e => e.idx, posts),
+      posts: series.Posts,
     });
 
     res.render('admin/blog/series/edit', {
       temp: temp && temp.idx,
       series,
-      posts,
+      posts: series.Posts,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const seriesDetail = controller.get(
   '/blog/series/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const BOARD_SERIES = BoardSeries(conn);
+    const series = await Series.selectOne(idx)(transaction);
+    if (!series) {
+      throw new Error('잘못된 접근입니다.');
+    }
 
-    let series = await BOARD_SERIES.selectOne(idx);
-
-    let contents = htmlToc(`<div id="toc"></div>${series.contents}`, {
-      selectors: 'h1, h2, h3, h4, h5',
-      anchors: false,
-      slugger: function(text) {
-        const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-        return decodeURI(text)
-          .toLowerCase()
-          .trim()
-          .replace(re, '')
-          .replace(/\s/g, '_');
-      },
-    });
-
-    let [toc, ...rest] = contents.match(
-      /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
-    );
-    series.contents = contents.replace(toc, '');
-
-    // 관련 포스트
-    const posts = await BOARD_SERIES.selectRelatedPost(idx);
+    let [content, toc] = parseToc(series.contents);
+    series.contents = content.replace(toc, '');
 
     // 포스트 네비바 처리
     let tocPostItems = '';
-    posts.forEach((e, i) => {
-      tocPostItems += `<li><a href="/admin/blog/post/${e.idx}">${e.title}</a></li>`;
+    series.Posts.forEach(post => {
+      tocPostItems += `<li><a href="/blog/post/${post.idx}">${post.title}</a></li>`;
     });
 
     let tocPost = `<li><a href="#postList">관련 포스트</a><ul class="nav">${tocPostItems}</ul></li>`;
@@ -288,25 +241,23 @@ router.get(
     res.render('admin/blog/series/detail', {
       series,
       toc,
-      posts,
+      posts: series.Posts,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const tag = controller.get(
   '/blog/tag',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
-    const POST_TAG = PostTag(conn);
-
-    const tags = await POST_TAG.selectDistinctTagGroupCount();
+  session.isAdmin(),
+  async (req, res, transaction) => {
+    const tags = await Tag.selectDistinctTagGroupCount()(transaction);
 
     res.render('admin/blog/tag', {
       tags,
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

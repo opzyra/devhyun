@@ -22,4 +22,10 @@ export default class Temp extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  static selectByTitle(title) {
+    return async transaction => {
+      return await this.findOne({ where: { title }, transaction });
+    };
+  }
 }

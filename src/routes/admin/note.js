@@ -1,29 +1,25 @@
-import express from 'express';
 import { go, filter } from 'fxjs';
-import htmlToc from 'html-toc';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
-import store from '../../lib/store';
+import session from '@/lib/session';
+import store from '@/lib/store';
 
 import validator, { Joi } from '@/middleware/validator';
+import { parseToc } from '@/lib/utils';
 
-import Note from '../../sql/Note';
-import NoteGroup from '../../sql/NoteGroup';
-import Temp from '../../sql/Temp';
+import Note from '@/models/Note';
+import NoteGroup from '@/models/NoteGroup';
+import Temp from '@/models/Temp';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const note = controller.get(
   '/note',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { group, query, page } = req.query;
 
-    const NOTE = Note(conn);
-    const NOTE_GROUP = NoteGroup(conn);
-
-    let noteGroups = await NOTE_GROUP.selectAll();
+    let noteGroups = await NoteGroup.selectAll()(transaction);
 
     const [ctxGroup] = go(noteGroups, filter(e => e.idx == group));
 
@@ -33,8 +29,9 @@ router.get(
 
     let noteGroup = ctxGroup;
 
-    let notes = await NOTE.selectPage(query, group, page);
-    let notePage = await NOTE.selectPageInfo(query, group, page);
+    let { notes, notePage } = await Note.selectPaginated(query, group, page)(
+      transaction,
+    );
 
     store(res).setState({
       notePage,
@@ -48,58 +45,38 @@ router.get(
       noteGroups,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const noteCreate = controller.get(
   '/note/edit',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { group } = req.query;
 
-    const NOTE_GROUP = NoteGroup(conn);
-
-    let noteGroups = await NOTE_GROUP.selectAll();
+    let noteGroups = await NoteGroup.selectAll()(transaction);
     res.render('admin/note/edit', {
       group,
       noteGroups,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const noteDetail = controller.get(
   '/note/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const NOTE = Note(conn);
-    const NOTE_GROUP = NoteGroup(conn);
+    let noteGroups = await NoteGroup.selectAll()(transaction);
+    let note = await Note.selectOne(idx)(transaction);
 
-    let noteGroups = await NOTE_GROUP.selectAll();
-    let note = await NOTE.selectOne(idx);
-
-    let contents = htmlToc(`<div id="toc"></div>${note.contents}`, {
-      selectors: 'h1, h2, h3, h4, h5',
-      anchors: false,
-      slugger: function(text) {
-        const re = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g;
-        return decodeURI(text)
-          .toLowerCase()
-          .trim()
-          .replace(re, '')
-          .replace(/\s/g, '_');
-      },
-    });
-
-    let [toc, ...rest] = contents.match(
-      /(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/,
-    );
-    note.contents = contents.replace(toc, '');
+    let [content, toc] = parseToc(note.contents);
+    note.contents = content.replace(toc, '');
 
     res.render('admin/note/detail', {
       note,
@@ -107,32 +84,28 @@ router.get(
       toc,
       layout: false,
     });
-  }),
+  },
 );
 
-router.get(
+export const noteEdit = controller.get(
   '/note/edit/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const NOTE = Note(conn);
-    const NOTE_GROUP = NoteGroup(conn);
-    const TEMP = Temp(conn);
-
-    let note = await NOTE.selectOne(idx);
+    let note = await Note.selectOne(idx)(transaction);
 
     if (!note) {
       throw new Error('잘못된 접근입니다');
     }
 
-    const temp = await TEMP.selectByTitle(note.title);
+    const temp = await Temp.selectByTitle(note.title)(transaction);
 
     let group = note.note_group_idx;
-    let noteGroups = await NOTE_GROUP.selectAll();
+    let noteGroups = await NoteGroup.selectAll()(transaction);
 
     res.render('admin/note/edit', {
       temp: temp && temp.idx,
@@ -141,7 +114,7 @@ router.get(
       noteGroups,
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

@@ -78,12 +78,12 @@
         <div id="list" class="list">
           <ul>
             {{#each notes}}
-            <a href="/admin/note/{{idx}}" data-idx="{{idx}}" class="group{{note_group_idx}}">
+            <a href="/admin/note/{{idx}}" data-idx="{{idx}}" class="group{{NoteGroupIdx}}">
               <li>
-                <h2><span class="bar" style="background-color: {{color}};"></span>{{title}}
+                <h2><span class="bar"></span>{{title}}
                 </h2>
                 <p>{{parseMarkdown contents 250}}</p>
-                <div>{{parseDate reg 'YYYY.MM.DD'}}</div>
+                <div>{{parseDate createdAt 'YYYY.MM.DD'}}</div>
               </li>
               <span></span>
             </a>

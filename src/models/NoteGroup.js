@@ -21,5 +21,12 @@ export default class NoteGroup extends Sequelize.Model {
     );
   }
 
+  // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  static selectAll() {
+    return async transaction => {
+      return await this.findAll({ order: [['odr', 'ASC']], transaction });
+    };
+  }
 }

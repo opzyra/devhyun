@@ -323,7 +323,7 @@ const admin = {
         groups,
         map(
           e =>
-            `.note .lib .right .list ul a.group${e.idx}:hover {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx}:hover span {border-color: ${e.color};}`,
+            `.note .lib .right .list ul a.group${e.idx}:hover {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx}:hover span {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx} .bar {background-color: ${e.color};}`,
         ),
         reduce((a, b) => `${a}${b}`),
       )}

@@ -10,9 +10,9 @@ import member from './member';
 const router = express.Router();
 
 // router.use(dashboard);
-// router.use(schedule);
+router.use(schedule);
 router.use(task);
-// router.use(note);
+router.use(note);
 router.use(blog);
 router.use(member);
 

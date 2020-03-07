@@ -28,7 +28,7 @@ export default class Task extends Sequelize.Model {
     this.belongsTo(models.TaskGroup);
   }
 
-  // 페이지 처리된 포스트 조회
+  // 페이지 처리된 태스크 조회
   static selectPaginated(query, group, page = 1, limit = 20) {
     return async transaction => {
       let offset = (parseInt(page) - 1) * limit;

@@ -1,48 +1,55 @@
-import express from 'express';
-import moment from 'moment';
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+import { go, map } from 'fxjs';
 
-import Application from '../../sql/Application';
-import BoardPost from '../../sql/BoardPost';
-import PostTag from '../../sql/PostTag';
-import Schedule from '../../sql/Schedule';
-import Task from '../../sql/Task';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
 
-const router = express.Router();
+import Post from '@/models/Post';
+import Tag from '@/models/Tag';
+import Task from '@/models/Task';
+import Schedule from '@/models/Schedule';
+import Application from '@/models/Application';
+import TaskGroup from '@/models/TaskGroup';
 
-router.get(
+const controller = asyncify();
+
+export const dashboard = controller.get(
   '/',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
-    const APPLICATION = Application(conn);
-    const POST_TAG = PostTag(conn);
-    const BOARD_POST = BoardPost(conn);
+  session.isAdmin(),
+  async (req, res, transaction) => {
+    const postCount = await Post.countAll()(transaction);
+    const tagCount = await Tag.countDistinct()(transaction);
 
-    const SCHEDULE = Schedule(conn);
-    const TASK = Task(conn);
+    const schedules = await Schedule.selectBetweenToday()(transaction);
 
-    const post_count = await BOARD_POST.countAll();
-    const tag_count = await POST_TAG.countDistinct();
+    let tasks = await Task.selectAllNotCompleted()(transaction);
+    const taskGropups = await TaskGroup.selectAll()(transaction);
 
-    const date = moment().format('YYYY-MM-DD');
-    const schedules = await SCHEDULE.selectBetweenToday(date);
+    tasks = go(
+      tasks,
+      map(task => {
+        let taskGroup = taskGropups.find(
+          group => group.idx === task.TaskGroupIdx,
+        );
+        return {
+          ...task,
+          color: taskGroup.color,
+        };
+      }),
+    );
 
-    const tasks = await TASK.selectAllNotCompleted();
-
-    const app = await APPLICATION.selectOne(1);
+    const app = await Application.selectOne(1)(transaction);
 
     res.render('admin/index', {
       app,
       tasks,
       schedules,
       countPostTag: {
-        post_count,
-        tag_count,
+        postCount,
+        tagCount,
       },
       layout: false,
     });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

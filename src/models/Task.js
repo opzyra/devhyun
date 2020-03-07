@@ -2,6 +2,8 @@ import Sequelize from 'sequelize';
 
 import { pagination } from '@/lib/utils';
 
+import TaskGroup from '@/models/TaskGroup';
+
 export default class Task extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
@@ -68,6 +70,20 @@ export default class Task extends Sequelize.Model {
       let taskPage = pagination(count, limit, page);
 
       return { tasks: rows, taskPage };
+    };
+  }
+
+  // 완료되지 않은 태스크 조회
+  static selectAllNotCompleted() {
+    return async transaction => {
+      return await this.findAll({
+        where: {
+          completed: false,
+        },
+        order: [['completed', 'ASC'], ['startAt', 'ASC'], ['endAt', 'ASC']],
+        raw: true,
+        transaction,
+      });
     };
   }
 }

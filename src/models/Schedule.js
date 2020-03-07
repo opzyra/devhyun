@@ -1,4 +1,5 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
+import moment from 'moment';
 
 export default class Schedule extends Sequelize.Model {
   static init(sequelize) {
@@ -25,5 +26,22 @@ export default class Schedule extends Sequelize.Model {
 
   static associate(models) {
     this.belongsTo(models.ScheduleGroup);
+  }
+
+  static selectBetweenToday() {
+    const today = moment().format('YYYY-MM-DD');
+    return async transaction => {
+      return await this.findAll({
+        where: {
+          startAt: {
+            [Op.lte]: Date.parse(`${today} 23:59:59`),
+          },
+          endAt: {
+            [Op.gte]: Date.parse(`${today} 00:00:00`),
+          },
+        },
+        transaction,
+      });
+    };
   }
 }

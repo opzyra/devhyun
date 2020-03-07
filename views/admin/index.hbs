@@ -36,11 +36,11 @@
           </li>
           <li>
             <h3>포스트 수</h3>
-            <p><span>{{countPostTag.post_count}}</span> 건</p>
+            <p><span>{{countPostTag.postCount}}</span> 건</p>
           </li>
           <li>
             <h3>태그 수</h3>
-            <p><span>{{countPostTag.tag_count}}</span> 개</p>
+            <p><span>{{countPostTag.tagCount}}</span> 개</p>
           </li>
         </ul>
         <div class="home_info">
@@ -100,10 +100,10 @@
                 {{title}}
               </div>
               <div class="start_date">
-                {{parseDate start 'YYYY.MM.DD'}}
+                {{parseDate startAt 'YYYY.MM.DD'}}
               </div>
               <div class="end_date">
-                {{parseDate end 'YYYY.MM.DD'}}
+                {{parseDate endAt 'YYYY.MM.DD'}}
               </div>
               <div class="check">
                 <input type="checkbox" id="checkTask{{idx}}" class="cbx" {{{checkbox completed}}}

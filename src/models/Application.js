@@ -25,4 +25,10 @@ export default class Application extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  static selectOne() {
+    return async transaction => {
+      return await this.findByPk(1, { transaction });
+    };
+  }
 }

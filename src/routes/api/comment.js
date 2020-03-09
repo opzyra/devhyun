@@ -1,122 +1,116 @@
-import express from 'express';
-import xssFilter from 'xssfilter';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+import session from '@/lib/session';
 
 import validator, { Joi } from '@/middleware/validator';
+import { xssFilter } from '@/lib/utils';
 
-import Comment from '../../sql/Comment';
+import Comment from '@/models/Comment';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const selectOne = controller.get(
   '/:idx',
-  sessionCtx.isAuthenticated(),
+  session.isAuthenticated(),
   validator.params({
     idx: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    const COMMENT = Comment(conn);
 
-    const item = await COMMENT.selectOne(idx);
+    const comment = await Comment.selectOne(idx)(transaction);
 
-    res.status(200).json(item);
-  }),
+    res.status(200).json(comment);
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAuthenticated(),
+  session.isAuthenticated(),
   validator.body({
     board: Joi.string().required(),
-    board_idx: Joi.number().required(),
+    postIdx: Joi.number().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
-    let { board, board_idx, target_idx, contents } = req.body;
-    const member_idx = req.session.member.idx;
+  async (req, res, transaction) => {
+    let { postIdx, targetIdx, contents } = req.body;
+    const memberIdx = req.session.member.idx;
 
-    const COMMENT = Comment(conn);
+    contents = xssFilter(contents);
 
-    contents = new xssFilter().filter(contents);
-
-    const insertId = await COMMENT.insertOne({
-      board,
-      board_idx,
-      member_idx,
-      target_idx: target_idx == '' ? null : target_idx,
+    const comment = await Comment.insertOne({
+      memberIdx: memberIdx,
+      targetIdx: targetIdx == '' ? null : targetIdx,
       contents,
-    });
+    })(transaction);
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  }),
+    await comment.addPost([postIdx], { transaction });
+
+    res
+      .status(200)
+      .json({ message: `등록이 완료 되었습니다`, idx: comment.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAuthenticated(),
+  session.isAuthenticated(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
     board: Joi.string().required(),
-    board_idx: Joi.number().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    let { board, board_idx, target_idx, contents } = req.body;
-    const member_idx = req.session.member.idx;
+    let { targetIdx, contents } = req.body;
+    const memberIdx = req.session.member.idx;
 
-    const COMMENT = Comment(conn);
+    contents = xssFilter(contents);
 
-    contents = new xssFilter().filter(contents);
+    const comment = await Comment.selectOne(idx)(transaction);
 
-    const comment = await COMMENT.selectOne(idx);
-
-    if (comment.member_idx != member_idx) {
+    if (comment.memberIdx != memberIdx) {
       throw new Error('잘못된 접근입니다');
     }
 
-    const insertId = await COMMENT.updateOne(
+    await Comment.updateOne(
       {
-        board,
-        board_idx,
-        member_idx,
-        target_idx: target_idx == '' ? null : target_idx,
+        ...comment,
+        memberIdx,
+        targetIdx: targetIdx == '' ? null : targetIdx,
         contents,
       },
-      idx,
-    );
+      comment.idx,
+    )(transaction);
 
-    res.status(200).json({ message: `수정이 완료 되었습니다`, idx: insertId });
-  }),
+    res
+      .status(200)
+      .json({ message: `수정이 완료 되었습니다`, idx: comment.idx });
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAuthenticated(),
+  session.isAuthenticated(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    const member_idx = req.session.member.idx;
+    const memberIdx = req.session.member.idx;
 
-    const COMMENT = Comment(conn);
+    const comment = await Comment.selectOne(idx)(transaction);
 
-    const comment = await COMMENT.selectOne(idx);
-
-    if (comment.member_idx != member_idx) {
+    if (comment.memberIdx != memberIdx) {
       throw new Error('잘못된 접근입니다');
     }
 
-    await COMMENT.deleteOne(idx);
+    await Comment.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

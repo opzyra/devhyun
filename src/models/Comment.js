@@ -56,4 +56,28 @@ export default class Comment extends Sequelize.Model {
       );
     };
   }
+
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findByPk(idx, { transaction });
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
+
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({ where: { idx }, cascade: true, transaction });
+    };
+  }
 }

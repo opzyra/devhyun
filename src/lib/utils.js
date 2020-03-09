@@ -2,6 +2,7 @@ import { createMarkdown } from 'safe-marked';
 import removeMd from 'remove-markdown';
 import htmlToText2 from 'html-to-text2';
 import htmlToc from 'html-toc';
+import xssHtmlFilter from 'xssfilter';
 
 export const cutString = (value, max) => {
   let isOver = true;
@@ -71,6 +72,10 @@ export const parseToc = contents => {
   let [toc, ...rest] = content.match(/(<div id="toc")(.|\r\n|\r|\n)*(<\/div>)/);
 
   return [content, toc];
+};
+
+export const xssFilter = contents => {
+  return new xssHtmlFilter().filter(contents);
 };
 
 export const pagination = (rowCount, limit, page) => {

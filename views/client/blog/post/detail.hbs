@@ -114,11 +114,11 @@
 								{{#if session.member}}
 								<form id="commentForm" method="POST" onsubmit="APP.createComment()" class="">
 									<input name="board" type="hidden" value="post">
-									<input name="board_idx" type="hidden" value="{{post.idx}}">
+									<input name="postIdx" type="hidden" value="{{post.idx}}">
 									<textarea name="contents" rows="1"></textarea>
 									<div class="submit">
 										{{#if commentsMember}}
-										<select name="target_idx">
+										<select name="targetIdx">
 											<option value="">글쓴이를 선택하세요</option>
 											{{#each commentsMember}}
 											<option value="{{idx}}">{{name}}</option>

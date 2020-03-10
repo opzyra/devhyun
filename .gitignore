@@ -20,3 +20,5 @@ build/
 
 # webpack
 public/js/module.js
+public/js/module.js.map
+public/js/vendor.module.js

@@ -1,10 +1,23 @@
-const path = require("path");
+const path = require('path');
+const { NODE_ENV } = process.env;
 
 module.exports = {
-  entry: "./src/script/index.js",
+  entry: './src/script/index.js',
   output: {
-    path: path.resolve(__dirname, "public/js"),
-    filename: "module.js"
+    path: path.resolve(__dirname, 'public/js'),
+    filename: 'module.js',
+  },
+  devtool: NODE_ENV === 'development' ? 'inline-source-map' : null,
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+        },
+      },
+    },
   },
   module: {
     rules: [
@@ -12,12 +25,12 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-env"]
-          }
-        }
-      }
-    ]
-  }
+            presets: ['@babel/preset-env'],
+          },
+        },
+      },
+    ],
+  },
 };

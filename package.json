@@ -12,7 +12,7 @@
     "clean": "rimraf ./build && mkdirp ./build",
     "nodemon": "nodemon --config ./nodemon.json",
     "serve:dev": "babel-node src/server.js",
-    "build:dev": "webpack --watch --mode development",
+    "build:dev": "set NODE_ENV=development&&webpack --watch --mode development",
     "lint": "eslint .",
     "test": "set NODE_ENV=test&&mocha -r @babel/register ./src/test/*.spec.js"
   },

@@ -1,84 +1,77 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
 
-import sessionCtx from '../../lib/session';
-import { rtfn, txrtfn } from '../../core/tx';
+import session from '@/lib/session';
 
 import validator, { Joi } from '@/middleware/validator';
-import { safeMarkdown, removeMarkdown } from '../../lib/utils';
+import { safeMarkdown, removeMarkdown } from '@/lib/utils';
 
-import Temp from '../../sql/Temp';
+import Temp from '@/models/Temp';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.post(
+export const spellCheck = controller.post(
   '/markdown',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
     markdown: Joi.string().required(),
   }),
-  rtfn(async (req, res, next) => {
+  (req, res) => {
     const { markdown } = req.body;
     const rmMd = removeMarkdown(markdown);
 
     res.status(200).json(rmMd);
-  }),
+  },
 );
 
-router.get(
+export const selectAll = controller.get(
   '/temp',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
-    const TEMP = Temp(conn);
+  session.isAdmin(),
+  async (req, res, transaction) => {
+    const temps = await Temp.selectAll()(transaction);
 
-    const items = await TEMP.selectAll();
-
-    res.status(200).json(items);
-  }),
+    res.status(200).json(temps);
+  },
 );
 
-router.get(
+export const selectOne = controller.get(
   '/temp/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const TEMP = Temp(conn);
+    const temp = await Temp.selectOne(idx)(transaction);
 
-    const item = await TEMP.selectOne(idx);
-
-    res.status(200).json(item);
-  }),
+    res.status(200).json(temp);
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/temp',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { title, contents, thumbnail } = req.body;
 
-    const TEMP = Temp(conn);
-
-    const insertId = await TEMP.insertOne({
+    const temp = await Temp.insertOne({
       title,
       thumbnail:
         thumbnail || `${process.env.APP_DOMAIN}/images/default_blog.png`,
       contents: safeMarkdown(contents),
-    });
+    })(transaction);
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  }),
+    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: temp.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/temp/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
@@ -86,20 +79,18 @@ router.put(
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
     const { title, contents, thumbnail } = req.body;
 
-    const TEMP = Temp(conn);
-
-    const temp = await TEMP.selectOne(idx);
+    const temp = await Temp.selectOne(idx)(transaction);
 
     if (!temp) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await TEMP.updateOne(
+    await Temp.updateOne(
       {
         title,
         thumbnail:
@@ -107,34 +98,32 @@ router.put(
         contents: safeMarkdown(contents),
       },
       idx,
-    );
+    )(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/temp/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const TEMP = Temp(conn);
-
-    const temp = await TEMP.selectOne(idx);
+    const temp = await Temp.selectOne(idx)(transaction);
 
     if (!temp) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await TEMP.deleteOne(idx);
+    await Temp.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

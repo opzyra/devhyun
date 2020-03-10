@@ -9,7 +9,6 @@ import Member from '@/models/Member';
 import Post from '@/models/Post';
 import Series from '@/models/Series';
 import Tag from '@/models/Tag';
-import Comment from '@/models/Comment';
 import Hit from '@/models/Hit';
 
 const controller = asyncify();
@@ -24,23 +23,6 @@ export const posts = controller.get(
 
     const postCount = await Post.countAll()(transaction);
     const tagCount = await Tag.countDistinct()(transaction);
-
-    const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
-      transaction,
-    );
-
-    posts = go(
-      posts,
-      map(post => {
-        const comment = comments.find(
-          comment => comment.post_idx === post.idx,
-        ) || { count: 0 };
-        return {
-          ...post,
-          comment: comment.count,
-        };
-      }),
-    );
 
     store(res).setState({
       postPage,

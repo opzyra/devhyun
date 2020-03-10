@@ -10,7 +10,6 @@ import { parseToc } from '@/lib/utils';
 import Member from '@/models/Member';
 import Post from '@/models/Post';
 import Series from '@/models/Series';
-import Comment from '@/models/Comment';
 import Temp from '@/models/Temp';
 import Tag from '@/models/Tag';
 
@@ -23,23 +22,6 @@ export const post = controller.get(
     const { query, page } = req.query;
     let { posts, postPage } = await Post.selectPaginated(query, page)(
       transaction,
-    );
-
-    const comments = await Comment.countGroupPost(posts.map(post => post.idx))(
-      transaction,
-    );
-
-    posts = go(
-      posts,
-      map(post => {
-        const comment = comments.find(
-          comment => comment.post_idx === post.idx,
-        ) || { count: 0 };
-        return {
-          ...post,
-          comment: comment.count,
-        };
-      }),
     );
 
     store(res).setState({

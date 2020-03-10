@@ -74,8 +74,8 @@
                 <p>{{parseMarkdown contents 89}}</p>
                 <div>
                   {{parseDate createdAt 'YYYY.MM.DD'}}
-                  {{#if comment}}
-                  <span>{{comment}}개의 댓글</span>
+                  {{#if Comments}}
+                  <span>{{length Comments}}개의 댓글</span>
                   {{/if}}
                   <span>조회수 {{hit}}</span>
                 </div>

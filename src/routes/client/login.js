@@ -38,13 +38,13 @@ export const loginPlatform = controller.get(
     let member = await auth(code);
 
     const dbMember = await Member.selectById(member.id)(transaction);
-
+    const loginAt = new Date();
     if (!dbMember) {
-      member = await Member.insertOne(member)(transaction);
+      member = await Member.insertOne({ ...member, loginAt })(transaction);
     } else {
       member = {
         ...dbMember,
-        login: new Date(),
+        loginAt,
       };
       await Member.updateOne(member)(transaction);
     }

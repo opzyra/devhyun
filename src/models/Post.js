@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 
 import { pagination } from '@/lib/utils';
 
@@ -57,21 +57,29 @@ export default class Post extends Sequelize.Model {
         limit,
         offset,
         order: [['idx', 'desc']],
-        raw: true,
+        include: [
+          {
+            model: Comment,
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+        nest: true,
         transaction,
       };
 
       if (query) {
         option.where = {
-          or: [
+          [Op.or]: [
             {
               title: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
             {
               contents: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
           ],

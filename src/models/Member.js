@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 
 import { pagination } from '@/lib/utils';
 
@@ -71,15 +71,15 @@ export default class Member extends Sequelize.Model {
       if (query) {
         option.where = {
           ...option.where,
-          or: [
+          [Op.or]: [
             {
               title: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
             {
               contents: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
           ],

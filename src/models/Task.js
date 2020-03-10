@@ -1,8 +1,6 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 
 import { pagination } from '@/lib/utils';
-
-import TaskGroup from '@/models/TaskGroup';
 
 export default class Task extends Sequelize.Model {
   static init(sequelize) {
@@ -51,15 +49,15 @@ export default class Task extends Sequelize.Model {
 
       if (query) {
         option.where = {
-          or: [
+          [Op.or]: [
             {
               title: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
             {
               contents: {
-                like: `%${query}%`,
+                [Op.like]: `%${query}%`,
               },
             },
           ],

@@ -44,7 +44,7 @@
 					</h2>
 					<div class="date">{{parseDate series.createdAt 'YYYY.MM.DD'}}
 						<div class="icon">
-							{{#isNewPost series.reg}}
+							{{#isNewPost series.createdAt}}
 							<img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
 							{{/isNewPost}}
 							{{#isHotPost series.hit}}

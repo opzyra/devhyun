@@ -58,7 +58,7 @@
             {{post.title}}
           </span>
           <span class="info">
-            <span class="reg">등록일 {{parseDate post.reg 'YYYY.MM.DD'}}</span>
+            <span class="reg">등록일 {{parseDate post.createdAt 'YYYY.MM.DD'}}</span>
             <span class="hit">
               조회수 {{post.hit}}
             </span>
@@ -81,7 +81,7 @@
           </div>
           <div id="aside" class="aside">
             <div class="icon">
-              {{#isNewPost post.reg}}
+              {{#isNewPost post.createdAt}}
               <img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
               {{/isNewPost}}
               {{#isHotPost post.hit}}

@@ -46,7 +46,7 @@ export const loginPlatform = controller.get(
         ...dbMember,
         loginAt,
       };
-      await Member.updateOne(member)(transaction);
+      await Member.updateOne(member, member.idx)(transaction);
     }
 
     if (!member.active) {

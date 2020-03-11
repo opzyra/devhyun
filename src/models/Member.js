@@ -105,10 +105,10 @@ export default class Member extends Sequelize.Model {
     };
   }
 
-  static updateOne(member) {
+  static updateOne(member, idx) {
     return async transaction => {
       return await this.update(member, {
-        where: { idx: member.idx },
+        where: { idx },
         transaction,
       });
     };

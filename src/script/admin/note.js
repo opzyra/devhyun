@@ -6,12 +6,12 @@ import {
   BROWSER,
   CONVERT,
   COMMON,
-  EDITOR
-} from "../common";
-import { validate } from "revalidator";
+  EDITOR,
+} from '../common';
+import { validate } from 'revalidator';
 
 export const note = {
-  namespace: "note",
+  namespace: 'note',
   templateNoteGroup(idx, color, name) {
     return `
       <div class="item" data-idx="${idx}">
@@ -37,15 +37,15 @@ export const note = {
     <form method="POST" onsubmit="APP.moveNoteGroup(${idx})">
       <div class="form_group">
         <span>노트 그룹</span>
-        <select name="note_group_idx">
+        <select name="noteGroupIdx">
           ${fx.go(
             groups,
             fx.map(
               e =>
                 `<option value="${e.idx}" ${
-                  group_idx == e.idx ? "selected" : ""
-                }>${e.name}</option>`
-            )
+                  group_idx == e.idx ? 'selected' : ''
+                }>${e.name}</option>`,
+            ),
           )}
         </select>
       </div>
@@ -58,13 +58,13 @@ export const note = {
   cbCtxMenu(key, options) {
     const idx = CONVERT.extractNumber(options.selector);
     switch (key) {
-      case "delete":
+      case 'delete':
         APP.deleteNote(idx);
         break;
-      case "move":
+      case 'move':
         APP.modalNoteGroupMove(idx);
         break;
-      case "edit":
+      case 'edit':
         location.href = `/admin/note/edit/${idx}`;
         break;
     }
@@ -77,37 +77,37 @@ export const note = {
       callback,
       items: {
         edit: {
-          name: "수정",
+          name: '수정',
           icon: function(opt, $itemElement, itemKey, item) {
-            return "mdi mdi-pen";
-          }
+            return 'mdi mdi-pen';
+          },
         },
         move: {
-          name: "그룹 이동",
+          name: '그룹 이동',
           icon: function(opt, $itemElement, itemKey, item) {
-            return "mdi mdi-puzzle-outline";
-          }
+            return 'mdi mdi-puzzle-outline';
+          },
         },
         delete: {
-          name: "삭제",
+          name: '삭제',
           icon: function(opt, $itemElement, itemKey, item) {
-            return "mdi mdi-window-close";
-          }
-        }
-      }
+            return 'mdi mdi-window-close';
+          },
+        },
+      },
     });
   },
   noteGroupSortable() {
-    $("#noteGroup").sortable({
-      handle: ".move",
+    $('#noteGroup').sortable({
+      handle: '.move',
       update: async (event, ui) => {
         let noteGroup = [];
-        $("#noteGroup .item").each((i, e) => {
-          const idx = $(e).attr("data-idx");
+        $('#noteGroup .item').each((i, e) => {
+          const idx = $(e).attr('data-idx');
           noteGroup.push(parseInt(idx));
         });
-        await AJAX.post("/group/note/odr", { noteGroup });
-      }
+        await AJAX.post('/group/note/odr', { noteGroup });
+      },
     });
   },
   async createNoteGroup() {
@@ -120,14 +120,14 @@ export const note = {
         name: {
           requried: true,
           allowEmpty: false,
-          message: "이름을 입력해주세요"
+          message: '이름을 입력해주세요',
         },
         color: {
           requried: true,
           allowEmpty: false,
-          message: "색상을 선택해주세요"
-        }
-      }
+          message: '색상을 선택해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -137,13 +137,13 @@ export const note = {
       return false;
     }
 
-    let rs = await AJAX.post("/group/note", form);
+    let rs = await AJAX.post('/group/note', form);
 
     if (rs) {
       let template = this.templateNoteGroup(rs.idx, form.color, form.name);
-      $("#noteGroup").append(template);
+      $('#noteGroup').append(template);
 
-      let modal = $("#remodal").remodal();
+      let modal = $('#remodal').remodal();
       modal.close();
       TOAST.success(rs.message);
       this.noteGroupSortable();
@@ -162,14 +162,14 @@ export const note = {
         name: {
           requried: true,
           allowEmpty: false,
-          message: "이름을 입력해주세요"
+          message: '이름을 입력해주세요',
         },
         color: {
           requried: true,
           allowEmpty: false,
-          message: "색상을 선택해주세요"
-        }
-      }
+          message: '색상을 선택해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -196,8 +196,8 @@ export const note = {
     const { group } = BROWSER.queryString();
     const form = $(event.target).serializeObject();
 
-    if (group && group == form.note_group_idx) {
-      ALERT.error("현재 노트 그룹으로 변경할 수 없습니다");
+    if (group && group == form.noteGroupIdx) {
+      ALERT.error('현재 노트 그룹으로 변경할 수 없습니다');
       return false;
     }
 
@@ -212,7 +212,7 @@ export const note = {
       return;
     }
 
-    let modal = $("#remodal").remodal();
+    let modal = $('#remodal').remodal();
     modal.close();
     TOAST.success(rs.message);
   },
@@ -224,19 +224,19 @@ export const note = {
       ${
         rowCount != 0
           ? `<br><span style="color:#ff4040;">※ 연관된 노트 ${rowCount}개가 함께 삭제됩니다.</span>`
-          : ""
+          : ''
       }
-      `
+      `,
     );
     if (value) {
       const { message } = await AJAX.delete(`/group/note/${idx}`);
-      message && (location.href = "/admin/note");
+      message && (location.href = '/admin/note');
     }
   },
   async modalNoteGroup(idx = null) {
     let group = {
-      name: "",
-      background_color: ""
+      name: '',
+      background_color: '',
     };
 
     if (idx) {
@@ -247,7 +247,7 @@ export const note = {
     <style>
       #remodal .confirm {margin-top: 64px;}
     </style>
-    <div class="title">그룹 ${idx ? "수정" : "추가"}</div>
+    <div class="title">그룹 ${idx ? '수정' : '추가'}</div>
     <form method="POST" onsubmit="${
       idx ? `APP.updateNoteGroup(${idx})` : `APP.createNoteGroup()`
     };">
@@ -261,7 +261,7 @@ export const note = {
         ${(() =>
           fx.go(
             COLOR.pallet,
-            fx.map(e => `<option value="${e}">${e}</option>`)
+            fx.map(e => `<option value="${e}">${e}</option>`),
           ))()}
         </select>
       </div>
@@ -271,30 +271,26 @@ export const note = {
     </form>
     `;
 
-    $("#remodal .contents_slot").html(template);
+    $('#remodal .contents_slot').html(template);
 
-    $("#remodal #colorSelect").colorSelect(`${group.color}`);
+    $('#remodal #colorSelect').colorSelect(`${group.color}`);
 
-    let modal = $("#remodal").remodal();
+    let modal = $('#remodal').remodal();
     modal.open();
   },
   async modalNoteGroupMove(idx) {
     let group = await AJAX.fetch(`/api/note/${idx}`);
     let groups = await AJAX.fetch(`/api/group/note`);
 
-    let template = this.templateChageNoteGroup(
-      idx,
-      group.note_group_idx,
-      groups
-    );
+    let template = this.templateChageNoteGroup(idx, group.noteGroupIdx, groups);
 
-    $("#remodal .contents_slot").html(template);
+    $('#remodal .contents_slot').html(template);
 
-    let modal = $("#remodal").remodal();
+    let modal = $('#remodal').remodal();
     modal.open();
   },
   async deleteNote(idx) {
-    const { value } = await ALERT.confirm("해당 노트를 삭제할까요?");
+    const { value } = await ALERT.confirm('해당 노트를 삭제할까요?');
     if (value) {
       const result = await AJAX.delete(`/note/${idx}`);
       if (result) {
@@ -303,24 +299,24 @@ export const note = {
     }
   },
   init() {
-    COMMON.pagination("#page", STATE.notePage.totalPages, STATE.notePage.page);
-    $("#list ul a").each((i, e) => {
-      const idx = $(e).attr("data-idx");
+    COMMON.pagination('#page', STATE.notePage.totalPages, STATE.notePage.page);
+    $('#list ul a').each((i, e) => {
+      const idx = $(e).attr('data-idx');
       this.registerCtxMenu(`#list ul a[data-idx="${idx}"]`);
     });
     this.noteGroupSortable();
-  }
+  },
 };
 
 export const nodeDetail = {
-  namespace: "noteDetail",
+  namespace: 'noteDetail',
   aside: function() {
-    $("#aside").stick_in_parent({
-      offset_top: 0
+    $('#aside').stick_in_parent({
+      offset_top: 0,
     });
-    let tocs = $("#toc a")
+    let tocs = $('#toc a')
       .map(function(i, e) {
-        let item = $(e).attr("href");
+        let item = $(e).attr('href');
         return $(item)[0].offsetTop + 50;
       })
       .toArray();
@@ -331,10 +327,10 @@ export const nodeDetail = {
         let item = tocs[i];
         let item_next = tocs[i + 1] ? tocs[i + 1] : $(document).innerHeight();
         if (top >= item && top < item_next) {
-          $("#toc a").removeClass("on");
-          $("#toc a")
+          $('#toc a').removeClass('on');
+          $('#toc a')
             .eq(i)
-            .addClass("on");
+            .addClass('on');
           break;
         }
       }
@@ -343,20 +339,20 @@ export const nodeDetail = {
     $(document).scroll(scroll);
   },
   async deleteNote(idx) {
-    const { value } = await ALERT.confirm("해당 노트를 삭제할까요?");
+    const { value } = await ALERT.confirm('해당 노트를 삭제할까요?');
     if (value) {
       const result = await AJAX.delete(`/note/${idx}`);
-      result && (location.href = "/admin/note");
+      result && (location.href = '/admin/note');
     }
   },
   init() {
     this.aside();
     COMMON.anchorScroll(0);
-  }
+  },
 };
 
 export const nodeEdit = {
-  namespace: "noteEdit",
+  namespace: 'noteEdit',
   templateTemp(item) {
     return `
     <li>
@@ -369,10 +365,10 @@ export const nodeEdit = {
   },
   async fetchTemp() {
     const temps = await fx.go(
-      AJAX.fetch("/api/editor/temp"),
-      fx.map(e => this.templateTemp(e))
+      AJAX.fetch('/api/editor/temp'),
+      fx.map(e => this.templateTemp(e)),
     );
-    $("#temps").html(temps);
+    $('#temps').html(temps);
   },
   async insertNote() {
     event.preventDefault();
@@ -386,19 +382,19 @@ export const nodeEdit = {
         title: {
           requried: true,
           allowEmpty: false,
-          message: "제목을 입력해주세요"
+          message: '제목을 입력해주세요',
         },
         contents: {
           requried: true,
           allowEmpty: false,
-          message: "내용을 입력해주세요"
+          message: '내용을 입력해주세요',
         },
-        note_group_idx: {
+        noteGroupIdx: {
           requried: true,
           allowEmpty: false,
-          message: "그룹을 선택해주세요"
-        }
-      }
+          message: '그룹을 선택해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -408,7 +404,7 @@ export const nodeEdit = {
       return false;
     }
 
-    const { idx } = await AJAX.post("/note", form);
+    const { idx } = await AJAX.post('/note', form);
     if (idx) {
       location.href = `/admin/note/${idx}`;
     }
@@ -425,19 +421,19 @@ export const nodeEdit = {
         title: {
           requried: true,
           allowEmpty: false,
-          message: "제목을 입력해주세요"
+          message: '제목을 입력해주세요',
         },
         contents: {
           requried: true,
           allowEmpty: false,
-          message: "내용을 입력해주세요"
+          message: '내용을 입력해주세요',
         },
-        note_group_idx: {
+        noteGroupIdx: {
           requried: true,
           allowEmpty: false,
-          message: "그룹을 선택해주세요"
-        }
-      }
+          message: '그룹을 선택해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -454,29 +450,29 @@ export const nodeEdit = {
   },
   async setTemp(idx) {
     const { value } = await ALERT.confirm(
-      "현재 작성된 데이터가 모두 삭제됩니다"
+      '현재 작성된 데이터가 모두 삭제됩니다',
     );
     if (value) {
       const temp = await AJAX.get(`/editor/temp/${idx}`);
-      $("#title").val(temp.title);
-      $("#tempIdx").val(temp.idx);
+      $('#title').val(temp.title);
+      $('#tempIdx').val(temp.idx);
       window.EDITOR.setHtml(temp.contents);
     }
   },
   async deleteTemp(idx) {
-    const { value } = await ALERT.confirm("선택하신 임시저장글을 삭제할까요?");
+    const { value } = await ALERT.confirm('선택하신 임시저장글을 삭제할까요?');
     if (value) {
       const { message } = await AJAX.delete(`/editor/temp/${idx}`);
       TOAST.success(message);
 
-      const tempIdx = $("#tempIdx").val();
-      if (tempIdx == idx) $("#tempIdx").val("");
+      const tempIdx = $('#tempIdx').val();
+      if (tempIdx == idx) $('#tempIdx').val('');
 
       this.fetchTemp();
     }
   },
   async cancel() {
-    const { value } = await ALERT.confirm("작성한 내용은 반영되지 않아요");
+    const { value } = await ALERT.confirm('작성한 내용은 반영되지 않아요');
     if (value) {
       history.back();
     }
@@ -484,52 +480,52 @@ export const nodeEdit = {
   async spell(platform) {
     const markdown = window.EDITOR.getMarkdown();
 
-    if (markdown == "") {
-      ALERT.error("내용을 입력해주세요");
+    if (markdown == '') {
+      ALERT.error('내용을 입력해주세요');
       return;
     }
 
-    const rs = await AJAX.post("/editor/markdown", { markdown });
+    const rs = await AJAX.post('/editor/markdown', { markdown });
     if (!rs) return;
 
-    let tempElem = document.createElement("textarea");
+    let tempElem = document.createElement('textarea');
     tempElem.value = rs;
     document.body.appendChild(tempElem);
 
     tempElem.select();
-    document.execCommand("copy");
+    document.execCommand('copy');
     document.body.removeChild(tempElem);
 
     switch (platform) {
-      case "pusan":
+      case 'pusan':
         window.open(
-          "https://speller.cs.pusan.ac.kr/",
-          "_blank",
-          "width=850, height=715, toolbar=no, menubar=no, scrollbars=no, resizable=no"
+          'https://speller.cs.pusan.ac.kr/',
+          '_blank',
+          'width=850, height=715, toolbar=no, menubar=no, scrollbars=no, resizable=no',
         );
         break;
-      case "saramin":
+      case 'saramin':
         window.open(
-          "http://www.saramin.co.kr/zf_user/tools/character-counter",
-          "_blank",
-          "toolbar=no, menubar=no, scrollbars=no, resizable=no"
+          'http://www.saramin.co.kr/zf_user/tools/character-counter',
+          '_blank',
+          'toolbar=no, menubar=no, scrollbars=no, resizable=no',
         );
         break;
-      case "jobkorea":
+      case 'jobkorea':
         window.open(
-          "http://www.jobkorea.co.kr/service/user/Tool/SpellCheck",
-          "_blank",
-          "toolbar=no, menubar=no, scrollbars=no, resizable=no"
+          'http://www.jobkorea.co.kr/service/user/Tool/SpellCheck',
+          '_blank',
+          'toolbar=no, menubar=no, scrollbars=no, resizable=no',
         );
         break;
     }
   },
   init() {
     const height = document.documentElement.clientHeight;
-    EDITOR.set("#markdown", height);
+    EDITOR.set('#markdown', height);
     EDITOR.setTempCb(() => {
       this.fetchTemp();
     });
     this.fetchTemp();
-  }
+  },
 };

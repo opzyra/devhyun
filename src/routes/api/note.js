@@ -1,93 +1,84 @@
-import express from 'express';
-
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
+import { safeMarkdown, anchorConvert } from '@/lib/utils';
 
 import validator, { Joi } from '@/middleware/validator';
-import { safeMarkdown, anchorConvert } from '../../lib/utils';
 
-import Note from '../../sql/Note';
+import Note from '@/models/Note';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const selectOne = controller.get(
   '/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const NOTE = Note(conn);
+    const note = await Note.selectOne(idx)(transaction);
 
-    const item = await NOTE.selectOne(idx);
-
-    res.status(200).json(item);
-  }),
+    res.status(200).json(note);
+  },
 );
 
-router.get(
+export const countOne = controller.get(
   '/count/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const NOTE = Note(conn);
-
-    const rowCount = await NOTE.countRelatedGroup(idx);
+    const rowCount = await Note.countRelatedGroup(idx)(transaction);
 
     res.status(200).json(rowCount);
-  }),
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
-    note_group_idx: Joi.number().required(),
+    noteGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
-    let { note_group_idx, title, contents } = req.body;
-
-    const NOTE = Note(conn);
+  async (req, res, transaction) => {
+    let { noteGroupIdx, title, contents } = req.body;
 
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
-    const note = await NOTE.insertOne({
-      note_group_idx,
+    const note = await Note.insertOne({
       title,
       contents,
-    });
+    })(transaction);
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note });
-  }),
+    await note.setNoteGroup(noteGroupIdx, { transaction });
+
+    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: note.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
-    note_group_idx: Joi.number().required(),
+    noteGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    let { note_group_idx, title, contents } = req.body;
+    let { noteGroupIdx, title, contents } = req.body;
 
-    const NOTE = Note(conn);
-
-    const note = await NOTE.selectOne(idx);
+    const note = await Note.selectOne(idx)(transaction);
 
     if (!note) {
       res.status(400).json({ message: `잘못된 접근입니다` });
@@ -97,62 +88,59 @@ router.put(
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
-    await NOTE.updateOne(
+    await note.setNoteGroup(noteGroupIdx, { transaction });
+
+    await Note.updateOne(
       {
-        note_group_idx,
         title,
         contents,
       },
       idx,
-    );
+    )(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.put(
+export const updateNoteGroup = controller.put(
   '/group/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
-    note_group_idx: Joi.number().required(),
+    noteGroupIdx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    const { note_group_idx } = req.body;
+    const { noteGroupIdx } = req.body;
 
-    const NOTE = Note(conn);
-
-    await NOTE.updateOne({ note_group_idx }, idx);
+    await Note.updateOne({ noteGroupIdx }, idx)(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const NOTE = Note(conn);
-
-    const note = await NOTE.selectOne(idx);
+    const note = await Note.selectOne(idx)(transaction);
 
     if (!note) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await NOTE.deleteOne(idx);
+    await Note.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

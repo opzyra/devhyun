@@ -19,9 +19,9 @@ AWS EC2에 배포하였으며 자세한 기술 스택은 아래를 참고해주�
 ### Server
 
 - Express
-- Knex.js
-- fxjs
-- webpack
+- Sequelize
+- Fxjs
+- Webpack
 - MySQL
 
 ## 개발 포인트

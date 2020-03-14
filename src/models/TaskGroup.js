@@ -29,4 +29,40 @@ export default class TaskGroup extends Sequelize.Model {
       return await this.findAll({ order: [['odr', 'ASC']], transaction });
     };
   }
+
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findOne({ where: { idx }, transaction });
+    };
+  }
+
+  static selectByName(name) {
+    return async transaction => {
+      return await this.findOne({ where: { name }, transaction });
+    };
+  }
+
+  static countAll() {
+    return async transaction => {
+      return await this.count({ transaction });
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
+
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({ where: { idx }, transaction });
+    };
+  }
 }

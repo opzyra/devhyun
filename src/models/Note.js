@@ -76,7 +76,7 @@ export default class Note extends Sequelize.Model {
 
   static countRelatedGroup(idx) {
     return async transaction => {
-      return await this.count({ where: { noteGroupIdx: idx }, transaction });
+      return await this.count({ where: { note_group_idx: idx }, transaction });
     };
   }
 

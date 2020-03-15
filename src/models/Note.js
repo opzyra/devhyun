@@ -61,7 +61,10 @@ export default class Note extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll(option);
+      let { count, rows } = await this.findAndCountAll({
+        ...option,
+        include: null,
+      });
       let notePage = pagination(count, limit, page);
 
       return { notes: rows, notePage };

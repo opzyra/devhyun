@@ -64,7 +64,10 @@ export default class Task extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll(option);
+      let { count, rows } = await this.findAndCountAll({
+        ...option,
+        include: null,
+      });
       let taskPage = pagination(count, limit, page);
 
       return { tasks: rows, taskPage };

@@ -86,7 +86,10 @@ export default class Member extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll(option);
+      let { count, rows } = await this.findAndCountAll({
+        ...option,
+        include: null,
+      });
       let memberPage = pagination(count, limit, page);
 
       return { members: rows, memberPage };

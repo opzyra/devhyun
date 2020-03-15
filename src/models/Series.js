@@ -75,7 +75,10 @@ export default class Series extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll(option);
+      let { count, rows } = await this.findAndCountAll({
+        ...option,
+        include: null,
+      });
       let seriesPage = pagination(count, limit, page);
 
       return { series: rows, seriesPage };

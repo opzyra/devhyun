@@ -86,7 +86,11 @@ export default class Post extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll(option);
+      let { count, rows } = await this.findAndCountAll({
+        ...option,
+        include: null,
+      });
+
       let postPage = pagination(count, limit, page);
 
       return { posts: rows, postPage };
@@ -169,6 +173,12 @@ export default class Post extends Sequelize.Model {
     };
   }
 
+  static selectAll() {
+    return async transaction => {
+      return await this.findAll({ transaction });
+    };
+  }
+
   // 메인화면에 제공하는 최신글 조회
   static selectLatest(limit = 5) {
     return async transaction => {
@@ -218,6 +228,12 @@ export default class Post extends Sequelize.Model {
         limit,
         transaction,
       });
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
     };
   }
 

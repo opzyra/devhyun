@@ -64,14 +64,16 @@ export const postEdit = controller.get(
 
     const temp = await Temp.selectByTitle(post.title)(transaction);
 
+    const tags = go(post.Tags, map(item => item.tag));
+
     store(res).setState({
-      tags: post.Tags,
+      tags,
     });
 
     res.render('admin/blog/post/edit', {
       temp: temp && temp.idx,
       post,
-      tags: post.Tags,
+      tags,
       layout: false,
     });
   },
@@ -97,6 +99,8 @@ export const postDetail = controller.get(
     const [content, toc] = parseToc(post.contents);
     post.contents = content.replace(toc, '');
 
+    const tags = go(post.Tags, map(item => item.tag));
+
     // 댓글 처리
     const members = await Member.selectAll()(transaction);
 
@@ -121,7 +125,7 @@ export const postDetail = controller.get(
     res.render('admin/blog/post/detail', {
       post,
       toc,
-      tags: post.Tags,
+      tags,
       layout: false,
     });
   },

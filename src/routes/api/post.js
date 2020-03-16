@@ -1,65 +1,59 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
+import { anchorConvert, safeMarkdown } from '@/lib/utils';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
-
-import { anchorConvert, safeMarkdown } from '../../lib/utils';
 import validator, { Joi } from '@/middleware/validator';
 
-import PostTag from '../../sql/PostTag';
-import BoardPost from '../../sql/BoardPost';
+import Post from '@/models/Post';
+import Tag from '@/models/Tag';
+import PostTag from '@/models/PostTag';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const selectAll = controller.get(
   '/',
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
-    const BOARD_POST = BoardPost(conn);
+  session.isAdmin(),
+  async (req, res, transaction) => {
+    const posts = await Post.selectAll()(transaction);
 
-    const items = await BOARD_POST.selectAll();
-
-    res.status(200).json(items);
-  }),
+    res.status(200).json(posts);
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     let { title, contents, tags, thumbnail } = req.body;
-    const POST_TAG = PostTag(conn);
-    const BOARD_POST = BoardPost(conn);
 
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
-    const insertId = await BOARD_POST.insertOne({
+    const post = await Post.insertOne({
       title,
       contents,
       thumbnail,
-    });
+    })(transaction);
 
     if (tags) {
-      for (let i = 0; i < tags.length; i++) {
-        await POST_TAG.insertOne({
-          post_idx: insertId,
-          tag: tags[i],
-        });
-      }
+      tags = tags.map(tag => ({ tag }));
+      const insertedTags = await Tag.insertAllIgnoreDuplicates(tags)(
+        transaction,
+      );
+      await post.setTags(insertedTags, { transaction });
     }
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  }),
+    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: post.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
@@ -67,58 +61,54 @@ router.put(
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
     let { title, contents, tags, thumbnail } = req.body;
-
-    const POST_TAG = PostTag(conn);
-    const BOARD_POST = BoardPost(conn);
 
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
-    const insertId = await BOARD_POST.updateOne(
+    await Post.updateOne(
       {
         title,
         contents,
         thumbnail,
       },
       idx,
-    );
+    )(transaction);
 
-    await POST_TAG.deleteRelatedPost(idx);
+    await PostTag.deleteRelatedPost(idx)(transaction);
 
     if (tags) {
-      for (let i = 0; i < tags.length; i++) {
-        await POST_TAG.insertOne({
-          post_idx: idx,
-          tag: tags[i],
-        });
-      }
+      tags = tags.map(tag => ({ tag }));
+      const insertedTags = await Tag.insertAllIgnoreDuplicates(tags)(
+        transaction,
+      );
+
+      const post = await Post.selectOne(idx)(transaction);
+
+      await post.setTags(insertedTags, { transaction });
     }
 
-    res.status(200).json({ message: `수정이 완료 되었습니다`, idx: insertId });
-  }),
+    res.status(200).json({ message: `수정이 완료 되었습니다`, idx });
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const POST_TAG = PostTag(conn);
-    const BOARD_POST = BoardPost(conn);
+    await Post.deleteOne(idx)(transaction);
 
-    await BOARD_POST.deleteOne(idx);
-
-    await POST_TAG.deleteRelatedPost(idx);
+    await PostTag.deleteRelatedPost(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

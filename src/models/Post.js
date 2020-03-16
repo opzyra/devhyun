@@ -7,6 +7,7 @@ import Series from '@/models/Series';
 import Tag from '@/models/Tag';
 
 import SeriesPost from '@/models/SeriesPost';
+import PostTag from '@/models/PostTag';
 
 export default class Post extends Sequelize.Model {
   static init(sequelize) {
@@ -34,11 +35,17 @@ export default class Post extends Sequelize.Model {
     this.belongsToMany(models.Comment, {
       through: 'post_comment',
       timestamps: false,
+      onDelete: 'CASCADE',
+      hooks: true,
     });
 
     this.belongsToMany(models.Tag, {
-      through: 'post_tag',
+      through: {
+        model: PostTag,
+      },
       timestamps: false,
+      onDelete: 'CASCADE',
+      hooks: true,
     });
 
     this.belongsToMany(models.Series, {
@@ -237,6 +244,12 @@ export default class Post extends Sequelize.Model {
     };
   }
 
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
+    };
+  }
+
   // 조회수 업데이트
   static updateHit(idx) {
     return async transaction => {
@@ -244,6 +257,17 @@ export default class Post extends Sequelize.Model {
         { hit: Sequelize.literal('hit + 1') },
         { where: { idx }, transaction, silent: true },
       );
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({
+        where: { idx },
+        cascade: true,
+        hooks: true,
+        transaction,
+      });
     };
   }
 }

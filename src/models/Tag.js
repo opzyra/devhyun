@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 
 import Post from '@/models/Post';
+import PostTag from '@/models/PostTag';
 
 export default class Tag extends Sequelize.Model {
   static init(sequelize) {
@@ -23,7 +24,9 @@ export default class Tag extends Sequelize.Model {
 
   static associate(models) {
     this.belongsToMany(models.Post, {
-      through: 'post_tag',
+      through: {
+        model: PostTag,
+      },
       timestamps: false,
     });
   }
@@ -58,6 +61,15 @@ export default class Tag extends Sequelize.Model {
         raw: true,
         nest: true,
         transaction,
+      });
+    };
+  }
+
+  static insertAllIgnoreDuplicates(models) {
+    return async transaction => {
+      return await this.bulkCreate(models, {
+        transaction,
+        ignoreDuplicates: true,
       });
     };
   }

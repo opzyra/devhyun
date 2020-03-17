@@ -103,9 +103,9 @@ export const deleteOne = controller.delete(
   async (req, res, transaction) => {
     const { idx } = req.params;
 
-    await Post.deleteOne(idx)(transaction);
-
     await PostTag.deleteRelatedPost(idx)(transaction);
+
+    await Post.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
   },

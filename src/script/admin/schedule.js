@@ -1,8 +1,8 @@
-import { AJAX, ALERT, COLOR, TOAST } from "../common";
-import { validate } from "revalidator";
+import { AJAX, ALERT, COLOR, TOAST } from '../common';
+import { validate } from 'revalidator';
 
 export const schedule = {
-  namespace: "schedule",
+  namespace: 'schedule',
   cal: null,
   caldedars: [],
   findCalendar(id) {
@@ -20,11 +20,11 @@ export const schedule = {
     let html = [];
     let start = moment(schedule.start.toUTCString());
     if (!isAllDay) {
-      html.push("<strong>" + start.format("HH:mm") + "</strong> ");
+      html.push('<strong>' + start.format('HH:mm') + '</strong> ');
     }
     if (schedule.isPrivate) {
       html.push('<span class="calendar-font-icon ic-lock-b"></span>');
-      html.push(" Private");
+      html.push(' Private');
     } else {
       if (schedule.isReadOnly) {
         html.push('<span class="calendar-font-icon ic-readonly-b"></span>');
@@ -35,56 +35,56 @@ export const schedule = {
       } else if (schedule.location) {
         html.push('<span class="calendar-font-icon ic-location-b"></span>');
       }
-      html.push(" " + schedule.title);
+      html.push(' ' + schedule.title);
     }
 
-    return html.join("");
+    return html.join('');
   },
   onClickMenu(e) {
     let target = $(e.target).closest('a[role="menuitem"]')[0];
     let action = APP.getDataAction(target);
     let options = APP.cal.getOptions();
-    let viewName = "";
+    let viewName = '';
 
     switch (action) {
-      case "toggle-daily":
-        viewName = "day";
+      case 'toggle-daily':
+        viewName = 'day';
         break;
-      case "toggle-weekly":
-        viewName = "week";
+      case 'toggle-weekly':
+        viewName = 'week';
         break;
-      case "toggle-monthly":
+      case 'toggle-monthly':
         options.month.visibleWeeksCount = 0;
-        viewName = "month";
+        viewName = 'month';
         break;
-      case "toggle-weeks2":
+      case 'toggle-weeks2':
         options.month.visibleWeeksCount = 2;
-        viewName = "month";
+        viewName = 'month';
         break;
-      case "toggle-weeks3":
+      case 'toggle-weeks3':
         options.month.visibleWeeksCount = 3;
-        viewName = "month";
+        viewName = 'month';
         break;
-      case "toggle-narrow-weekend":
+      case 'toggle-narrow-weekend':
         options.month.narrowWeekend = !options.month.narrowWeekend;
         options.week.narrowWeekend = !options.week.narrowWeekend;
         viewName = APP.cal.getViewName();
 
-        target.querySelector("input").checked = options.month.narrowWeekend;
+        target.querySelector('input').checked = options.month.narrowWeekend;
         break;
-      case "toggle-start-day-1":
+      case 'toggle-start-day-1':
         options.month.startDayOfWeek = options.month.startDayOfWeek ? 0 : 1;
         options.week.startDayOfWeek = options.week.startDayOfWeek ? 0 : 1;
         viewName = APP.cal.getViewName();
 
-        target.querySelector("input").checked = options.month.startDayOfWeek;
+        target.querySelector('input').checked = options.month.startDayOfWeek;
         break;
-      case "toggle-workweek":
+      case 'toggle-workweek':
         options.month.workweek = !options.month.workweek;
         options.week.workweek = !options.week.workweek;
         viewName = APP.cal.getViewName();
 
-        target.querySelector("input").checked = !options.month.workweek;
+        target.querySelector('input').checked = !options.month.workweek;
         break;
       default:
         break;
@@ -100,13 +100,13 @@ export const schedule = {
     let action = APP.getDataAction(e.target);
 
     switch (action) {
-      case "move-prev":
+      case 'move-prev':
         cal.prev();
         break;
-      case "move-next":
+      case 'move-next':
         cal.next();
         break;
-      case "move-today":
+      case 'move-today':
         cal.today();
         break;
       default:
@@ -122,20 +122,20 @@ export const schedule = {
     APP.changeNewScheduleCalendar(calendarId);
   },
   changeNewScheduleCalendar(calendarId) {
-    let calendarNameElement = document.getElementById("calendarName");
+    let calendarNameElement = document.getElementById('calendarName');
     let calendar = APP.findCalendar(calendarId);
     let html = [];
 
     html.push(
       '<span class="calendar-bar" style="background-color: ' +
         calendar.bgColor +
-        "; border-color:" +
+        '; border-color:' +
         calendar.borderColor +
-        ';"></span>'
+        ';"></span>',
     );
-    html.push('<span class="calendar-name">' + calendar.name + "</span>");
+    html.push('<span class="calendar-name">' + calendar.name + '</span>');
 
-    calendarNameElement.innerHTML = html.join("");
+    calendarNameElement.innerHTML = html.join('');
 
     selectedCalendar = calendar;
   },
@@ -144,24 +144,24 @@ export const schedule = {
     let end = event.end
       ? new Date(event.end.getTime())
       : moment()
-          .add(1, "hours")
+          .add(1, 'hours')
           .toDate();
 
     APP.cal.openCreationPopup({
       start: start,
-      end: end
+      end: end,
     });
   },
   onChangeCalendars(e) {
     let calendarId = e.target.value;
     let checked = e.target.checked;
-    let viewAll = document.querySelector(".lnb-calendars-item input");
+    let viewAll = document.querySelector('.lnb-calendars-item input');
     let calendarElements = Array.prototype.slice.call(
-      document.querySelectorAll("#calendarList input")
+      document.querySelectorAll('#calendarList input'),
     );
     let allCheckedCalendars = true;
 
-    if (calendarId === "all") {
+    if (calendarId === 'all') {
       allCheckedCalendars = checked;
 
       calendarElements.forEach(function(input) {
@@ -169,7 +169,7 @@ export const schedule = {
         input.checked = checked;
         span.style.backgroundColor = checked
           ? span.style.borderColor
-          : "transparent";
+          : 'transparent';
       });
 
       APP.caldedars.forEach(function(calendar) {
@@ -196,7 +196,7 @@ export const schedule = {
     let caldedars = this.caldedars || APP.caldedars;
 
     let calendarElements = Array.prototype.slice.call(
-      document.querySelectorAll("#calendarList input")
+      document.querySelectorAll('#calendarList input'),
     );
 
     for (const cldrs of caldedars) {
@@ -209,77 +209,77 @@ export const schedule = {
       let span = cldrEl.nextElementSibling;
       span.style.backgroundColor = cldrEl.checked
         ? span.style.borderColor
-        : "transparent";
+        : 'transparent';
     }
   },
   setDropdownCalendarType() {
-    let calendarTypeName = document.getElementById("calendarTypeName");
-    let calendarTypeIcon = document.getElementById("calendarTypeIcon");
+    let calendarTypeName = document.getElementById('calendarTypeName');
+    let calendarTypeIcon = document.getElementById('calendarTypeIcon');
     let options = cal.getOptions();
     let type = cal.getViewName();
     let iconClassName;
 
-    if (type === "day") {
-      type = "일 단위";
-      iconClassName = "calendar-icon ic_view_day";
-    } else if (type === "week") {
-      type = "1주 단위";
-      iconClassName = "calendar-icon ic_view_week";
+    if (type === 'day') {
+      type = '일 단위';
+      iconClassName = 'calendar-icon ic_view_day';
+    } else if (type === 'week') {
+      type = '1주 단위';
+      iconClassName = 'calendar-icon ic_view_week';
     } else if (options.month.visibleWeeksCount === 2) {
-      type = "2주 단위";
-      iconClassName = "calendar-icon ic_view_week";
+      type = '2주 단위';
+      iconClassName = 'calendar-icon ic_view_week';
     } else if (options.month.visibleWeeksCount === 3) {
-      type = "3주 단위";
-      iconClassName = "calendar-icon ic_view_week";
+      type = '3주 단위';
+      iconClassName = 'calendar-icon ic_view_week';
     } else {
-      type = "월 단위";
-      iconClassName = "calendar-icon ic_view_month";
+      type = '월 단위';
+      iconClassName = 'calendar-icon ic_view_month';
     }
 
     calendarTypeName.innerHTML = type;
     calendarTypeIcon.className = iconClassName;
   },
   setRenderRangeText() {
-    let renderRange = document.getElementById("renderRange");
+    let renderRange = document.getElementById('renderRange');
     let options = cal.getOptions();
     let viewName = cal.getViewName();
     let html = [];
-    if (viewName === "day") {
-      html.push(moment(cal.getDate().getTime()).format("YYYY.MM.DD"));
+    if (viewName === 'day') {
+      html.push(moment(cal.getDate().getTime()).format('YYYY.MM.DD'));
     } else if (
-      viewName === "month" &&
+      viewName === 'month' &&
       (!options.month.visibleWeeksCount || options.month.visibleWeeksCount > 4)
     ) {
-      html.push(moment(cal.getDate().getTime()).format("YYYY.MM"));
+      html.push(moment(cal.getDate().getTime()).format('YYYY.MM'));
     } else {
-      html.push(moment(cal.getDateRangeStart().getTime()).format("YYYY.MM.DD"));
-      html.push(" ~ ");
-      html.push(moment(cal.getDateRangeEnd().getTime()).format(" MM.DD"));
+      html.push(moment(cal.getDateRangeStart().getTime()).format('YYYY.MM.DD'));
+      html.push(' ~ ');
+      html.push(moment(cal.getDateRangeEnd().getTime()).format(' MM.DD'));
     }
-    renderRange.innerHTML = html.join("");
+    renderRange.innerHTML = html.join('');
   },
   setEventListener() {
-    $("#menu-navi").on("click", this.onClickNavi);
-    $('.dropdown-menu a[role="menuitem"]').on("click", this.onClickMenu);
-    $("#lnb-calendars").on("change", this.onChangeCalendars);
+    $('#menu-navi').on('click', this.onClickNavi);
+    $('.dropdown-menu a[role="menuitem"]').on('click', this.onClickMenu);
+    $('#lnb-calendars').on('change', this.onChangeCalendars);
 
-    $("#btn-new-schedule").on("click", this.createNewSchedule);
+    $('#btn-new-schedule').on('click', this.createNewSchedule);
 
-    $("#dropdownMenu-calendars-list").on(
-      "click",
-      this.onChangeNewScheduleCalendar
+    $('#dropdownMenu-calendars-list').on(
+      'click',
+      this.onChangeNewScheduleCalendar,
     );
 
-    window.addEventListener("resize", this.resizeThrottled);
+    window.addEventListener('resize', this.resizeThrottled);
   },
   getDataAction(target) {
     return target.dataset
       ? target.dataset.action
-      : target.getAttribute("data-action");
+      : target.getAttribute('data-action');
   },
   setCalendarGroupRender() {
-    let calendarList = document.getElementById("calendarList");
-    calendarList.innerHTML = "";
+    let calendarList = document.getElementById('calendarList');
+    calendarList.innerHTML = '';
     let html = [];
     this.caldedars.forEach(function(calendar) {
       html.push(
@@ -298,39 +298,39 @@ export const schedule = {
           <i class="mdi mdi-window-close"></i>
           </span>
         </div>
-        `
+        `,
       );
     });
-    calendarList.innerHTML = html.join("\n");
+    calendarList.innerHTML = html.join('\n');
   },
   setCalendarSortable() {
-    $("#calendarList").sortable({
-      handle: ".move",
+    $('#calendarList').sortable({
+      handle: '.move',
       update: async (event, ui) => {
         let calendars = [];
         $(
-          "#calendarList .lnb-calendars-item .tui-full-calendar-checkbox-round"
+          '#calendarList .lnb-calendars-item .tui-full-calendar-checkbox-round',
         ).each((i, e) => {
           calendars.push(parseInt(e.value));
         });
-        await AJAX.post("/group/schedule/odr", { calendars });
-      }
+        await AJAX.post('/group/schedule/odr', { calendars });
+      },
     });
   },
   async setCalendars() {
     this.caldedars = await fx.go(
-      AJAX.fetch("/api/group/schedule"),
+      AJAX.fetch('/api/group/schedule'),
       fx.map(e => {
         return {
           id: String(e.idx),
           name: e.name,
-          color: "#ffffff",
+          color: '#ffffff',
           bgColor: e.color,
           dragBgColor: e.color,
           borderColor: e.color,
-          checked: true
+          checked: true,
         };
-      })
+      }),
     );
     APP.cal.setCalendars(this.caldedars);
     this.setCalendarGroupRender();
@@ -338,47 +338,48 @@ export const schedule = {
   },
   async setSchedules() {
     this.cal.clear();
-    const start = moment(this.cal.getDateRangeStart().getTime())
-      .subtract(1, "months")
-      .format("YYYYMMDD");
-    const end = moment(this.cal.getDateRangeEnd().getTime())
-      .add(1, "months")
-      .format("YYYYMMDD");
+    const startAt = moment(this.cal.getDateRangeStart().getTime())
+      .subtract(1, 'months')
+      .format('YYYYMMDD');
+    const endAt = moment(this.cal.getDateRangeEnd().getTime())
+      .add(1, 'months')
+      .format('YYYYMMDD');
     let schedules = await fx.go(
-      AJAX.fetch("/api/schedule", {
-        start,
-        end
+      AJAX.fetch('/api/schedule', {
+        startAt,
+        endAt,
       }),
       fx.map(e => {
-        let color = APP.findCalendar(String(e.schedule_group_idx)).bgColor;
+        console.log(e);
+        let color = APP.findCalendar(String(e.ScheduleGroupIdx)).bgColor;
         return {
           id: e.idx,
           title: e.title,
-          isAllDay: e.all_day,
-          start: e.start,
-          end: e.end,
-          color: "#ffffff",
+          isAllDay: e.allDay,
+          start: e.startAt,
+          end: e.endAt,
+          color: '#ffffff',
           isVisible: true,
           bgColor: color,
           dragBgColor: color,
           borderColor: color,
-          calendarId: String(e.schedule_group_idx),
-          category: e.all_day ? "allday" : "time",
+          calendarId: String(e.ScheduleGroupIdx),
+          category: e.allDay ? 'allday' : 'time',
           location: e.location,
-          state: e.state
+          state: e.state,
         };
-      })
+      }),
     );
 
     this.cal.createSchedules(schedules);
     this.refreshScheduleVisibility();
   },
   async calendarInit() {
-    this.cal = new tui.Calendar("#calendar", {
-      defaultView: "month",
+    this.cal = new tui.Calendar('#calendar', {
+      defaultView: 'month',
       useCreationPopup: true,
       useDetailPopup: true,
-      taskView: ["allday"],
+      taskView: ['allday'],
       template: {
         milestone: function(model) {
           return (
@@ -386,7 +387,7 @@ export const schedule = {
             model.bgColor +
             '">' +
             model.title +
-            "</span>"
+            '</span>'
           );
         },
         allday(schedule) {
@@ -402,61 +403,61 @@ export const schedule = {
           return '<span class="tui-full-calendar-left-content">종일</span>';
         },
         popupIsAllDay: function() {
-          return "종일";
+          return '종일';
         },
         popupStateFree: function() {
-          return "중요";
+          return '중요';
         },
         popupStateBusy: function() {
-          return "일반";
+          return '일반';
         },
         titlePlaceholder: function() {
-          return "제목";
+          return '제목';
         },
         locationPlaceholder: function() {
-          return "장소";
+          return '장소';
         },
         startDatePlaceholder: function() {
-          return "시작일";
+          return '시작일';
         },
         endDatePlaceholder: function() {
-          return "종료일";
+          return '종료일';
         },
         popupSave: function() {
-          return "저장";
+          return '저장';
         },
         popupUpdate: function() {
-          return "수정";
+          return '수정';
         },
         popupEdit: function() {
-          return "수정";
+          return '수정';
         },
         popupDelete: function() {
-          return "삭제";
-        }
+          return '삭제';
+        },
       },
       month: {
         daynames: [
-          "일요일",
-          "월요일",
-          "화요일",
-          "수요일",
-          "목요일",
-          "금요일",
-          "토요일"
-        ]
+          '일요일',
+          '월요일',
+          '화요일',
+          '수요일',
+          '목요일',
+          '금요일',
+          '토요일',
+        ],
       },
       week: {
         daynames: [
-          "일요일",
-          "월요일",
-          "화요일",
-          "수요일",
-          "목요일",
-          "금요일",
-          "토요일"
-        ]
-      }
+          '일요일',
+          '월요일',
+          '화요일',
+          '수요일',
+          '목요일',
+          '금요일',
+          '토요일',
+        ],
+      },
     });
 
     this.cal.on({
@@ -465,14 +466,16 @@ export const schedule = {
         let calendar =
           scheduleData.calendar || APP.findCalendar(scheduleData.calendarId);
 
-        const data = await AJAX.post("/schedule", {
-          schedule_group_idx: scheduleData.calendarId,
+        const data = await AJAX.post('/schedule', {
+          scheduleGroupIdx: scheduleData.calendarId,
           title: scheduleData.title,
           location: scheduleData.location,
           state: scheduleData.state,
-          all_day: scheduleData.isAllDay,
-          start: moment(scheduleData.start._date).format("YYYY-MM-DD HH:mm:ss"),
-          end: moment(scheduleData.end._date).format("YYYY-MM-DD HH:mm:ss")
+          allDay: scheduleData.isAllDay,
+          startAt: moment(scheduleData.start._date).format(
+            'YYYY-MM-DD HH:mm:ss',
+          ),
+          endAt: moment(scheduleData.end._date).format('YYYY-MM-DD HH:mm:ss'),
         });
 
         if (!data) {
@@ -485,19 +488,19 @@ export const schedule = {
           id: data.idx,
           title: scheduleData.title,
           isAllDay: scheduleData.isAllDay,
-          start: scheduleData.start,
-          end: scheduleData.end,
-          category: scheduleData.isAllDay ? "allday" : "time",
-          dueDateClass: "",
+          start: scheduleData.startAt,
+          end: scheduleData.endAt,
+          category: scheduleData.isAllDay ? 'allday' : 'time',
+          dueDateClass: '',
           color: calendar.color,
           bgColor: calendar.bgColor,
           dragBgColor: calendar.bgColor,
           borderColor: calendar.borderColor,
           location: scheduleData.location,
           raw: {
-            class: scheduleData.raw.class
+            class: scheduleData.raw.class,
           },
-          state: scheduleData.state
+          state: scheduleData.state,
         };
 
         if (calendar) {
@@ -531,13 +534,13 @@ export const schedule = {
           });
 
           const res = await AJAX.put(`/schedule/${e.schedule.id}`, {
-            schedule_group_idx: calendarId,
+            scheduleGroupIdx: calendarId,
             title: e.schedule.title,
             location: e.schedule.location,
             state: e.schedule.state,
-            all_day: !!e.schedule.isAllDay,
-            start: moment(e.start._date).format("YYYY-MM-DD HH:mm:ss"),
-            end: moment(e.end._date).format("YYYY-MM-DD HH:mm:ss")
+            allDay: !!e.schedule.isAllDay,
+            startAt: moment(e.start._date).format('YYYY-MM-DD HH:mm:ss'),
+            endAt: moment(e.end._date).format('YYYY-MM-DD HH:mm:ss'),
           });
 
           if (!res) return;
@@ -562,7 +565,7 @@ export const schedule = {
       },
       async beforeDeleteSchedule(e) {
         const { value } = await ALERT.confirm(
-          `선택하신 스케줄을 삭제할까요?</span>`
+          `선택하신 스케줄을 삭제할까요?</span>`,
         );
         if (value) {
           const res = await AJAX.delete(`/schedule/${e.schedule.id}`);
@@ -573,18 +576,18 @@ export const schedule = {
       clickTimezonesCollapseBtn(timezonesCollapsed) {
         if (timezonesCollapsed) {
           APP.cal.setTheme({
-            "week.daygridLeft.width": "77px",
-            "week.timegridLeft.width": "77px"
+            'week.daygridLeft.width': '77px',
+            'week.timegridLeft.width': '77px',
           });
         } else {
           APP.cal.setTheme({
-            "week.daygridLeft.width": "60px",
-            "week.timegridLeft.width": "60px"
+            'week.daygridLeft.width': '60px',
+            'week.timegridLeft.width': '60px',
           });
         }
 
         return true;
-      }
+      },
     });
 
     this.resizeThrottled = tui.util.throttle(() => {
@@ -610,14 +613,14 @@ export const schedule = {
         name: {
           requried: true,
           allowEmpty: false,
-          message: "이름을 입력해주세요"
+          message: '이름을 입력해주세요',
         },
         color: {
           requried: true,
           allowEmpty: false,
-          message: "색상을 선택해주세요"
-        }
-      }
+          message: '색상을 선택해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -631,13 +634,13 @@ export const schedule = {
     if (idx) {
       rs = await AJAX.put(`/group/schedule/${idx}`, form);
     } else {
-      rs = await AJAX.post("/group/schedule", form);
+      rs = await AJAX.post('/group/schedule', form);
     }
 
     if (rs) {
       await APP.setCalendars();
       await APP.setSchedules();
-      let modal = $("#remodal").remodal();
+      let modal = $('#remodal').remodal();
       modal.close();
     }
 
@@ -646,7 +649,7 @@ export const schedule = {
   async scheduleGroupDelete(idx) {
     const rowCount = await AJAX.get(`/schedule/count/${idx}`);
     const { value } = await ALERT.confirm(
-      `선택하신 그룹을 삭제할까요?<br><span style="color:#ff4040;">※ 연관된 스케줄 ${rowCount}개가 함께 삭제됩니다.</span>`
+      `선택하신 그룹을 삭제할까요?<br><span style="color:#ff4040;">※ 연관된 스케줄 ${rowCount}개가 함께 삭제됩니다.</span>`,
     );
     if (value) {
       const { message } = await AJAX.delete(`/group/schedule/${idx}`);
@@ -657,8 +660,8 @@ export const schedule = {
   },
   async scheduleGroupModal(idx = null) {
     let group = {
-      name: "",
-      color: ""
+      name: '',
+      color: '',
     };
 
     if (idx) {
@@ -669,7 +672,7 @@ export const schedule = {
     <style>
       #remodal .confirm {margin-top: 64px;}
     </style>
-    <div class="title">그룹 ${idx ? "수정" : "추가"}</div>
+    <div class="title">그룹 ${idx ? '수정' : '추가'}</div>
     <form method="POST" onsubmit="APP.scheduleGroupAction(${idx});">
       <div class="form_group">
         <span>이름</span>
@@ -681,7 +684,7 @@ export const schedule = {
         ${(() =>
           fx.go(
             COLOR.pallet,
-            fx.map(e => `<option value="${e}">${e}</option>`)
+            fx.map(e => `<option value="${e}">${e}</option>`),
           ))()}
         </select>
       </div>
@@ -691,14 +694,14 @@ export const schedule = {
     </form>
     `;
 
-    $("#remodal .contents_slot").html(template);
+    $('#remodal .contents_slot').html(template);
 
-    $("#remodal #colorSelect").colorSelect(`${group.color}`);
+    $('#remodal #colorSelect').colorSelect(`${group.color}`);
 
-    let modal = $("#remodal").remodal();
+    let modal = $('#remodal').remodal();
     modal.open();
   },
   init() {
     this.calendarInit();
-  }
+  },
 };

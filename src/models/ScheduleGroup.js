@@ -21,8 +21,9 @@ export default class ScheduleGroup extends Sequelize.Model {
     );
   }
 
-  // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+  static associate(models) {
+    this.hasMany(models.Schedule);
+  }
 
   static selectAll() {
     return async transaction => {

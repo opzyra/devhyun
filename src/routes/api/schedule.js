@@ -1,161 +1,155 @@
-import express from 'express';
-
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
 
 import validator, { Joi } from '@/middleware/validator';
 
-import Schedule from '../../sql/Schedule';
+import Schedule from '@/models/Schedule';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const selectAllPeriod = controller.get(
   '/',
   validator.query({
-    start: Joi.date().required(),
-    end: Joi.date().required(),
+    startAt: Joi.date().required(),
+    endAt: Joi.date().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
-    const { start, end } = req.query;
+  session.isAdmin(),
+  async (req, res, transaction) => {
+    const { startAt, endAt } = req.query;
 
-    const SCHEDULE = Schedule(conn);
+    const schedule = await Schedule.selectAllPeriod({ startAt, endAt })(
+      transaction,
+    );
 
-    const items = await SCHEDULE.selectAllPeriod({ start, end });
-
-    res.status(200).json(items);
-  }),
+    res.status(200).json(schedule);
+  },
 );
 
-router.get(
+export const countRelatedGroup = controller.get(
   '/count/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const SCHEDULE = Schedule(conn);
-
-    const rowCount = await SCHEDULE.countRelatedGroup(idx);
+    const rowCount = await Schedule.countRelatedGroup(idx)(transaction);
 
     res.status(200).json(rowCount);
-  }),
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
-    schedule_group_idx: Joi.number().required(),
+    scheduleGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     state: Joi.string().required(),
-    all_day: Joi.boolean().required(),
-    start: Joi.date().required(),
-    end: Joi.date().required(),
+    allDay: Joi.boolean().required(),
+    startAt: Joi.date().required(),
+    endAt: Joi.date().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const {
-      schedule_group_idx,
+      scheduleGroupIdx,
       title,
       location,
       state,
-      all_day,
-      start,
-      end,
+      allDay,
+      startAt,
+      endAt,
     } = req.body;
 
-    const SCHEDULE = Schedule(conn);
-
-    const schedule = await SCHEDULE.insertOne({
-      schedule_group_idx,
+    const schedule = await Schedule.insertOne({
       title,
       location,
       state,
-      all_day,
-      start,
-      end,
-    });
+      allDay,
+      startAt,
+      endAt,
+    })(transaction);
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: schedule });
-  }),
+    await schedule.setScheduleGroup(scheduleGroupIdx, { transaction });
+
+    res
+      .status(200)
+      .json({ message: `등록이 완료 되었습니다`, idx: schedule.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
-    schedule_group_idx: Joi.number().required(),
+    scheduleGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     state: Joi.string().required(),
-    all_day: Joi.boolean().required(),
-    start: Joi.date().required(),
-    end: Joi.date().required(),
+    allDay: Joi.boolean().required(),
+    startAt: Joi.date().required(),
+    endAt: Joi.date().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
     const {
-      schedule_group_idx,
+      scheduleGroupIdx,
       title,
       location,
       state,
-      all_day,
-      start,
-      end,
+      allDay,
+      startAt,
+      endAt,
     } = req.body;
 
-    const SCHEDULE = Schedule(conn);
-
-    const schedule = await SCHEDULE.selectOne(idx);
+    const schedule = await Schedule.selectOne(idx)(transaction);
 
     if (!schedule) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await SCHEDULE.updateOne(
+    await schedule.setScheduleGroup(scheduleGroupIdx, { transaction });
+
+    await Schedule.updateOne(
       {
-        schedule_group_idx,
         title,
         location,
         state,
-        all_day,
-        start,
-        end,
+        allDay,
+        startAt,
+        endAt,
       },
       idx,
-    );
+    )(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const SCHEDULE = Schedule(conn);
-
-    const schedule = await SCHEDULE.selectOne(idx);
+    const schedule = await Schedule.selectOne(idx)(transaction);
 
     if (!schedule) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await SCHEDULE.deleteOne(idx);
+    await Schedule.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

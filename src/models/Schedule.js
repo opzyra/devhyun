@@ -25,7 +25,15 @@ export default class Schedule extends Sequelize.Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.ScheduleGroup);
+    this.belongsTo(models.ScheduleGroup, {
+      as: 'ScheduleGroup',
+    });
+  }
+
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findOne({ where: { idx }, transaction });
+    };
   }
 
   static selectBetweenToday() {
@@ -42,6 +50,61 @@ export default class Schedule extends Sequelize.Model {
         },
         transaction,
       });
+    };
+  }
+
+  static selectAllPeriod(period) {
+    return async transaction => {
+      return await this.findAll({
+        where: {
+          startAt: {
+            [Op.gte]: period.startAt,
+          },
+          endAt: {
+            [Op.lte]: period.endAt,
+          },
+        },
+        transaction,
+      });
+    };
+  }
+
+  static countRelatedGroup(idx) {
+    return async transaction => {
+      return await this.sequelize.query(
+        `
+          SELECT 
+            count(*)
+          FROM 
+            schedule
+          WHERE 
+            schedule_group_idx = (:idx)
+      `,
+        {
+          replacements: { idx },
+          type: Sequelize.QueryTypes.SELECT,
+          raw: true,
+          transaction,
+        },
+      );
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
+
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({ where: { idx }, transaction });
     };
   }
 }

@@ -34,7 +34,7 @@ export const countRelatedGroup = controller.get(
   async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const rowCount = await Schedule.countRelatedGroup(idx)(transaction);
+    const [{ rowCount }] = await Schedule.countRelatedGroup(idx)(transaction);
 
     res.status(200).json(rowCount);
   },

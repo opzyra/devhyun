@@ -649,7 +649,11 @@ export const schedule = {
   async scheduleGroupDelete(idx) {
     const rowCount = await AJAX.get(`/schedule/count/${idx}`);
     const { value } = await ALERT.confirm(
-      `선택하신 그룹을 삭제할까요?<br><span style="color:#ff4040;">※ 연관된 스케줄 ${rowCount}개가 함께 삭제됩니다.</span>`,
+      `선택하신 그룹을 삭제할까요?<span style="color:#ff4040;">${
+        rowCount !== 0
+          ? '<br>※ 연관된 스케줄' + rowCount + '개가 함께 삭제됩니다.'
+          : ''
+      }</span>`,
     );
     if (value) {
       const { message } = await AJAX.delete(`/group/schedule/${idx}`);

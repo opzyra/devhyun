@@ -74,11 +74,11 @@ export default class Schedule extends Sequelize.Model {
       return await this.sequelize.query(
         `
           SELECT 
-            count(*)
+            count(*) AS rowCount
           FROM 
             schedule
           WHERE 
-            schedule_group_idx = (:idx)
+            schedule_group_idx = :idx
       `,
         {
           replacements: { idx },

@@ -5,7 +5,6 @@ import { anchorConvert, safeMarkdown } from '@/lib/utils';
 import validator, { Joi } from '@/middleware/validator';
 
 import Series from '@/models/Series';
-import BoardSeries from '../../sql/BoardSeries';
 
 const controller = asyncify();
 

@@ -75,10 +75,7 @@ export default class Series extends Sequelize.Model {
         };
       }
 
-      let { count, rows } = await this.findAndCountAll({
-        ...option,
-        include: null,
-      });
+      let { count, rows } = await this.findAndCountAll(option);
       let seriesPage = pagination(count, limit, page);
 
       return { series: rows, seriesPage };
@@ -92,17 +89,31 @@ export default class Series extends Sequelize.Model {
         where: {
           idx,
         },
+        order: [[Sequelize.col('Posts.seriesPost.odr'), 'ASC']],
         include: [
           {
             model: Post,
             through: {
-              attributes: [],
+              as: 'seriesPost',
+              attributes: ['odr'],
             },
           },
         ],
         nest: true,
         transaction,
       });
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
+
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
     };
   }
 
@@ -113,6 +124,12 @@ export default class Series extends Sequelize.Model {
         { hit: Sequelize.literal('hit + 1') },
         { where: { idx }, transaction, silent: true },
       );
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({ where: { idx }, transaction });
     };
   }
 }

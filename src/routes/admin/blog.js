@@ -20,9 +20,10 @@ export const post = controller.get(
   session.isAdmin(),
   async (req, res, transaction) => {
     const { query, page } = req.query;
-    let { posts, postPage } = await Post.selectPaginated(query, page)(
-      transaction,
-    );
+    let { posts, postPage } = await Post.selectPaginated(
+      query,
+      page,
+    )(transaction);
 
     store(res).setState({
       postPage,
@@ -64,7 +65,10 @@ export const postEdit = controller.get(
 
     const temp = await Temp.selectByTitle(post.title)(transaction);
 
-    const tags = go(post.Tags, map(item => item.tag));
+    const tags = go(
+      post.Tags,
+      map(item => item.tag),
+    );
 
     store(res).setState({
       tags,
@@ -99,7 +103,10 @@ export const postDetail = controller.get(
     const [content, toc] = parseToc(post.contents);
     post.contents = content.replace(toc, '');
 
-    const tags = go(post.Tags, map(item => item.tag));
+    const tags = go(
+      post.Tags,
+      map(item => item.tag),
+    );
 
     // 댓글 처리
     const members = await Member.selectAll()(transaction);
@@ -137,9 +144,10 @@ export const series = controller.get(
   async (req, res, transaction) => {
     const { query, page } = req.query;
 
-    let { series, seriesPage } = await Series.selectPaginated(query, page)(
-      transaction,
-    );
+    let { series, seriesPage } = await Series.selectPaginated(
+      query,
+      page,
+    )(transaction);
 
     store(res).setState({
       seriesPage,
@@ -180,8 +188,13 @@ export const seriesEdit = controller.get(
 
     const temp = await Temp.selectByTitle(series.title)(transaction);
 
+    const posts = go(
+      series.Posts,
+      map(item => item.idx),
+    );
+
     store(res).setState({
-      posts: series.Posts,
+      posts,
     });
 
     res.render('admin/blog/series/edit', {

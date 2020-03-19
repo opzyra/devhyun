@@ -1,54 +1,51 @@
-import express from 'express';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
 
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
-
-import { anchorConvert, safeMarkdown } from '../../lib/utils';
+import { anchorConvert, safeMarkdown } from '@/lib/utils';
 import validator, { Joi } from '@/middleware/validator';
 
-import SeriesPost from '../../sql/SeriesPost';
+import Series from '@/models/Series';
 import BoardSeries from '../../sql/BoardSeries';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     let { title, contents, posts, thumbnail } = req.body;
-    const SERIES_POST = SeriesPost(conn);
-    const BOARD_SERIES = BoardSeries(conn);
 
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
-    const insertId = await BOARD_SERIES.insertOne({
+    const series = await Series.insertOne({
       title,
       contents,
       thumbnail,
-    });
+    })(transaction);
 
     if (posts) {
       for (let i = 0; i < posts.length; i++) {
-        await SERIES_POST.insertOne({
-          series_idx: insertId,
-          post_idx: posts[i],
-          odr: i + 1,
+        await series.addPost(posts[i], {
+          through: { odr: i + 1 },
+          transaction,
         });
       }
     }
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: insertId });
-  }),
+    res
+      .status(200)
+      .json({ message: `등록이 완료 되었습니다`, idx: series.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
@@ -56,59 +53,57 @@ router.put(
     title: Joi.string().required(),
     contents: Joi.string().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
     let { title, contents, posts, thumbnail } = req.body;
 
-    const SERIES_POST = SeriesPost(conn);
-    const BOARD_SERIES = BoardSeries(conn);
+    const series = await Series.selectOne(idx)(transaction);
 
-    contents = safeMarkdown(contents);
-    contents = anchorConvert(contents);
-
-    await BOARD_SERIES.updateOne(
+    await Series.updateOne(
       {
         title,
         contents,
         thumbnail,
       },
       idx,
-    );
-
-    await SERIES_POST.deleteRelatedSeries(idx);
+    )(transaction);
 
     if (posts) {
+      await series.setPosts([], { transaction });
       for (let i = 0; i < posts.length; i++) {
-        await SERIES_POST.insertOne({
-          series_idx: idx,
-          post_idx: posts[i],
-          odr: i + 1,
+        await series.addPost(posts[i], {
+          through: { odr: i + 1 },
+          transaction,
         });
       }
     }
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const SERIES_POST = SeriesPost(conn);
-    const BOARD_SERIES = BoardSeries(conn);
+    const series = await Series.selectOne(idx)(transaction);
 
-    await BOARD_SERIES.deleteOne(idx);
+    if (!series) {
+      res.status(400).json({ message: `잘못된 접근입니다` });
+      return;
+    }
 
-    await SERIES_POST.deleteRelatedSeries(idx);
+    await series.setPosts([], { transaction });
+
+    await Series.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

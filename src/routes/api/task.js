@@ -1,192 +1,184 @@
-import express from 'express';
-
-import sessionCtx from '../../lib/session';
-import { txrtfn } from '../../core/tx';
+import asyncify from '@/lib/asyncify';
+import session from '@/lib/session';
 
 import validator, { Joi } from '@/middleware/validator';
 
-import Task from '../../sql/Task';
+import Task from '@/models/Task';
 
-const router = express.Router();
+const controller = asyncify();
 
-router.get(
+export const selectOne = controller.get(
   '/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const TASK = Task(conn);
+    const task = await Task.selectOne(idx)(transaction);
 
-    const item = await TASK.selectOne(idx);
-
-    res.status(200).json(item);
-  }),
+    res.status(200).json(task);
+  },
 );
 
-router.get(
+export const countRelatedGroup = controller.get(
   '/count/:idx',
   validator.params({
     idx: Joi.number().required(),
   }),
-  sessionCtx.isAdmin(),
-  txrtfn(async (req, res, next, conn) => {
+  session.isAdmin(),
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const TASK = Task(conn);
-
-    const rowCount = await TASK.countRelatedGroup(idx);
+    const [{ rowCount }] = await Task.countRelatedGroup(idx)(transaction);
 
     res.status(200).json(rowCount);
-  }),
+  },
 );
 
-router.post(
+export const insertOne = controller.post(
   '/',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.body({
-    task_group_idx: Joi.number().required(),
+    taskGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     contents: Joi.string().required(),
-    start: Joi.date().required(),
-    end: Joi.date().required(),
+    startAt: Joi.date().required(),
+    endAt: Joi.date().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
-    const { task_group_idx, title, contents, start, end } = req.body;
+  async (req, res, transaction) => {
+    const { taskGroupIdx, title, contents, startAt, endAt } = req.body;
 
-    const TASK = Task(conn);
-
-    const task = await TASK.insertOne({
-      task_group_idx,
+    const task = await Task.insertOne({
+      taskGroupIdx,
       title,
       contents,
-      start,
-      end,
-    });
+      startAt,
+      endAt,
+    })(transaction);
 
-    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: task });
-  }),
+    res.status(200).json({ message: `등록이 완료 되었습니다`, idx: task.idx });
+  },
 );
 
-router.put(
+export const updateOne = controller.put(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
-    task_group_idx: Joi.number().required(),
+    taskGroupIdx: Joi.number().required(),
     title: Joi.string().required(),
     contents: Joi.string().required(),
-    start: Joi.date().required(),
-    end: Joi.date().required(),
+    startAt: Joi.date().required(),
+    endAt: Joi.date().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    const { task_group_idx, title, contents, start, end } = req.body;
+    const { taskGroupIdx, title, contents, startAt, endAt } = req.body;
 
-    const TASK = Task(conn);
-
-    const task = await TASK.selectOne(idx);
+    const task = await Task.selectOne(idx)(transaction);
 
     if (!task) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await TASK.updateOne(
+    await task.setTaskGroup(taskGroupIdx, { transaction });
+
+    await Task.updateOne(
       {
-        task_group_idx,
         title,
         contents,
-        start,
-        end,
+        startAt,
+        endAt,
       },
       idx,
-    );
+    )(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.put(
+export const updateOneGroup = controller.put(
   '/group/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
-    task_group_idx: Joi.number().required(),
+    taskGroupIdx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
-    const { task_group_idx } = req.body;
+    const { taskGroupIdx } = req.body;
 
-    const TASK = Task(conn);
+    const task = await Task.selectOne(idx)(transaction);
 
-    await TASK.updateOne({ task_group_idx }, idx);
+    if (!task) {
+      res.status(400).json({ message: `잘못된 접근입니다` });
+      return;
+    }
+
+    await task.setTaskGroup(taskGroupIdx, { transaction });
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.put(
+export const updateOneComplate = controller.put(
   '/complete/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
   validator.body({
     completed: Joi.boolean().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
     const { completed } = req.body;
 
-    const TASK = Task(conn);
-
-    const task = await TASK.selectOne(idx);
+    const task = await Task.selectOne(idx)(transaction);
 
     if (!task) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await TASK.updateOne(
+    await Task.updateOne(
       {
         completed,
       },
       idx,
-    );
+    )(transaction);
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
-  }),
+  },
 );
 
-router.delete(
+export const deleteOne = controller.delete(
   '/:idx',
-  sessionCtx.isAdmin(),
+  session.isAdmin(),
   validator.params({
     idx: Joi.number().required(),
   }),
-  txrtfn(async (req, res, next, conn) => {
+  async (req, res, transaction) => {
     const { idx } = req.params;
 
-    const TASK = Task(conn);
-
-    const task = await TASK.selectOne(idx);
+    const task = await Task.selectOne(idx)(transaction);
 
     if (!task) {
       res.status(400).json({ message: `잘못된 접근입니다` });
       return;
     }
 
-    await TASK.deleteOne(idx);
+    await Task.deleteOne(idx)(transaction);
 
     res.status(200).json({ message: `삭제가 완료 되었습니다` });
-  }),
+  },
 );
 
-export default router;
+export default controller.router;

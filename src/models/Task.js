@@ -25,7 +25,9 @@ export default class Task extends Sequelize.Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.TaskGroup);
+    this.belongsTo(models.TaskGroup, {
+      as: 'TaskGroup',
+    });
   }
 
   // 페이지 처리된 태스크 조회
@@ -35,7 +37,10 @@ export default class Task extends Sequelize.Model {
       let option = {
         limit,
         offset,
-        order: [['completed', 'asc'], ['TaskGroupIdx', 'asc']],
+        order: [
+          ['completed', 'asc'],
+          ['TaskGroupIdx', 'asc'],
+        ],
         raw: true,
         transaction,
       };
@@ -81,10 +86,59 @@ export default class Task extends Sequelize.Model {
         where: {
           completed: false,
         },
-        order: [['completed', 'ASC'], ['startAt', 'ASC'], ['endAt', 'ASC']],
+        order: [
+          ['completed', 'ASC'],
+          ['startAt', 'ASC'],
+          ['endAt', 'ASC'],
+        ],
         raw: true,
         transaction,
       });
+    };
+  }
+
+  static selectOne(idx) {
+    return async transaction => {
+      return await this.findOne({ where: { idx }, transaction });
+    };
+  }
+
+  static countRelatedGroup(idx) {
+    return async transaction => {
+      return await this.sequelize.query(
+        `
+          SELECT 
+            count(*) AS rowCount
+          FROM 
+            task
+          WHERE 
+            task_group_idx = :idx
+      `,
+        {
+          replacements: { idx },
+          type: Sequelize.QueryTypes.SELECT,
+          raw: true,
+          transaction,
+        },
+      );
+    };
+  }
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
+
+  static updateOne(model, idx) {
+    return async transaction => {
+      return await this.update(model, { where: { idx }, transaction });
+    };
+  }
+
+  static deleteOne(idx) {
+    return async transaction => {
+      return await this.destroy({ where: { idx }, transaction });
     };
   }
 }

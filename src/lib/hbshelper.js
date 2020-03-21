@@ -85,49 +85,6 @@ const convert = {
     return phone.split('-')[index];
   },
   /**
-   * 성별을 텍스트로 변환
-   * IN: 성별 값(INTEGER)
-   * OUT: 성별 텍스트(STRING)
-   */
-  parseGender: function(value) {
-    return value == 0 ? '남성' : '여성';
-  },
-  /**
-   * 나이 계산
-   * IN: 날짜(DATE)
-   * OUT: 나이(INTEGER)
-   */
-  parseAge: function(value) {
-    if (value == 0) return '';
-    let year = value.substring(0, 4);
-    let now = moment().format('YYYY');
-
-    return parseInt(now) - parseInt(year) + 1;
-  },
-  /**
-   * 만 나이 계산
-   * IN: 날짜(DATE)
-   * OUT: 만 나이(INTEGER)
-   */
-  parseRealAge: function(birth) {
-    if (birth == 0) return '';
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-
-    if (month < 10) month = '0' + month;
-    if (day < 10) day = '0' + day;
-
-    let monthDay = month + day;
-    birth = birth.replace('-', '').replace('-', '');
-
-    let birthdayy = birth.substr(0, 4);
-    let birthdaymd = birth.substr(4, 4);
-    let age = monthDay < birthdaymd ? year - birthdayy - 1 : year - birthdayy;
-    return age;
-  },
-  /**
    * 마크다운 처리
    * IN: 마크다운 태그(STRING)
    * OUT: 일반 문자열(STRING)
@@ -227,7 +184,7 @@ const html = {
     }
     return rs;
   },
-  lineBreak: function(value, count) {
+  lineBreak: function(value) {
     if (!value || value == '') return '-';
     return value.replace(/(\n|\r\n)/g, '<br>');
   },
@@ -291,7 +248,7 @@ const client = {
     }
     return options.inverse(this);
   },
-  memberIdEllipse: function(value, options) {
+  memberIdEllipse: function(value) {
     const [platform, id] = value.split('_');
     return `${platform}_${id.substring(0, 2)}*****`;
   },

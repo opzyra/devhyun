@@ -1,12 +1,12 @@
-import express from "express";
+import express from 'express';
 
-import main from "./main";
-import about from "./about";
-import project from "./project";
-import blog from "./blog";
-import policy from "./policy";
-import login from "./login";
-import mypage from "./mypage";
+import main from './main';
+import about from './about';
+import project from './project';
+import blog from './blog';
+import policy from './policy';
+import login from './login';
+import mypage from './mypage';
 
 const router = express.Router();
 

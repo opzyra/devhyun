@@ -24,4 +24,10 @@ export default class Upload extends Sequelize.Model {
 
   // eslint-disable-next-line no-unused-vars
   static associate(models) {}
+
+  static insertOne(model) {
+    return async transaction => {
+      return await this.create(model, { transaction });
+    };
+  }
 }

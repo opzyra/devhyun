@@ -30,7 +30,6 @@ export default class Post extends Sequelize.Model {
     );
   }
 
-  // eslint-disable-next-line no-unused-vars
   static associate(models) {
     this.belongsToMany(models.Comment, {
       through: 'post_comment',
@@ -194,6 +193,12 @@ export default class Post extends Sequelize.Model {
         limit,
         transaction,
       });
+    };
+  }
+
+  static selectRssAll() {
+    return async transaction => {
+      return await this.findAll({ order: [['idx', 'desc']], transaction });
     };
   }
 

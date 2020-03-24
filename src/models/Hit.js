@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 
 export default class Hit extends Sequelize.Model {
   static init(sequelize) {
@@ -46,6 +46,15 @@ export default class Hit extends Sequelize.Model {
         ignoreDuplicates: true,
         transaction,
         isNewRecord: true,
+      });
+    };
+  }
+
+  static deleteExpired(date) {
+    return async transaction => {
+      return await this.destroy({
+        where: { createdAt: { [Op.lte]: `${date} 23:59:59` } },
+        transaction,
       });
     };
   }

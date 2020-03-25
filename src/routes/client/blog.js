@@ -2,8 +2,9 @@ import { go, map, filter, uniqueBy } from 'fxjs';
 
 import asyncify from '@/lib/asyncify';
 import store from '@/lib/store';
-import validator, { Joi } from '@/middleware/validator';
 import { parseToc } from '@/lib/utils';
+
+import validator, { Joi } from '@/middleware/validator';
 
 import Member from '@/models/Member';
 import Post from '@/models/Post';
@@ -17,9 +18,10 @@ export const posts = controller.get(
   '/blog/post',
   async (req, res, transaction) => {
     const { query, page } = req.query;
-    let { posts, postPage } = await Post.selectPaginated(query, page)(
-      transaction,
-    );
+    let { posts, postPage } = await Post.selectPaginated(
+      query,
+      page,
+    )(transaction);
 
     const postCount = await Post.countAll()(transaction);
     const tagCount = await Tag.countDistinct()(transaction);
@@ -135,9 +137,10 @@ export const series = controller.get(
   async (req, res, transaction) => {
     const { query, page } = req.query;
 
-    let { series, seriesPage } = await Series.selectPaginated(query, page)(
-      transaction,
-    );
+    let { series, seriesPage } = await Series.selectPaginated(
+      query,
+      page,
+    )(transaction);
 
     const postCount = await Post.countAll()(transaction);
     const tagCount = await Tag.countDistinct()(transaction);
@@ -237,9 +240,10 @@ export const tagDetail = controller.get(
     const { query } = req.params;
     const { page } = req.query;
 
-    let { posts, postPage } = await Post.selectPaginatedRelatedTag(query, page)(
-      transaction,
-    );
+    let { posts, postPage } = await Post.selectPaginatedRelatedTag(
+      query,
+      page,
+    )(transaction);
 
     const postCount = await Post.countAll()(transaction);
     const tagCount = await Tag.countDistinct()(transaction);

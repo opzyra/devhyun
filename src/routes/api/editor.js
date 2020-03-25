@@ -1,9 +1,8 @@
 import asyncify from '@/lib/asyncify';
-
 import session from '@/lib/session';
+import { safeMarkdown, removeMarkdown } from '@/lib/utils';
 
 import validator, { Joi } from '@/middleware/validator';
-import { safeMarkdown, removeMarkdown } from '@/lib/utils';
 
 import Temp from '@/models/Temp';
 

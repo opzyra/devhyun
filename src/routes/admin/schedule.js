@@ -1,5 +1,4 @@
 import asyncify from '@/lib/asyncify';
-
 import session from '@/lib/session';
 
 const controller = asyncify();

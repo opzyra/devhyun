@@ -1,8 +1,8 @@
 import asyncify from '@/lib/asyncify';
-
 import session from '@/lib/session';
-import validator, { Joi } from '@/middleware/validator';
 import oauth, { loginUrl } from '@/lib/oauth';
+
+import validator, { Joi } from '@/middleware/validator';
 
 import Member from '@/models/Member';
 

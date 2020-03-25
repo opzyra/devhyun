@@ -1,9 +1,8 @@
 import asyncify from '@/lib/asyncify';
-
 import session from '@/lib/session';
+import { xssFilter } from '@/lib/utils';
 
 import validator, { Joi } from '@/middleware/validator';
-import { xssFilter } from '@/lib/utils';
 
 import Comment from '@/models/Comment';
 

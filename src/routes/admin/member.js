@@ -1,6 +1,6 @@
 import { go, map } from 'fxjs';
-import asyncify from '@/lib/asyncify';
 
+import asyncify from '@/lib/asyncify';
 import session from '@/lib/session';
 import store from '@/lib/store';
 

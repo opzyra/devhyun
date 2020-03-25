@@ -1,6 +1,6 @@
 import { go, filter } from 'fxjs';
-import asyncify from '@/lib/asyncify';
 
+import asyncify from '@/lib/asyncify';
 import session from '@/lib/session';
 import store from '@/lib/store';
 
@@ -21,7 +21,10 @@ export const note = controller.get(
 
     let noteGroups = await NoteGroup.selectAll()(transaction);
 
-    const [ctxGroup] = go(noteGroups, filter(e => e.idx == group));
+    const [ctxGroup] = go(
+      noteGroups,
+      filter(e => e.idx == group),
+    );
 
     if (group && !ctxGroup) {
       throw new Error('잘못된 접근입니다');
@@ -29,9 +32,11 @@ export const note = controller.get(
 
     let noteGroup = ctxGroup;
 
-    let { notes, notePage } = await Note.selectPaginated(query, group, page)(
-      transaction,
-    );
+    let { notes, notePage } = await Note.selectPaginated(
+      query,
+      group,
+      page,
+    )(transaction);
 
     store(res).setState({
       notePage,

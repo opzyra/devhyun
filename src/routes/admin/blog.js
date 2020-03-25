@@ -1,6 +1,6 @@
 import { go, map } from 'fxjs';
-import asyncify from '@/lib/asyncify';
 
+import asyncify from '@/lib/asyncify';
 import session from '@/lib/session';
 import store from '@/lib/store';
 
@@ -109,6 +109,7 @@ export const postDetail = controller.get(
     );
 
     // 댓글 처리
+    // eslint-disable-next-line no-unused-vars
     const members = await Member.selectAll()(transaction);
 
     // TODO 관리자 페이지 댓글 보기 기능

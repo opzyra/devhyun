@@ -41,6 +41,20 @@ const wrap = asyncFunc => {
   };
 };
 
+export const txWrap = asyncFunc => {
+  return async () => {
+    const transaction = await database.sequelize.transaction();
+    asyncFunc(transaction)
+      .then(async () => {
+        await transaction.commit();
+      })
+      .catch(async error => {
+        await transaction.rollback();
+        throw error;
+      });
+  };
+};
+
 export default function controller() {
   return {
     router: asyncify(express.Router()),

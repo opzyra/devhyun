@@ -1,4 +1,5 @@
 import { go, map, filter } from 'fxjs';
+
 import asyncify from '@/lib/asyncify';
 import session from '@/lib/session';
 import store from '@/lib/store';
@@ -16,7 +17,10 @@ export const task = controller.get(
 
     let taskGroups = await TaskGroup.selectAll()(transaction);
 
-    const [ctxGroup] = go(taskGroups, filter(e => e.idx == group));
+    const [ctxGroup] = go(
+      taskGroups,
+      filter(e => e.idx == group),
+    );
 
     if (group && !ctxGroup) {
       throw new Error('잘못된 접근입니다');
@@ -24,9 +28,11 @@ export const task = controller.get(
 
     let taskGroup = ctxGroup;
 
-    let { tasks, taskPage } = await Task.selectPaginated(query, group, page)(
-      transaction,
-    );
+    let { tasks, taskPage } = await Task.selectPaginated(
+      query,
+      group,
+      page,
+    )(transaction);
 
     tasks = go(
       tasks,

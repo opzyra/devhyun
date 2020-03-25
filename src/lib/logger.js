@@ -15,7 +15,7 @@ export const errorLogger = winston.createLogger({
     }),
     new winston.transports.DailyRotateFile({
       filename: 'logs/error/error.log',
-      zippedArchive: true,
+      zippedArchive: false,
       format: winston.format.printf(
         info =>
           `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} [ERROR]: ${
@@ -34,6 +34,16 @@ export const infoLogger = winston.createLogger({
         winston.format.simple(),
         winston.format.colorize(),
         winston.format.printf(info => `${info.message}`),
+      ),
+    }),
+    new winston.transports.DailyRotateFile({
+      filename: 'logs/info/info.log',
+      zippedArchive: false,
+      format: winston.format.printf(
+        info =>
+          `${moment().format('YYYY-MM-DD HH:mm:ss.SSS')} [INFO]: ${
+            info.message
+          }`,
       ),
     }),
   ],

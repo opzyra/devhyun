@@ -94,18 +94,10 @@ const listener = () => {
     // 회원 관련 처리
     if (req.session.member) {
       const { member } = req.session;
-      console.log(req.session.id);
-      // 중복 로그인 체크
-      // store.get(req.session.id, (error, session) => {
-      //   if (
-      //     !!session.member &&
-      //     session.member.id == member.id &&
-      //     session.id != req.session.id
-      //   ) {
-      //     // eslint-disable-next-line no-unused-vars
-      //     // store.destroy(session.id, error => {});
-      //   }
-      // });
+
+      console.log(store);
+
+      //중복 로그인 체크
       store.all((_, sessions) => {
         for (let i = 0; i < sessions.length; i++) {
           let e = sessions[i];

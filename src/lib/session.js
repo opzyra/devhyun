@@ -95,8 +95,6 @@ const listener = () => {
     if (req.session.member) {
       const { member } = req.session;
 
-      console.log(store);
-
       //중복 로그인 체크
       store.all((_, sessions) => {
         for (let i = 0; i < sessions.length; i++) {

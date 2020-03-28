@@ -27,10 +27,7 @@ export default class Comment extends Sequelize.Model {
       as: 'target',
     });
 
-    this.belongsToMany(models.Post, {
-      through: 'post_comment',
-      timestamps: false,
-    });
+    this.belongsTo(models.Post);
   }
 
   static countGroupPost(posts) {

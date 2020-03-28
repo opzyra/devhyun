@@ -21,7 +21,7 @@ export default class Post extends Sequelize.Model {
         title: { type: Sequelize.STRING(100) },
         thumbnail: { type: Sequelize.STRING(200) },
         contents: { type: Sequelize.TEXT('medium') },
-        hit: { type: Sequelize.INTEGER(11) },
+        hit: { type: Sequelize.INTEGER(11), defaultValue: 0 },
       },
       {
         tableName: 'post',
@@ -31,11 +31,8 @@ export default class Post extends Sequelize.Model {
   }
 
   static associate(models) {
-    this.belongsToMany(models.Comment, {
-      through: 'post_comment',
-      timestamps: false,
+    this.hasMany(models.Comment, {
       onDelete: 'CASCADE',
-      hooks: true,
     });
 
     this.belongsToMany(models.Tag, {
@@ -149,9 +146,6 @@ export default class Post extends Sequelize.Model {
         include: [
           {
             model: Comment,
-            through: {
-              attributes: [],
-            },
           },
           {
             model: Tag,

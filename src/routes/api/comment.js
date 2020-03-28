@@ -43,7 +43,7 @@ export const insertOne = controller.post(
       contents,
     })(transaction);
 
-    await comment.addPost([postIdx], { transaction });
+    await comment.setPost(postIdx, { transaction });
 
     res
       .status(200)

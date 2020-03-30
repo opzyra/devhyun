@@ -7,7 +7,6 @@ import Series from '@/models/Series';
 import Tag from '@/models/Tag';
 
 import SeriesPost from '@/models/SeriesPost';
-import PostTag from '@/models/PostTag';
 
 export default class Post extends Sequelize.Model {
   static init(sequelize) {
@@ -35,13 +34,8 @@ export default class Post extends Sequelize.Model {
       onDelete: 'CASCADE',
     });
 
-    this.belongsToMany(models.Tag, {
-      through: {
-        model: PostTag,
-      },
-      timestamps: false,
+    this.hasMany(models.Tag, {
       onDelete: 'CASCADE',
-      hooks: true,
     });
 
     this.belongsToMany(models.Series, {

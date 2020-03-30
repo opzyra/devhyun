@@ -1,7 +1,6 @@
 import Sequelize from 'sequelize';
 
 import Post from '@/models/Post';
-import PostTag from '@/models/PostTag';
 
 export default class Tag extends Sequelize.Model {
   static init(sequelize) {
@@ -12,7 +11,7 @@ export default class Tag extends Sequelize.Model {
           autoIncrement: true,
           primaryKey: true,
         },
-        tag: { type: Sequelize.STRING(100), unique: true },
+        tag: { type: Sequelize.STRING(100) },
       },
       {
         tableName: 'tag',
@@ -23,12 +22,7 @@ export default class Tag extends Sequelize.Model {
   }
 
   static associate(models) {
-    this.belongsToMany(models.Post, {
-      through: {
-        model: PostTag,
-      },
-      timestamps: false,
-    });
+    this.belongsTo(models.Post);
   }
 
   // 중복제외된 태그의 수 조회

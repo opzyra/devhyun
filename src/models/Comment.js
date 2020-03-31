@@ -37,7 +37,7 @@ export default class Comment extends Sequelize.Model {
           post_idx, 
           COUNT(post_idx) as count 
         FROM 
-          post_comment
+          comment
         WHERE 
           post_idx 
         IN 

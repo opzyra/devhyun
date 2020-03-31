@@ -6,7 +6,6 @@ import validator, { Joi } from '@/middleware/validator';
 
 import Post from '@/models/Post';
 import Tag from '@/models/Tag';
-import PostTag from '@/models/PostTag';
 
 const controller = asyncify();
 
@@ -39,11 +38,15 @@ export const insertOne = controller.post(
       thumbnail,
     })(transaction);
 
+    console.log(post.Tags);
+
     if (tags) {
-      tags = tags.map(tag => ({ tag }));
-      const insertedTags = await Tag.insertAllIgnoreDuplicates(tags)(
-        transaction,
-      );
+      tags = tags.map(tag => ({
+        tag,
+      }));
+
+      const insertedTags = await Tag.insertAll(tags)(transaction);
+
       await post.setTags(insertedTags, { transaction });
     }
 
@@ -68,6 +71,8 @@ export const updateOne = controller.put(
     contents = safeMarkdown(contents);
     contents = anchorConvert(contents);
 
+    const post = await Post.selectOne(idx)(transaction);
+
     await Post.updateOne(
       {
         title,
@@ -77,15 +82,16 @@ export const updateOne = controller.put(
       idx,
     )(transaction);
 
-    await PostTag.deleteRelatedPost(idx)(transaction);
-
     if (tags) {
-      tags = tags.map(tag => ({ tag }));
-      const insertedTags = await Tag.insertAllIgnoreDuplicates(tags)(
-        transaction,
-      );
+      tags = tags
+        .filter(tag => {
+          return post.Tags.some(item => item.tag !== tag);
+        })
+        .map(tag => ({
+          tag,
+        }));
 
-      const post = await Post.selectOne(idx)(transaction);
+      const insertedTags = await Tag.insertAll(tags)(transaction);
 
       await post.setTags(insertedTags, { transaction });
     }
@@ -102,8 +108,6 @@ export const deleteOne = controller.delete(
   }),
   async (req, res, transaction) => {
     const { idx } = req.params;
-
-    await PostTag.deleteRelatedPost(idx)(transaction);
 
     await Post.deleteOne(idx)(transaction);
 

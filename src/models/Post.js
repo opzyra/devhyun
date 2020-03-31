@@ -116,9 +116,6 @@ export default class Post extends Sequelize.Model {
               tag: query,
             },
             require: true,
-            through: {
-              attributes: [],
-            },
           },
         ],
         raw: true,
@@ -143,9 +140,6 @@ export default class Post extends Sequelize.Model {
           },
           {
             model: Tag,
-            through: {
-              attributes: [],
-            },
           },
           {
             model: Series,
@@ -208,9 +202,6 @@ export default class Post extends Sequelize.Model {
               idx: {
                 [Sequelize.Op.in]: tags,
               },
-            },
-            through: {
-              attributes: [],
             },
           },
         ],

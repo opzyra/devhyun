@@ -45,9 +45,6 @@ export default class Tag extends Sequelize.Model {
             attributes: {
               include: ['idx'],
             },
-            through: {
-              attributes: [],
-            },
           },
         ],
         group: ['idx'],
@@ -59,11 +56,10 @@ export default class Tag extends Sequelize.Model {
     };
   }
 
-  static insertAllIgnoreDuplicates(models) {
+  static insertAll(models) {
     return async transaction => {
       return await this.bulkCreate(models, {
         transaction,
-        ignoreDuplicates: true,
       });
     };
   }

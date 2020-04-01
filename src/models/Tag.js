@@ -63,4 +63,24 @@ export default class Tag extends Sequelize.Model {
       });
     };
   }
+
+  static deleteRelatedPost(idx) {
+    return async transaction => {
+      return await this.sequelize.query(
+        `
+        DELETE 
+        FROM 
+          tag
+        WHERE 
+          post_idx = :idx
+        `,
+        {
+          replacements: { idx },
+          type: Sequelize.QueryTypes.DELETE,
+          raw: true,
+          transaction,
+        },
+      );
+    };
+  }
 }

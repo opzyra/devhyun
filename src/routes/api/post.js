@@ -38,8 +38,6 @@ export const insertOne = controller.post(
       thumbnail,
     })(transaction);
 
-    console.log(post.Tags);
-
     if (tags) {
       tags = tags.map(tag => ({
         tag,
@@ -83,13 +81,11 @@ export const updateOne = controller.put(
     )(transaction);
 
     if (tags) {
-      tags = tags
-        .filter(tag => {
-          return post.Tags.some(item => item.tag !== tag);
-        })
-        .map(tag => ({
-          tag,
-        }));
+      tags = tags.map(tag => ({
+        tag,
+      }));
+
+      await Tag.deleteRelatedPost(idx)(transaction);
 
       const insertedTags = await Tag.insertAll(tags)(transaction);
 

@@ -36,8 +36,10 @@ const runServer = async () => {
 
   try {
     if (process.env.NODE_ENV !== 'production') {
-      await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
-      await db.sync({ force: true });
+      // await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
+      // await db.sync({ force: true });
+    } else {
+      await db.sync();
     }
   } catch (e) {
     stopServer(server, db);

@@ -64,23 +64,23 @@
       <section class="sys_info">
         <h2>시스템 현황</h2>
         <div class="chart">
-          <span class="percent">{{restPercent app.expired_server}} %</span>
-          <span id="sysInfoDonut" class="peity-donut">{{restDonut app.expired_server}}</span>
+          <span class="percent">{{restPercent app.expiredServer}} %</span>
+          <span id="sysInfoDonut" class="peity-donut">{{restDonut app.expiredServer}}</span>
         </div>
         <div class="more">
           <div>
             <h3>서버 유효기간</h3>
-            <p>{{restDate app.expired_server}} 일</p>
+            <p>{{restDate app.expiredServer}} 일</p>
           </div>
           <div>
             <h3>도메인 유효기간</h3>
-            <p>{{restDate app.expired_domain}} 일</p>
+            <p>{{restDate app.expiredDomain}} 일</p>
           </div>
         </div>
         <div class="more">
           <div>
             <h3>결제 예정일</h3>
-            <p>{{parseDate app.expired_server 'YYYY.MM.DD'}}</p>
+            <p>{{parseDate app.expiredServer 'YYYY.MM.DD'}}</p>
           </div>
           <div>
             <h3>금액</h3>

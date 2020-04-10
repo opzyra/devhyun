@@ -13,7 +13,7 @@ const store = new RedisStore({
 const config = session({
   store,
   name: 'sessionId',
-  secret: process.env.APP_SECRET,
+  secret: process.env.APP_SECRET || '#@XV5Ex!*m2Mwp',
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -150,10 +150,10 @@ const isAnonymous = () => {
       return;
     }
 
-    if (req.is('json') || req.is('multipart/form-data')) {
-      res.status(401).json({ message: '접근 권한이 없습니다.' });
-    } else {
+    if (req.is('html')) {
       res.render('error/401', { layout: false });
+    } else {
+      res.status(401).json({ message: '접근 권한이 없습니다.' });
     }
   };
 };
@@ -166,10 +166,10 @@ const isAuthenticated = () => {
       return;
     }
 
-    if (req.is('json') || req.is('multipart/form-data')) {
-      res.status(401).json({ message: '접근 권한이 없습니다.' });
-    } else {
+    if (req.is('html')) {
       res.render('error/401', { layout: false });
+    } else {
+      res.status(401).json({ message: '접근 권한이 없습니다.' });
     }
   };
 };
@@ -185,10 +185,10 @@ const isAdmin = () => {
       }
     }
 
-    if (req.is('json') || req.is('multipart/form-data')) {
-      res.status(401).json({ message: '접근 권한이 없습니다.' });
-    } else {
+    if (req.is('html')) {
       res.render('error/401', { layout: false });
+    } else {
+      res.status(401).json({ message: '접근 권한이 없습니다.' });
     }
   };
 };
@@ -204,10 +204,10 @@ const isUser = () => {
       }
     }
 
-    if (req.is('json') || req.is('multipart/form-data')) {
-      res.status(401).json({ message: '접근 권한이 없습니다.' });
-    } else {
+    if (req.is('html')) {
       res.render('error/401', { layout: false });
+    } else {
+      res.status(401).json({ message: '접근 권한이 없습니다.' });
     }
   };
 };
@@ -225,10 +225,10 @@ const hasRole = (...roles) => {
       }
     }
 
-    if (req.is('json') || req.is('multipart/form-data')) {
-      res.status(401).json({ message: '접근 권한이 없습니다.' });
-    } else {
+    if (req.is('html')) {
       res.render('error/401', { layout: false });
+    } else {
+      res.status(401).json({ message: '접근 권한이 없습니다.' });
     }
     return;
   };

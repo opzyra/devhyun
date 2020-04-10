@@ -15,6 +15,11 @@ export const schema = {
 export const options = {
   tableName: 'tag',
   timestamps: false,
+  indexes: [
+    {
+      fields: ['tag'],
+    },
+  ],
 };
 
 const Tag = sequelize.define('Tag', schema, options);

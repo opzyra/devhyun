@@ -7,7 +7,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public/js'),
     filename: 'module.js',
   },
-  devtool: NODE_ENV === 'development' ? 'inline-source-map' : null,
+  devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
   optimization: {
     splitChunks: {
       chunks: 'all',

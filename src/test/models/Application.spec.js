@@ -1,14 +1,8 @@
 import { expect } from 'chai';
-import { spy, assert } from 'sinon';
+import { spy } from 'sinon';
 import proxyquire from 'proxyquire';
 import Sequelize from 'sequelize';
-import {
-  sequelize,
-  dataTypes,
-  checkModelName,
-  checkUniqueIndex,
-  checkPropertyExists,
-} from 'sequelize-test-helpers';
+import { sequelize } from 'sequelize-test-helpers';
 
 describe('[Model] Application', () => {
   spy(sequelize, 'define');
@@ -16,7 +10,6 @@ describe('[Model] Application', () => {
   const Application = proxyquire('../../models/Application', {
     '@/models': sequelize,
   });
-  const modelDefineSpy = sequelize.define.getCall(0);
 
   context('- Model Options', () => {
     describe('# TABLE', () => {

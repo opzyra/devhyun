@@ -15,6 +15,7 @@ module.exports = {
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendor',
+          filename: 'vendor.module.js',
         },
       },
     },

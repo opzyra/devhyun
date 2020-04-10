@@ -54,9 +54,6 @@ Post.selectPaginated = (query, page = 1, limit = 9) => {
       include: [
         {
           model: Comment,
-          through: {
-            attributes: [],
-          },
         },
       ],
       nest: true,
@@ -80,10 +77,7 @@ Post.selectPaginated = (query, page = 1, limit = 9) => {
       };
     }
 
-    let { count, rows } = await Post.findAndCountAll({
-      ...option,
-      include: null,
-    });
+    let { count, rows } = await Post.findAndCountAll(option);
 
     let postPage = pagination(count, limit, page);
 

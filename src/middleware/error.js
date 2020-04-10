@@ -16,7 +16,9 @@ export const endpoint = (req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 export const error = (error, req, res, next) => {
-  logger.error(error.stack);
+  if (error.stack) {
+    logger.error(error.stack);
+  }
 
   if (req.is('json') || req.is('multipart/form-data')) {
     res.status(500).json({ message: '시스템 오류가 발생하였습니다.' });

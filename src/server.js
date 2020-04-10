@@ -1,18 +1,42 @@
-import app from './app';
-import batch from './batch';
-import sequelize from './models';
+import fs from 'fs';
+import path from 'path';
 
-import logger from './lib/logger';
+import app from '@/app';
+import batch from '@/batch';
+import logger from '@/lib/logger';
 
 const runServer = async () => {
-  const db = sequelize.init();
+  const db = require('./models').default;
+  const models = Object.assign(
+    {},
+    ...fs
+      .readdirSync(__dirname + '/models')
+      .filter(
+        file =>
+          file.indexOf('.') !== 0 &&
+          file.indexOf('.map') < 0 &&
+          file !== 'index.js',
+      )
+      .map(file => {
+        const model = require(path.join(__dirname + '/models', file));
+        return {
+          [model.name]: model,
+        };
+      }),
+  );
+
+  for (const model of Object.keys(models)) {
+    typeof models[model].associate === 'function' &&
+      models[model].associate(models);
+  }
+
   const server = app.listen(process.env.APP_PORT, () => {});
   batch.initialize();
 
   try {
     if (process.env.NODE_ENV !== 'production') {
       await db.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
-      await db.sync({});
+      await db.sync({ force: true });
     }
   } catch (e) {
     stopServer(server, db);

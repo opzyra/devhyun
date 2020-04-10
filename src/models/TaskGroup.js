@@ -1,68 +1,68 @@
 import Sequelize from 'sequelize';
 
-export default class TaskGroup extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        name: { type: Sequelize.STRING(100), unique: true },
-        color: { type: Sequelize.STRING(10) },
-        odr: { type: Sequelize.INTEGER(11) },
-      },
-      {
-        tableName: 'task_group',
-        timestamps: false,
-        sequelize,
-      },
-    );
-  }
+import sequelize from '@/models';
 
-  // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: { type: Sequelize.STRING(100), unique: true },
+  color: { type: Sequelize.STRING(10) },
+  odr: { type: Sequelize.INTEGER(11) },
+};
 
-  static selectAll() {
-    return async transaction => {
-      return await this.findAll({ order: [['odr', 'ASC']], transaction });
-    };
-  }
+export const options = {
+  tableName: 'task_group',
+  timestamps: false,
+};
 
-  static selectOne(idx) {
-    return async transaction => {
-      return await this.findOne({ where: { idx }, transaction });
-    };
-  }
+const TaskGroup = sequelize.define('TaskGroup', schema, options);
 
-  static selectByName(name) {
-    return async transaction => {
-      return await this.findOne({ where: { name }, transaction });
-    };
-  }
+// eslint-disable-next-line no-unused-vars
+TaskGroup.associate = models => {};
 
-  static countAll() {
-    return async transaction => {
-      return await this.count({ transaction });
-    };
-  }
+TaskGroup.selectAll = () => {
+  return async transaction => {
+    return await TaskGroup.findAll({ order: [['odr', 'ASC']], transaction });
+  };
+};
 
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
+TaskGroup.selectOne = idx => {
+  return async transaction => {
+    return await TaskGroup.findOne({ where: { idx }, transaction });
+  };
+};
 
-  static updateOne(model, idx) {
-    return async transaction => {
-      return await this.update(model, { where: { idx }, transaction });
-    };
-  }
+TaskGroup.selectByName = name => {
+  return async transaction => {
+    return await TaskGroup.findOne({ where: { name }, transaction });
+  };
+};
 
-  static deleteOne(idx) {
-    return async transaction => {
-      return await this.destroy({ where: { idx }, transaction });
-    };
-  }
-}
+TaskGroup.countAll = () => {
+  return async transaction => {
+    return await TaskGroup.count({ transaction });
+  };
+};
+
+TaskGroup.insertOne = model => {
+  return async transaction => {
+    return await TaskGroup.create(model, { transaction });
+  };
+};
+
+TaskGroup.updateOne = (model, idx) => {
+  return async transaction => {
+    return await TaskGroup.update(model, { where: { idx }, transaction });
+  };
+};
+
+TaskGroup.deleteOne = idx => {
+  return async transaction => {
+    return await TaskGroup.destroy({ where: { idx }, transaction });
+  };
+};
+
+export default TaskGroup;

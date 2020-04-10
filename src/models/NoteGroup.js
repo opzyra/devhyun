@@ -1,68 +1,67 @@
 import Sequelize from 'sequelize';
+import sequelize from '@/models';
 
-export default class NoteGroup extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        name: { type: Sequelize.STRING(100), unique: true },
-        color: { type: Sequelize.STRING(10) },
-        odr: { type: Sequelize.INTEGER(11) },
-      },
-      {
-        tableName: 'note_group',
-        timestamps: false,
-        sequelize,
-      },
-    );
-  }
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: { type: Sequelize.STRING(100), unique: true },
+  color: { type: Sequelize.STRING(10) },
+  odr: { type: Sequelize.INTEGER(11) },
+};
 
-  // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+export const options = {
+  tableName: 'note_group',
+  timestamps: false,
+};
 
-  static selectAll() {
-    return async transaction => {
-      return await this.findAll({ order: [['odr', 'ASC']], transaction });
-    };
-  }
+const NoteGroup = sequelize.define('NoteGroup', schema, options);
 
-  static selectOne(idx) {
-    return async transaction => {
-      return await this.findOne({ where: { idx }, transaction });
-    };
-  }
+// eslint-disable-next-line no-unused-vars
+NoteGroup.associate = models => {};
 
-  static selectByName(name) {
-    return async transaction => {
-      return await this.findOne({ where: { name }, transaction });
-    };
-  }
+NoteGroup.selectAll = () => {
+  return async transaction => {
+    return await NoteGroup.findAll({ order: [['odr', 'ASC']], transaction });
+  };
+};
 
-  static countAll() {
-    return async transaction => {
-      return await this.count({ transaction });
-    };
-  }
+NoteGroup.selectOne = idx => {
+  return async transaction => {
+    return await NoteGroup.findOne({ where: { idx }, transaction });
+  };
+};
 
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
+NoteGroup.selectByName = name => {
+  return async transaction => {
+    return await NoteGroup.findOne({ where: { name }, transaction });
+  };
+};
 
-  static updateOne(model, idx) {
-    return async transaction => {
-      return await this.update(model, { where: { idx }, transaction });
-    };
-  }
+NoteGroup.countAll = () => {
+  return async transaction => {
+    return await NoteGroup.count({ transaction });
+  };
+};
 
-  static deleteOne(idx) {
-    return async transaction => {
-      return await this.destroy({ where: { idx }, transaction });
-    };
-  }
-}
+NoteGroup.insertOne = model => {
+  return async transaction => {
+    return await NoteGroup.create(model, { transaction });
+  };
+};
+
+NoteGroup.updateOne = (model, idx) => {
+  return async transaction => {
+    return await NoteGroup.update(model, { where: { idx }, transaction });
+  };
+};
+
+NoteGroup.deleteOne = idx => {
+  return async transaction => {
+    return await NoteGroup.destroy({ where: { idx }, transaction });
+  };
+};
+
+export default NoteGroup;

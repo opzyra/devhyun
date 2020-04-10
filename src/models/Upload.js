@@ -1,33 +1,33 @@
 import Sequelize from 'sequelize';
 
-export default class Upload extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        mimetype: { type: Sequelize.STRING(200) },
-        ext: { type: Sequelize.STRING(50) },
-        name: { type: Sequelize.STRING(200) },
-        size: { type: Sequelize.INTEGER(11) },
-        src: { type: Sequelize.STRING(300) },
-      },
-      {
-        tableName: 'upload',
-        sequelize,
-      },
-    );
-  }
+import sequelize from '@/models';
 
-  // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  mimetype: { type: Sequelize.STRING(200) },
+  ext: { type: Sequelize.STRING(50) },
+  name: { type: Sequelize.STRING(200) },
+  size: { type: Sequelize.INTEGER(11) },
+  src: { type: Sequelize.STRING(300) },
+};
 
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
-}
+export const options = {
+  tableName: 'upload',
+};
+
+const Upload = sequelize.define('Upload', schema, options);
+
+// eslint-disable-next-line no-unused-vars
+Upload.associate = models => {};
+
+Upload.insertOne = model => {
+  return async transaction => {
+    return await Upload.create(model, { transaction });
+  };
+};
+
+export default Upload;

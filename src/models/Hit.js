@@ -1,61 +1,59 @@
 import Sequelize, { Op } from 'sequelize';
+import sequelize from '@/models';
 
-export default class Hit extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        ip: { type: Sequelize.STRING(30) },
-        type: { type: Sequelize.STRING(30) },
-        key: { type: Sequelize.INTEGER(11) },
-      },
-      {
-        tableName: 'hit',
-        indexes: [
-          {
-            unique: true,
-            fields: ['ip', 'type', 'key'],
-          },
-        ],
-        sequelize,
-      },
-    );
-  }
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  ip: { type: Sequelize.STRING(30) },
+  type: { type: Sequelize.STRING(30) },
+  key: { type: Sequelize.INTEGER(11) },
+};
 
-  // eslint-disable-next-line no-unused-vars
-  static associate(models) {}
+export const options = {
+  tableName: 'hit',
+  indexes: [
+    {
+      unique: true,
+      fields: ['ip', 'type', 'key'],
+    },
+  ],
+};
 
-  // 게시글 조회 정도 조회
-  static selectOne(hit) {
-    return async transaction => {
-      return await this.findOne({
-        where: hit,
-        transaction,
-      });
-    };
-  }
+const Hit = sequelize.define('Hit', schema, options);
 
-  // 게시글 조회 정보 등록
-  static insertIgonre(hit) {
-    return async transaction => {
-      return await this.create(hit, {
-        ignoreDuplicates: true,
-        transaction,
-        isNewRecord: true,
-      });
-    };
-  }
+// eslint-disable-next-line no-unused-vars
+Hit.associate = models => {};
 
-  static deleteExpired(date) {
-    return async transaction => {
-      return await this.destroy({
-        where: { createdAt: { [Op.lte]: `${date} 23:59:59` } },
-        transaction,
-      });
-    };
-  }
-}
+Hit.selectOne = hit => {
+  return async transaction => {
+    return await Hit.findOne({
+      where: hit,
+      transaction,
+    });
+  };
+};
+
+// 게시글 조회 정보 등록
+Hit.insertIgonre = hit => {
+  return async transaction => {
+    return await Hit.create(hit, {
+      ignoreDuplicates: true,
+      transaction,
+      isNewRecord: true,
+    });
+  };
+};
+
+Hit.deleteExpired = date => {
+  return async transaction => {
+    return await Hit.destroy({
+      where: { createdAt: { [Op.lte]: `${date} 23:59:59` } },
+      transaction,
+    });
+  };
+};
+
+export default Hit;

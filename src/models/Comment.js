@@ -1,80 +1,83 @@
 import Sequelize from 'sequelize';
+import sequelize from '@/models';
 
-export default class Comment extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  contents: { type: Sequelize.TEXT('medium') },
+};
+
+export const options = {
+  tableName: 'comment',
+};
+
+const Comment = sequelize.define('Comment', schema, options);
+
+Comment.associate = models => {
+  Comment.belongsTo(models.Member, {
+    as: 'member',
+  });
+
+  Comment.belongsTo(models.Member, {
+    as: 'target',
+  });
+
+  Comment.belongsTo(models.Post);
+};
+
+Comment.countGroupPost = posts => {
+  return async transaction => {
+    return await Comment.sequelize.query(
+      `SELECT 
+        post_idx, 
+        COUNT(post_idx) as count 
+      FROM 
+        comment
+      WHERE 
+        post_idx 
+      IN 
+        (:posts)
+      GROUP BY 
+        post_idx`,
       {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        contents: { type: Sequelize.TEXT('medium') },
-      },
-      {
-        tableName: 'comment',
-        sequelize,
+        replacements: { posts },
+        type: Sequelize.QueryTypes.SELECT,
+        raw: true,
+        transaction,
       },
     );
-  }
+  };
+};
 
-  static associate(models) {
-    this.belongsTo(models.Member, {
-      as: 'member',
+Comment.selectOne = idx => {
+  return async transaction => {
+    return await Comment.findByPk(idx, { transaction });
+  };
+};
+
+Comment.insertOne = model => {
+  return async transaction => {
+    return await Comment.create(model, { transaction });
+  };
+};
+
+Comment.updateOne = (model, idx) => {
+  return async transaction => {
+    return await Comment.update(model, { where: { idx }, transaction });
+  };
+};
+
+Comment.deleteOne = idx => {
+  return async transaction => {
+    return await Comment.destroy({
+      where: { idx },
+      cascade: true,
+      transaction,
     });
+  };
+};
 
-    this.belongsTo(models.Member, {
-      as: 'target',
-    });
-
-    this.belongsTo(models.Post);
-  }
-
-  static countGroupPost(posts) {
-    return async transaction => {
-      return await this.sequelize.query(
-        `SELECT 
-          post_idx, 
-          COUNT(post_idx) as count 
-        FROM 
-          comment
-        WHERE 
-          post_idx 
-        IN 
-          (:posts)
-        GROUP BY 
-          post_idx`,
-        {
-          replacements: { posts },
-          type: Sequelize.QueryTypes.SELECT,
-          raw: true,
-          transaction,
-        },
-      );
-    };
-  }
-
-  static selectOne(idx) {
-    return async transaction => {
-      return await this.findByPk(idx, { transaction });
-    };
-  }
-
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
-
-  static updateOne(model, idx) {
-    return async transaction => {
-      return await this.update(model, { where: { idx }, transaction });
-    };
-  }
-
-  static deleteOne(idx) {
-    return async transaction => {
-      return await this.destroy({ where: { idx }, cascade: true, transaction });
-    };
-  }
-}
+export default Comment;

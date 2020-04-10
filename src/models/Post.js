@@ -1,5 +1,6 @@
 import Sequelize, { Op } from 'sequelize';
 
+import sequelize from '@/models';
 import { pagination } from '@/lib/utils';
 
 import Comment from '@/models/Comment';
@@ -8,250 +9,240 @@ import Tag from '@/models/Tag';
 
 import SeriesPost from '@/models/SeriesPost';
 
-export default class Post extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  title: { type: Sequelize.STRING(100) },
+  thumbnail: { type: Sequelize.STRING(200) },
+  contents: { type: Sequelize.TEXT('medium') },
+  hit: { type: Sequelize.INTEGER(11), defaultValue: 0 },
+};
+
+export const options = {
+  tableName: 'post',
+};
+
+const Post = sequelize.define('Post', schema, options);
+
+Post.associate = models => {
+  Post.hasMany(models.Comment, {
+    onDelete: 'CASCADE',
+  });
+
+  Post.hasMany(models.Tag, {
+    onDelete: 'CASCADE',
+  });
+
+  Post.belongsToMany(models.Series, {
+    through: {
+      model: SeriesPost,
+    },
+    timestamps: false,
+  });
+};
+
+Post.selectPaginated = (query, page = 1, limit = 9) => {
+  return async transaction => {
+    let offset = (parseInt(page) - 1) * limit;
+    let option = {
+      limit,
+      offset,
+      order: [['idx', 'desc']],
+      include: [
+        {
+          model: Comment,
+          through: {
+            attributes: [],
+          },
         },
-        title: { type: Sequelize.STRING(100) },
-        thumbnail: { type: Sequelize.STRING(200) },
-        contents: { type: Sequelize.TEXT('medium') },
-        hit: { type: Sequelize.INTEGER(11), defaultValue: 0 },
-      },
-      {
-        tableName: 'post',
-        sequelize,
-      },
-    );
-  }
+      ],
+      nest: true,
+      transaction,
+    };
 
-  static associate(models) {
-    this.hasMany(models.Comment, {
-      onDelete: 'CASCADE',
-    });
-
-    this.hasMany(models.Tag, {
-      onDelete: 'CASCADE',
-    });
-
-    this.belongsToMany(models.Series, {
-      through: {
-        model: SeriesPost,
-      },
-      timestamps: false,
-    });
-  }
-
-  // 페이지 처리된 포스트 조회
-  static selectPaginated(query, page = 1, limit = 9) {
-    return async transaction => {
-      let offset = (parseInt(page) - 1) * limit;
-      let option = {
-        limit,
-        offset,
-        order: [['idx', 'desc']],
-        include: [
+    if (query) {
+      option.where = {
+        [Op.or]: [
           {
-            model: Comment,
-            through: {
-              attributes: [],
+            title: {
+              [Op.like]: `%${query}%`,
+            },
+          },
+          {
+            contents: {
+              [Op.like]: `%${query}%`,
             },
           },
         ],
-        nest: true,
-        transaction,
       };
+    }
 
-      if (query) {
-        option.where = {
-          [Op.or]: [
+    let { count, rows } = await Post.findAndCountAll({
+      ...option,
+      include: null,
+    });
+
+    let postPage = pagination(count, limit, page);
+
+    return { posts: rows, postPage };
+  };
+};
+
+Post.selectPaginatedRelatedTag = (query, page = 1, limit = 9) => {
+  return async transaction => {
+    let offset = (parseInt(page) - 1) * limit;
+
+    let { count, rows } = await Post.findAndCountAll({
+      limit,
+      offset,
+      order: [['idx', 'desc']],
+      include: [
+        {
+          model: Comment,
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: Tag,
+          where: {
+            tag: query,
+          },
+          require: true,
+        },
+      ],
+      raw: true,
+      nest: true,
+      transaction,
+    });
+    let postPage = pagination(count, limit, page);
+
+    return { posts: rows, postPage };
+  };
+};
+
+Post.selectOne = idx => {
+  return async transaction => {
+    return await Post.findOne({
+      where: { idx },
+      transaction,
+      include: [
+        {
+          model: Comment,
+        },
+        {
+          model: Tag,
+        },
+        {
+          model: Series,
+          through: {
+            attributes: [],
+          },
+          include: [
             {
-              title: {
-                [Op.like]: `%${query}%`,
-              },
-            },
-            {
-              contents: {
-                [Op.like]: `%${query}%`,
+              model: Post,
+              through: {
+                attributes: [],
               },
             },
           ],
-        };
-      }
+        },
+      ],
+      nest: true,
+    });
+  };
+};
 
-      let { count, rows } = await this.findAndCountAll({
-        ...option,
-        include: null,
-      });
+Post.selectAll = () => {
+  return async transaction => {
+    return await Post.findAll({ transaction });
+  };
+};
 
-      let postPage = pagination(count, limit, page);
+Post.selectLatest = (limit = 5) => {
+  return async transaction => {
+    return await Post.findAll({
+      order: [['idx', 'desc']],
+      limit,
+      transaction,
+    });
+  };
+};
 
-      return { posts: rows, postPage };
-    };
-  }
+Post.selectRssAll = () => {
+  return async transaction => {
+    return await Post.findAll({ order: [['idx', 'desc']], transaction });
+  };
+};
 
-  // 태그와 연관있는 포스트 조회
-  static selectPaginatedRelatedTag(query, page = 1, limit = 9) {
-    return async transaction => {
-      let offset = (parseInt(page) - 1) * limit;
+Post.countAll = () => {
+  return async transaction => {
+    return await Post.count({ transaction });
+  };
+};
 
-      let { count, rows } = await this.findAndCountAll({
-        limit,
-        offset,
-        order: [['idx', 'desc']],
-        include: [
-          {
-            model: Comment,
-            through: {
-              attributes: [],
+Post.selectRelatedTagPost = (tags = []) => {
+  return async transaction => {
+    return await Post.findAll({
+      include: [
+        {
+          model: Tag,
+          where: {
+            idx: {
+              [Sequelize.Op.in]: tags,
             },
           },
-          {
-            model: Tag,
-            where: {
-              tag: query,
-            },
-            require: true,
-          },
-        ],
-        raw: true,
-        nest: true,
-        transaction,
-      });
-      let postPage = pagination(count, limit, page);
+        },
+      ],
+      limit: 5,
+      transaction,
+    });
+  };
+};
 
-      return { posts: rows, postPage };
-    };
-  }
+Post.selectPopularPost = (limit = 5) => {
+  return async transaction => {
+    return await Post.findAll({
+      order: [['idx', 'desc']],
+      limit,
+      transaction,
+    });
+  };
+};
 
-  // 하나의 포스트 조회
-  static selectOne(idx) {
-    return async transaction => {
-      return await this.findOne({
-        where: { idx },
-        transaction,
-        include: [
-          {
-            model: Comment,
-          },
-          {
-            model: Tag,
-          },
-          {
-            model: Series,
-            through: {
-              attributes: [],
-            },
-            include: [
-              {
-                model: Post,
-                through: {
-                  attributes: [],
-                },
-              },
-            ],
-          },
-        ],
-        nest: true,
-      });
-    };
-  }
+Post.insertOne = model => {
+  return async transaction => {
+    return await Post.create(model, { transaction });
+  };
+};
 
-  static selectAll() {
-    return async transaction => {
-      return await this.findAll({ transaction });
-    };
-  }
+Post.updateOne = (model, idx) => {
+  return async transaction => {
+    return await Post.update(model, { where: { idx }, transaction });
+  };
+};
 
-  // 메인화면에 제공하는 최신글 조회
-  static selectLatest(limit = 5) {
-    return async transaction => {
-      return await this.findAll({
-        order: [['idx', 'desc']],
-        limit,
-        transaction,
-      });
-    };
-  }
+Post.updateHit = idx => {
+  return async transaction => {
+    return await Post.update(
+      { hit: Sequelize.literal('hit + 1') },
+      { where: { idx }, transaction, silent: true },
+    );
+  };
+};
 
-  static selectRssAll() {
-    return async transaction => {
-      return await this.findAll({ order: [['idx', 'desc']], transaction });
-    };
-  }
+Post.deleteOne = idx => {
+  return async transaction => {
+    return await Post.destroy({
+      where: { idx },
+      cascade: true,
+      hooks: true,
+      transaction,
+    });
+  };
+};
 
-  // 포스트 전체 갯수 조회
-  static countAll() {
-    return async transaction => {
-      return await this.count({ transaction });
-    };
-  }
-
-  // 태그에 대한 연관 포스트 (기본값 5개)
-  static selectRelatedTagPost(tags = []) {
-    return async transaction => {
-      return await this.findAll({
-        include: [
-          {
-            model: Tag,
-            where: {
-              idx: {
-                [Sequelize.Op.in]: tags,
-              },
-            },
-          },
-        ],
-        limit: 5,
-        transaction,
-      });
-    };
-  }
-
-  // 조회수가 많은 포스트 조회 (기본값 5개)
-  static selectPopularPost(limit = 5) {
-    return async transaction => {
-      return await this.findAll({
-        order: [['idx', 'desc']],
-        limit,
-        transaction,
-      });
-    };
-  }
-
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
-
-  static updateOne(model, idx) {
-    return async transaction => {
-      return await this.update(model, { where: { idx }, transaction });
-    };
-  }
-
-  // 조회수 업데이트
-  static updateHit(idx) {
-    return async transaction => {
-      return await this.update(
-        { hit: Sequelize.literal('hit + 1') },
-        { where: { idx }, transaction, silent: true },
-      );
-    };
-  }
-
-  static deleteOne(idx) {
-    return async transaction => {
-      return await this.destroy({
-        where: { idx },
-        cascade: true,
-        hooks: true,
-        transaction,
-      });
-    };
-  }
-}
+export default Post;

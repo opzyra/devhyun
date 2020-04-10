@@ -1,69 +1,72 @@
 import Sequelize from 'sequelize';
 
-export default class ScheduleGroup extends Sequelize.Model {
-  static init(sequelize) {
-    return super.init(
-      {
-        idx: {
-          type: Sequelize.INTEGER(11),
-          autoIncrement: true,
-          primaryKey: true,
-        },
-        name: { type: Sequelize.STRING(100), unique: true },
-        color: { type: Sequelize.STRING(10) },
-        odr: { type: Sequelize.INTEGER(11) },
-      },
-      {
-        tableName: 'schedule_group',
-        timestamps: false,
-        sequelize,
-      },
-    );
-  }
+import sequelize from '@/models';
 
-  static associate(models) {
-    this.hasMany(models.Schedule);
-  }
+export const schema = {
+  idx: {
+    type: Sequelize.INTEGER(11),
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: { type: Sequelize.STRING(100), unique: true },
+  color: { type: Sequelize.STRING(10) },
+  odr: { type: Sequelize.INTEGER(11) },
+};
 
-  static selectAll() {
-    return async transaction => {
-      return await this.findAll({ order: [['odr', 'ASC']], transaction });
-    };
-  }
+export const options = {
+  tableName: 'schedule_group',
+  timestamps: false,
+};
 
-  static selectOne(idx) {
-    return async transaction => {
-      return await this.findOne({ where: { idx }, transaction });
-    };
-  }
+const ScheduleGroup = sequelize.define('ScheduleGroup', schema, options);
 
-  static selectByName(name) {
-    return async transaction => {
-      return await this.findOne({ where: { name }, transaction });
-    };
-  }
+ScheduleGroup.associate = models => {
+  ScheduleGroup.hasMany(models.Schedule);
+};
 
-  static countAll() {
-    return async transaction => {
-      return await this.count({ transaction });
-    };
-  }
+ScheduleGroup.selectAll = () => {
+  return async transaction => {
+    return await ScheduleGroup.findAll({
+      order: [['odr', 'ASC']],
+      transaction,
+    });
+  };
+};
 
-  static insertOne(model) {
-    return async transaction => {
-      return await this.create(model, { transaction });
-    };
-  }
+ScheduleGroup.selectOne = idx => {
+  return async transaction => {
+    return await ScheduleGroup.findOne({ where: { idx }, transaction });
+  };
+};
 
-  static updateOne(model, idx) {
-    return async transaction => {
-      return await this.update(model, { where: { idx }, transaction });
-    };
-  }
+ScheduleGroup.selectByName = name => {
+  return async transaction => {
+    return await ScheduleGroup.findOne({ where: { name }, transaction });
+  };
+};
 
-  static deleteOne(idx) {
-    return async transaction => {
-      return await this.destroy({ where: { idx }, transaction });
-    };
-  }
-}
+ScheduleGroup.countAll = () => {
+  return async transaction => {
+    return await ScheduleGroup.count({ transaction });
+  };
+};
+
+ScheduleGroup.insertOne = model => {
+  return async transaction => {
+    return await ScheduleGroup.create(model, { transaction });
+  };
+};
+
+ScheduleGroup.updateOne = (model, idx) => {
+  return async transaction => {
+    return await ScheduleGroup.update(model, { where: { idx }, transaction });
+  };
+};
+
+ScheduleGroup.deleteOne = idx => {
+  return async transaction => {
+    return await ScheduleGroup.destroy({ where: { idx }, transaction });
+  };
+};
+
+export default ScheduleGroup;

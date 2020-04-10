@@ -102,9 +102,6 @@ Post.selectPaginatedRelatedTag = (query, page = 1, limit = 9) => {
       include: [
         {
           model: Comment,
-          through: {
-            attributes: [],
-          },
         },
         {
           model: Tag,
@@ -114,7 +111,6 @@ Post.selectPaginatedRelatedTag = (query, page = 1, limit = 9) => {
           require: true,
         },
       ],
-      raw: true,
       nest: true,
       transaction,
     });

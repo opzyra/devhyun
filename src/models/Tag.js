@@ -1,7 +1,6 @@
 import Sequelize from 'sequelize';
 
 import sequelize from '@/models';
-import Post from '@/models/Post';
 
 export const schema = {
   idx: {
@@ -40,15 +39,7 @@ Tag.selectDistinctTagGroupCount = () => {
       attributes: {
         include: ['Tag.*', [Sequelize.fn('COUNT', '*'), 'count']],
       },
-      include: [
-        {
-          model: Post,
-          attributes: {
-            include: ['idx'],
-          },
-        },
-      ],
-      group: ['idx'],
+      group: ['tag'],
       order: [[Sequelize.literal('count'), 'desc']],
       raw: true,
       nest: true,

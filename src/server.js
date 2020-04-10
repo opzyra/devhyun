@@ -18,7 +18,8 @@ const runServer = async () => {
           file !== 'index.js',
       )
       .map(file => {
-        const model = require(path.join(__dirname + '/models', file));
+        const model = require(path.join(__dirname + '/models', file)).default;
+
         return {
           [model.name]: model,
         };

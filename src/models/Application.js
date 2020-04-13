@@ -12,11 +12,11 @@ export const schema = {
   own: { type: Sequelize.STRING(50) },
   price: { type: Sequelize.INTEGER(11) },
   expiredServer: {
-    type: Sequelize.DATE,
+    type: Sequelize.DATE(),
     field: 'expired_server',
   },
   expiredDomain: {
-    type: Sequelize.DATE,
+    type: Sequelize.DATE(),
     field: 'expired_domain',
   },
 };

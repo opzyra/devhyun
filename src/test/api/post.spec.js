@@ -9,6 +9,8 @@ import Post from '@/models/Post';
 
 describe('[API] POST', () => {
   context('- GET /api/post', () => {
+    const selectAll = compose(postApi.selectAll);
+
     before(() => {
       sinon.stub(Post, 'selectAll').returns(() => {
         return [
@@ -35,7 +37,7 @@ describe('[API] POST', () => {
     });
 
     describe('# ERROR', () => {
-      it('로그인 하지 않은 사용자의 요청은 401로 응답한다', async () => {
+      it('로그인 하지 않은 사용자의 요청은 401로 응답한다.', async () => {
         const req = httpMocks.createRequest({
           url: '/api/post',
           method: 'GET',
@@ -43,14 +45,14 @@ describe('[API] POST', () => {
         });
         const res = httpMocks.createResponse();
 
-        await compose(postApi.selectAll)(req, res);
+        await selectAll(req, res);
 
         // 세션 체크
         expect(req.session.member).to.null;
         expect(res.statusCode).to.eq(401);
       });
 
-      it('USER 권한 사용자의 요청은 401로 응답한다', async () => {
+      it('USER 권한 사용자의 요청은 401로 응답한다.', async () => {
         const req = httpMocks.createRequest({
           url: '/api/post',
           method: 'GET',
@@ -58,7 +60,7 @@ describe('[API] POST', () => {
         });
         const res = httpMocks.createResponse();
 
-        await compose(postApi.selectAll)(req, res);
+        await selectAll(req, res);
 
         // 세션 체크
         expect(req.session.member.role).to.eq('USER');
@@ -67,7 +69,7 @@ describe('[API] POST', () => {
     });
 
     describe('# SUCCESS', () => {
-      it('POST 리스트를 반환한다', async () => {
+      it('POST 리스트를 반환한다.', async () => {
         const req = httpMocks.createRequest({
           url: '/api/post',
           method: 'GET',
@@ -75,7 +77,7 @@ describe('[API] POST', () => {
         });
         const res = httpMocks.createResponse();
 
-        await compose(postApi.selectAll)(req, res);
+        await selectAll(req, res);
 
         const json = JSON.parse(res._getData());
 

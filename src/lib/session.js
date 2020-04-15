@@ -150,7 +150,7 @@ const isAnonymous = () => {
       return;
     }
 
-    if (req.is('html')) {
+    if (req.is() == null || req.is('text/html', 'text')) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -166,7 +166,7 @@ const isAuthenticated = () => {
       return;
     }
 
-    if (req.is('html')) {
+    if (req.is() == null || req.is('text/html', 'text')) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -185,7 +185,7 @@ const isAdmin = () => {
       }
     }
 
-    if (req.is('html')) {
+    if (req.is() == null || req.is('text/html', 'text')) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -204,7 +204,7 @@ const isUser = () => {
       }
     }
 
-    if (req.is('html')) {
+    if (req.is() == null || req.is('text/html', 'text')) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -225,7 +225,7 @@ const hasRole = (...roles) => {
       }
     }
 
-    if (req.is('html')) {
+    if (req.is() == null || req.is('text/html', 'text')) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });

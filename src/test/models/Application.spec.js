@@ -15,6 +15,9 @@ describe('[Model] Application', () => {
       it('테이블명은 application 이다.', () => {
         expect(options.tableName).to.eql('application');
       });
+      it('모델명은 Application 이다.', () => {
+        expect(options.modelName).to.eql('Application');
+      });
     });
 
     describe('# FIELD', () => {

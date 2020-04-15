@@ -16,6 +16,10 @@ describe('[Model] Hit', () => {
         expect(options.tableName).to.eql('hit');
       });
 
+      it('모델명은 Hit 이다.', () => {
+        expect(options.modelName).to.eql('Hit');
+      });
+
       it('ip, type, key 필드로 유니크키가 설정되어있다.', () => {
         const ipTypeKeyUnique = options.indexes[0];
 

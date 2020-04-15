@@ -16,6 +16,9 @@ describe('[Model] Comment', () => {
       it('테이블명은 comment 이다.', () => {
         expect(options.tableName).to.eql('comment');
       });
+      it('모델명은 Comment 이다.', () => {
+        expect(options.modelName).to.eql('Comment');
+      });
     });
 
     describe('# FIELD', () => {

@@ -42,6 +42,7 @@ describe('[API] POST', () => {
           url: '/api/post',
           method: 'GET',
           session: { member: null },
+          headers: { 'content-type': 'application/json' },
         });
         const res = httpMocks.createResponse();
 
@@ -57,6 +58,7 @@ describe('[API] POST', () => {
           url: '/api/post',
           method: 'GET',
           session: { member: { role: 'USER' } },
+          headers: { 'content-type': 'application/json' },
         });
         const res = httpMocks.createResponse();
 
@@ -74,6 +76,7 @@ describe('[API] POST', () => {
           url: '/api/post',
           method: 'GET',
           session: { member: { role: 'ADMIN' } },
+          headers: { 'content-type': 'application/json' },
         });
         const res = httpMocks.createResponse();
 

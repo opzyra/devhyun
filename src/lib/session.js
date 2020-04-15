@@ -24,40 +24,40 @@ const config = session({
 });
 
 const info = req => {
-  const header = req.headers['user-agent'];
+  const userAgent = req.headers['user-agent'];
   let ip = requestIp.getClientIp(req);
   let device = 'undefined';
   let robot = false;
 
-  if (!header) {
+  if (!userAgent) {
     device = 'undefined';
-  } else if (header.indexOf('MSIE') > -1) {
+  } else if (userAgent.indexOf('MSIE') > -1) {
     device = 'MSIE';
-  } else if (header.indexOf('Chrome') > -1) {
+  } else if (userAgent.indexOf('Chrome') > -1) {
     device = 'Chrome';
-  } else if (header.indexOf('Opera') > -1) {
+  } else if (userAgent.indexOf('Opera') > -1) {
     device = 'Opera';
-  } else if (header.indexOf('Firefox') > -1) {
+  } else if (userAgent.indexOf('Firefox') > -1) {
     device = 'Firefox';
-  } else if (header.indexOf('rv:') > -1) {
+  } else if (userAgent.indexOf('rv:') > -1) {
     device = 'MSIE';
-  } else if (header.indexOf('iPhone') > -1) {
+  } else if (userAgent.indexOf('iPhone') > -1) {
     device = 'Iphone';
-  } else if (header.indexOf('iPad') > -1) {
+  } else if (userAgent.indexOf('iPad') > -1) {
     device = 'Ipad';
-  } else if (header.indexOf('Android') > -1) {
+  } else if (userAgent.indexOf('Android') > -1) {
     device = 'Android';
-  } else if (header.indexOf('BlackBerry') > -1) {
+  } else if (userAgent.indexOf('BlackBerry') > -1) {
     device = 'BlackBerry';
-  } else if (header.indexOf('symbian') > -1) {
+  } else if (userAgent.indexOf('symbian') > -1) {
     device = 'Symbian';
-  } else if (header.indexOf('sony') > -1) {
+  } else if (userAgent.indexOf('sony') > -1) {
     device = 'Sony';
-  } else if (header.indexOf('Mobile') > -1) {
+  } else if (userAgent.indexOf('Mobile') > -1) {
     device = 'Mobile';
   }
 
-  if (header && header.indexOf('bot') > -1) {
+  if (userAgent && userAgent.indexOf('bot') > -1) {
     robot = true;
   }
 
@@ -78,6 +78,19 @@ const info = req => {
     device,
     robot,
   };
+};
+
+const isHtml = req => {
+  const contentType = req.headers['content-type'];
+  let check = true;
+
+  if (
+    contentType === 'application/json' ||
+    contentType === 'multipart/form-data'
+  ) {
+    check = false;
+  }
+  return check;
 };
 
 const listener = () => {
@@ -150,7 +163,7 @@ const isAnonymous = () => {
       return;
     }
 
-    if (req.is() == null || req.is('text/html', 'text')) {
+    if (isHtml(req)) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -166,7 +179,7 @@ const isAuthenticated = () => {
       return;
     }
 
-    if (req.is() == null || req.is('text/html', 'text')) {
+    if (isHtml(req)) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -185,7 +198,7 @@ const isAdmin = () => {
       }
     }
 
-    if (req.is() == null || req.is('text/html', 'text')) {
+    if (isHtml(req)) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -197,14 +210,14 @@ const isAdmin = () => {
 const isUser = () => {
   return (req, res, next) => {
     if (req.session.member) {
-      // 관리자 권한이 있는 경우
+      // 사용자 권한이 있는 경우
       if (req.session.member.role.indexOf('USER') != -1) {
         next();
         return;
       }
     }
 
-    if (req.is() == null || req.is('text/html', 'text')) {
+    if (isHtml(req)) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });
@@ -225,7 +238,7 @@ const hasRole = (...roles) => {
       }
     }
 
-    if (req.is() == null || req.is('text/html', 'text')) {
+    if (isHtml(req)) {
       res.render('error/401', { layout: false });
     } else {
       res.status(401).json({ message: '접근 권한이 없습니다.' });

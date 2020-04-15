@@ -18,10 +18,10 @@ export const schema = {
     defaultValue: '/images/default_thumbnail.png',
   },
   email: { type: Sequelize.STRING(500) },
-  marketing: { type: Sequelize.BOOLEAN, defaultValue: false },
-  withdraw: { type: Sequelize.BOOLEAN, defaultValue: false },
-  active: { type: Sequelize.BOOLEAN, defaultValue: true },
-  loginAt: { type: Sequelize.DATE, field: 'login_at' },
+  marketing: { type: Sequelize.BOOLEAN(), defaultValue: false },
+  withdraw: { type: Sequelize.BOOLEAN(), defaultValue: false },
+  active: { type: Sequelize.BOOLEAN(), defaultValue: true },
+  loginAt: { type: Sequelize.DATE(), field: 'login_at' },
 };
 
 export const options = {

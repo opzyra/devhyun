@@ -25,7 +25,9 @@ Comment.associate = models => {
     as: 'target',
   });
 
-  Comment.belongsTo(models.Post);
+  Comment.belongsTo(models.Post, {
+    as: 'post',
+  });
 };
 
 Comment.countGroupPost = posts => {

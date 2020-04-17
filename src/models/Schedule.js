@@ -25,7 +25,7 @@ const Schedule = sequelize.define('Schedule', schema, options);
 
 Schedule.associate = models => {
   Schedule.belongsTo(models.ScheduleGroup, {
-    as: 'ScheduleGroup',
+    as: 'scheduleGroup',
   });
 };
 

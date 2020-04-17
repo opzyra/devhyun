@@ -20,7 +20,7 @@ export const options = {
 const Note = sequelize.define('Note', schema, options);
 
 Note.associate = models => {
-  Note.belongsTo(models.NoteGroup);
+  Note.belongsTo(models.NoteGroup, { as: 'noteGroup' });
 };
 
 Note.selectPaginated = (query, group, page = 1, limit = 20) => {
@@ -29,7 +29,7 @@ Note.selectPaginated = (query, group, page = 1, limit = 20) => {
     let option = {
       limit,
       offset,
-      order: [['NoteGroupIdx', 'asc']],
+      order: [['noteGroupIdx', 'asc']],
       raw: true,
       transaction,
     };
@@ -37,7 +37,7 @@ Note.selectPaginated = (query, group, page = 1, limit = 20) => {
     if (group) {
       option.where = {
         ...option.where,
-        NoteGroupIdx: group,
+        noteGroupIdx: group,
       };
     }
 

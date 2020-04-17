@@ -24,7 +24,9 @@ export const options = {
 const Tag = sequelize.define('Tag', schema, options);
 
 Tag.associate = models => {
-  Tag.belongsTo(models.Post);
+  Tag.belongsTo(models.Post, {
+    as: 'post',
+  });
 };
 
 Tag.countDistinct = () => {

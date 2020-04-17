@@ -350,8 +350,7 @@ export const schedule = {
         endAt,
       }),
       fx.map(e => {
-        console.log(e);
-        let color = APP.findCalendar(String(e.ScheduleGroupIdx)).bgColor;
+        let color = APP.findCalendar(String(e.scheduleGroupIdx)).bgColor;
         return {
           id: e.idx,
           title: e.title,
@@ -363,7 +362,7 @@ export const schedule = {
           bgColor: color,
           dragBgColor: color,
           borderColor: color,
-          calendarId: String(e.ScheduleGroupIdx),
+          calendarId: String(e.scheduleGroupIdx),
           category: e.allDay ? 'allday' : 'time',
           location: e.location,
           state: e.state,
@@ -488,8 +487,8 @@ export const schedule = {
           id: data.idx,
           title: scheduleData.title,
           isAllDay: scheduleData.isAllDay,
-          start: scheduleData.startAt,
-          end: scheduleData.endAt,
+          start: scheduleData.start,
+          end: scheduleData.end,
           category: scheduleData.isAllDay ? 'allday' : 'time',
           dueDateClass: '',
           color: calendar.color,

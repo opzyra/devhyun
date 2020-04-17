@@ -282,7 +282,7 @@ export const note = {
     let group = await AJAX.fetch(`/api/note/${idx}`);
     let groups = await AJAX.fetch(`/api/group/note`);
 
-    let template = this.templateChageNoteGroup(idx, group.NoteGroupIdx, groups);
+    let template = this.templateChageNoteGroup(idx, group.noteGroupIdx, groups);
 
     $('#remodal .contents_slot').html(template);
 

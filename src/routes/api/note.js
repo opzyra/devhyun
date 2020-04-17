@@ -115,7 +115,9 @@ export const updateNoteGroup = controller.put(
     const { idx } = req.params;
     const { noteGroupIdx } = req.body;
 
-    await Note.updateOne({ noteGroupIdx }, idx)(transaction);
+    const note = await Note.selectOne(idx)(transaction);
+
+    await note.setNoteGroup(noteGroupIdx, { transaction });
 
     res.status(200).json({ message: `수정이 완료 되었습니다` });
   },

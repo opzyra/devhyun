@@ -109,7 +109,7 @@ export const noteEdit = controller.get(
 
     const temp = await Temp.selectByTitle(note.title)(transaction);
 
-    let group = note.NoteGroupIdx;
+    let group = note.noteGroupIdx;
     let noteGroups = await NoteGroup.selectAll()(transaction);
 
     res.render('admin/note/edit', {

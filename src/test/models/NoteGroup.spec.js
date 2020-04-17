@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import { spy } from 'sinon';
 import proxyquire from 'proxyquire';
 import Sequelize from 'sequelize';
 import { sequelize } from 'sequelize-test-helpers';

@@ -37,7 +37,7 @@ export const task = controller.get(
     tasks = go(
       tasks,
       map(task => {
-        let group = taskGroups.find(group => group.idx == task.TaskGroupIdx);
+        let group = taskGroups.find(group => group.idx == task.taskGroupIdx);
         return {
           ...task,
           color: group.color,

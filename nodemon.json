@@ -2,5 +2,6 @@
   "watch": ["src"],
   "ext": "js",
   "delay": "2500",
-  "exec": "set NODE_ENV=development&&npm-run-all -c lint serve:dev"
+  "exec": "set NODE_ENV=development&&npm-run-all -c lint serve:dev",
+  "ignore": ["src/script/**"]
 }

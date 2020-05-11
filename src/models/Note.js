@@ -37,7 +37,7 @@ Note.selectPaginated = (query, group, page = 1, limit = 20) => {
     if (group) {
       option.where = {
         ...option.where,
-        noteGroupIdx: group,
+        NoteGroupIdx: group,
       };
     }
 

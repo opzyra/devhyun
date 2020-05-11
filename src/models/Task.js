@@ -24,9 +24,7 @@ export const options = {
 const Task = sequelize.define('Task', schema, options);
 
 Task.associate = models => {
-  Task.belongsTo(models.TaskGroup, {
-    as: 'taskGroup',
-  });
+  Task.belongsTo(models.TaskGroup);
 };
 
 Task.selectPaginated = (query, group, page = 1, limit = 20) => {
@@ -37,7 +35,7 @@ Task.selectPaginated = (query, group, page = 1, limit = 20) => {
       offset,
       order: [
         ['completed', 'asc'],
-        ['taskGroupIdx', 'asc'],
+        ['TaskGroupIdx', 'asc'],
       ],
       raw: true,
       transaction,
@@ -46,7 +44,7 @@ Task.selectPaginated = (query, group, page = 1, limit = 20) => {
     if (group) {
       option.where = {
         ...option.where,
-        taskGroupIdx: group,
+        TaskGroupIdx: group,
       };
     }
 

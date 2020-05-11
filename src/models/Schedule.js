@@ -24,9 +24,7 @@ export const options = {
 const Schedule = sequelize.define('Schedule', schema, options);
 
 Schedule.associate = models => {
-  Schedule.belongsTo(models.ScheduleGroup, {
-    as: 'scheduleGroup',
-  });
+  Schedule.belongsTo(models.ScheduleGroup);
 };
 
 Schedule.selectOne = idx => {

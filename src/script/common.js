@@ -1,8 +1,8 @@
-import { validate } from "revalidator";
+import { validate } from 'revalidator';
 
 export const BROWSER = {
   isMobile() {
-    let filter = "win16|win32|win64|mac|macintel";
+    let filter = 'win16|win32|win64|mac|macintel';
     let windowWidth = $(window).width();
     if (navigator.platform) {
       if (
@@ -18,13 +18,13 @@ export const BROWSER = {
     return false;
   },
   queryString() {
-    let a = window.location.search.substr(1).split("&");
-    if (a == "") return {};
+    let a = window.location.search.substr(1).split('&');
+    if (a == '') return {};
     let b = {};
     for (let i = 0; i < a.length; ++i) {
-      let p = a[i].split("=", 2);
-      if (p.length == 1) b[p[0]] = "";
-      else b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+      let p = a[i].split('=', 2);
+      if (p.length == 1) b[p[0]] = '';
+      else b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
     }
     return b;
   },
@@ -32,97 +32,97 @@ export const BROWSER = {
     if (window.history.replaceState) {
       window.history.replaceState({}, null, url);
     }
-  }
+  },
 };
 
 export const ALERT = {
   async error(message) {
     return await Swal.fire({
-      type: "error",
-      title: "ERROR",
+      type: 'error',
+      title: 'ERROR',
       html: message,
-      confirmButtonText: "확인",
+      confirmButtonText: '확인',
       allowOutsideClick: false,
-      heightAuto: false
+      heightAuto: false,
     });
   },
   async success(message) {
     return await Swal.fire({
-      type: "success",
-      title: "COMPLETE",
+      type: 'success',
+      title: 'COMPLETE',
       html: message,
-      confirmButtonText: "확인",
+      confirmButtonText: '확인',
       allowOutsideClick: false,
-      heightAuto: false
+      heightAuto: false,
     });
   },
   async confirm(message) {
     return await Swal.fire({
-      type: "warning",
-      title: "CONFIRM",
+      type: 'warning',
+      title: 'CONFIRM',
       html: message,
-      confirmButtonText: "확인",
-      cancelButtonText: "취소",
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
       showCancelButton: true,
       allowOutsideClick: false,
       heightAuto: false,
-      reverseButton: true
+      reverseButton: true,
     });
-  }
+  },
 };
 export const CONVERT = {
   lineBreak(str) {
-    return str.replace(/(\n|\r\n)/g, "<br>");
+    return str.replace(/(\n|\r\n)/g, '<br>');
   },
   extractNumber(str) {
-    return str.replace(/[^0-9]/g, "");
-  }
+    return str.replace(/[^0-9]/g, '');
+  },
 };
 
 export const TOAST = {
   success(title) {
     let Toast = Swal.mixin({
       toast: true,
-      position: "top-end",
+      position: 'top-end',
       showConfirmButton: false,
-      timer: 3000
+      timer: 3000,
     });
 
     Toast.fire({
-      type: "success",
-      title: title
+      type: 'success',
+      title: title,
     });
   },
   error(title) {
     let Toast = Swal.mixin({
       toast: true,
-      position: "top-end",
+      position: 'top-end',
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
     });
 
     Toast.fire({
-      type: "error",
-      title: title
+      type: 'error',
+      title: title,
     });
-  }
+  },
 };
 
 export const COLOR = {
   pallet: [
-    "#004abf",
-    "#9e5fff",
-    "#00a9ff",
-    "#ff5583",
-    "#D870A9",
-    "#03bd9e",
-    "#8BC163",
-    "#bbdc00",
-    "#9d9d9d",
-    "#34495E",
-    "#ffbb3b",
-    "#ff4040"
-  ]
+    '#004abf',
+    '#9e5fff',
+    '#00a9ff',
+    '#ff5583',
+    '#D870A9',
+    '#03bd9e',
+    '#8BC163',
+    '#bbdc00',
+    '#9d9d9d',
+    '#34495E',
+    '#ffbb3b',
+    '#ff4040',
+  ],
 };
 
 export const COOKIE = {
@@ -141,71 +141,71 @@ export const COOKIE = {
     }
     if (Found == true) {
       start = end + 1;
-      end = document.cookie.indexOf(";", start);
+      end = document.cookie.indexOf(';', start);
       if (end < start) end = document.cookie.length;
       return document.cookie.substring(start, end);
     }
-    return "";
+    return '';
   },
   setCookie(name, value, expiredays) {
     let endDate = new Date();
     endDate.setDate(endDate.getDate() + expiredays);
     document.cookie =
       name +
-      "=" +
+      '=' +
       escape(value) +
-      "; path=/; expires=" +
+      '; path=/; expires=' +
       endDate.toGMTString() +
-      ";";
-  }
+      ';';
+  },
 };
 
 export const AJAX = {
   config: {
-    baseURL: "/api",
+    baseURL: '/api',
     timeout: 8000,
     beforeSend() {
       $('a, :button[type="submit"], :input[type="submit"]').attr(
-        "disabled",
-        "disabled"
+        'disabled',
+        'disabled',
       );
       NProgress.start();
     },
     always() {
       $('a, :button[type="submit"], :input[type="submit"]').removeAttr(
-        "disabled"
+        'disabled',
       );
       NProgress.done();
     },
     async fail(jqxhr) {
-      let message = "데이터베이스 오류가 발생하였습니다.";
+      let message = '데이터베이스 오류가 발생하였습니다.';
       let responseJSON = jqxhr.responseJSON;
       let statue = jqxhr.status;
       if (statue == 401) {
         const { value } = await ALERT.confirm(
-          "세션이 만료되었습니다.<br/>로그인 화면으로 이동할까요?"
+          '세션이 만료되었습니다.<br/>로그인 화면으로 이동할까요?',
         );
         if (value) {
-          location.href = "/login";
+          location.href = '/login';
         }
         return;
       }
 
       if (responseJSON) message = responseJSON.message;
-      if (!message) message = "잘못된 요청입니다.";
+      if (!message) message = '잘못된 요청입니다.';
 
       ALERT.error(message);
-    }
+    },
   },
   async get(url, param) {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "GET",
+        type: 'GET',
         url: this.config.baseURL + url,
         timeout: this.config.timeout,
         data: param || null,
-        contentType: "application/json"
+        contentType: 'application/json',
       });
 
       return data;
@@ -219,12 +219,12 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "POST",
+        type: 'POST',
         url: this.config.baseURL + url,
         timeout: this.config.timeout,
         data: JSON.stringify(param) || null,
-        dataType: "json",
-        contentType: "application/json"
+        dataType: 'json',
+        contentType: 'application/json',
       });
 
       return data;
@@ -238,12 +238,12 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "PUT",
+        type: 'PUT',
         url: this.config.baseURL + url,
         timeout: this.config.timeout,
         data: JSON.stringify(param) || null,
-        dataType: "json",
-        contentType: "application/json"
+        dataType: 'json',
+        contentType: 'application/json',
       });
       return data;
     } catch (e) {
@@ -256,12 +256,12 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "DELETE",
+        type: 'DELETE',
         url: this.config.baseURL + url,
         timeout: this.config.timeout,
         data: JSON.stringify(param) || null,
-        dataType: "json",
-        contentType: "application/json"
+        dataType: 'json',
+        contentType: 'application/json',
       });
       return data;
     } catch (e) {
@@ -274,12 +274,12 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "POST",
+        type: 'POST',
         url: this.config.baseURL + url,
         timeout: this.config.timeout,
         data: param || null,
         processData: false,
-        contentType: false
+        contentType: false,
       });
       return data;
     } catch (e) {
@@ -292,18 +292,18 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "POST",
+        type: 'POST',
         url:
           this.config.baseURL +
           url +
-          "?width=" +
+          '?width=' +
           option.width +
-          "&height=" +
+          '&height=' +
           option.height,
         timeout: this.config.timeout,
         data: param || null,
         processData: false,
-        contentType: false
+        contentType: false,
       });
       return data;
     } catch (e) {
@@ -316,12 +316,12 @@ export const AJAX = {
     this.config.beforeSend();
     try {
       const data = await $.ajax({
-        type: "GET",
+        type: 'GET',
         url: url,
         timeout: this.config.timeout,
         xhrFields: {
-          responseType: "blob"
-        }
+          responseType: 'blob',
+        },
       });
       return data;
     } catch (e) {
@@ -333,93 +333,92 @@ export const AJAX = {
   async fetch(url, param) {
     try {
       const data = await $.ajax({
-        type: "GET",
+        type: 'GET',
         url: url,
         timeout: this.config.timeout,
-        data: param || null
+        data: param || null,
       });
 
       return data;
     } catch (e) {
       this.config.fail(e);
     }
-  }
+  },
 };
 
 export const EDITOR = {
   EDITOR: null,
-  set(el, height = "1000") {
+  set(el, height = '1000') {
     this.EDITOR = new tui.Editor({
       el: document.querySelector(el),
-      initialEditType: "markdown",
-      previewStyle: BROWSER.isMobile() ? "tab" : "vertical",
-      height: BROWSER.isMobile() ? "600px" : height - 230 + "px",
-      language: "ko_KR",
+      initialEditType: 'markdown',
+      previewStyle: BROWSER.isMobile() ? 'tab' : 'vertical',
+      height: BROWSER.isMobile() ? '600px' : height - 230 + 'px',
+      language: 'ko_KR',
       previewDelayTime: 500,
-      exts: ["scrollSync"],
+      exts: ['scrollSync'],
       hooks: {
         addImageBlobHook: async (blob, callback) => {
           if (!COMMON.isFileSize(blob)) {
-            ALERT.error("이미지는 최대 5MB까지 업로드가 가능합니다.");
+            ALERT.error('이미지는 최대 5MB까지 업로드가 가능합니다.');
             return;
           }
           if (!blob) return;
           const multipart = new FormData();
-          multipart.append("file", blob);
+          multipart.append('file', blob);
 
-          const res = await AJAX.file("/upload/image", multipart);
+          const res = await AJAX.file('/upload/image', multipart);
           if (res) {
             callback(res.src, res.name);
           }
-        }
-      }
+        },
+      },
     });
 
     const toolbar = this.EDITOR.getUI().getToolbar();
 
     toolbar.addButton(
       {
-        name: "emoji",
-        tooltip: "이모티콘",
-        $el: $('<button class="emoji button"></button>')
+        name: 'emoji',
+        tooltip: '이모티콘',
+        $el: $('<button class="emoji button"></button>'),
       },
-      14
+      14,
     );
     toolbar.addButton(
       {
-        name: "temp",
-        tooltip: "임시저장",
-        $el: $('<button class="temp button"></button>')
+        name: 'temp',
+        tooltip: '임시저장',
+        $el: $('<button class="temp button"></button>'),
       },
-      15
+      15,
     );
 
-    $(".emoji").emojiPicker({
+    $('.emoji').emojiPicker({
       cb(emoji) {
-        let value = window.EDITOR.getHtml();
-        window.EDITOR.setHtml(value + emoji);
-      }
+        window.EDITOR.insertText(emoji);
+      },
     });
 
     window.EDITOR = this.EDITOR;
   },
   setTempCb(cb) {
-    $(".temp.button").click(() => {
+    $('.temp.button').click(() => {
       this.tempSave(cb);
     });
 
     // ctrl + s 임시저장
-    this.EDITOR.commandManager.keyMapCommand["CTRL+S"] = "Save";
-    $("#markdown").keydown(e => {
+    this.EDITOR.commandManager.keyMapCommand['CTRL+S'] = 'Save';
+    $('#markdown').keydown(e => {
       if (e.keyCode == 83 && e.ctrlKey) {
         this.tempSave(cb);
       }
     });
   },
   async tempSave(cb) {
-    const tempIdx = $("#tempIdx").val();
-    const title = $("#title").val();
-    const thumbnail = $("#thumbnailHdn").val();
+    const tempIdx = $('#tempIdx').val();
+    const title = $('#title').val();
+    const thumbnail = $('#thumbnailHdn').val();
     const contents = window.EDITOR.getMarkdown();
     const form = { title, contents };
 
@@ -428,14 +427,14 @@ export const EDITOR = {
         title: {
           requried: true,
           allowEmpty: false,
-          message: "제목을 입력해주세요"
+          message: '제목을 입력해주세요',
         },
         contents: {
           requried: true,
           allowEmpty: false,
-          message: "내용을 입력해주세요"
-        }
-      }
+          message: '내용을 입력해주세요',
+        },
+      },
     };
 
     const { valid, errors } = validate(form, schema);
@@ -451,26 +450,26 @@ export const EDITOR = {
     if (tempIdx) {
       rs = await AJAX.put(`/editor/temp/${tempIdx}`, form);
     } else {
-      rs = await AJAX.post("/editor/temp", form);
-      $("#tempIdx").val(rs.idx);
+      rs = await AJAX.post('/editor/temp', form);
+      $('#tempIdx').val(rs.idx);
     }
 
     TOAST.success(rs.message);
     cb();
-  }
+  },
 };
 
 export const COMMON = {
   anchorScroll(height = 100) {
     // 앵커 오프셋
-    $("a").click(function() {
-      var href = $.attr(this, "href");
-      if (href.indexOf("#") == -1 || href == "#contents") return;
-      $("html, body").animate(
+    $('a').click(function() {
+      var href = $.attr(this, 'href');
+      if (href.indexOf('#') == -1 || href == '#contents') return;
+      $('html, body').animate(
         {
-          scrollTop: $(href).offset().top - height
+          scrollTop: $(href).offset().top - height,
         },
-        500
+        500,
       );
       return false;
     });
@@ -483,20 +482,18 @@ export const COMMON = {
       totalPages: totalPages,
       startPage: totalPages >= startPage ? startPage : 1,
       visiblePages: 5,
-      first: "처음페이지로 이동",
-      last: "마지막페이지로 이동",
-      prev: "이전페이지로 이동",
-      next: "다음페이지로 이동",
+      first: '처음페이지로 이동',
+      last: '마지막페이지로 이동',
+      prev: '이전페이지로 이동',
+      next: '다음페이지로 이동',
       onPageClick: function(event, page) {
         if (startPage == page) return;
-        if (location.href.indexOf("page") == -1) {
-          let isQuery = location.href.indexOf("?") >= 0;
-          location.href =
-            location.href + (isQuery ? "&" : "?") + "page=" + page;
-        } else {
-          location.href = location.href.replace(/page=.+/g, "page=" + page);
-        }
-      }
+
+        let query = Qs.parse(location.search.replace('?', ''));
+        query.page = page;
+
+        location.href = location.pathname + '?' + Qs.stringify(query);
+      },
     });
   },
   dateDiff(_date1, _date2) {
@@ -506,12 +503,12 @@ export const COMMON = {
     diffDate_1 = new Date(
       diffDate_1.getFullYear(),
       diffDate_1.getMonth() + 1,
-      diffDate_1.getDate()
+      diffDate_1.getDate(),
     );
     diffDate_2 = new Date(
       diffDate_2.getFullYear(),
       diffDate_2.getMonth() + 1,
-      diffDate_2.getDate()
+      diffDate_2.getDate(),
     );
 
     let diff = Math.abs(diffDate_2.getTime() - diffDate_1.getTime());
@@ -552,10 +549,10 @@ export const COMMON = {
   },
   fileDownload(fileSrc, fileName) {
     AJAX.download(fileSrc).then(function(data) {
-      if (navigator.appVersion.toString().indexOf(".NET") > 0) {
+      if (navigator.appVersion.toString().indexOf('.NET') > 0) {
         window.navigator.msSaveBlob(data, fileName);
       } else {
-        var a = document.createElement("a");
+        var a = document.createElement('a');
         var url = window.URL.createObjectURL(data);
         a.href = url;
         a.download = fileName;
@@ -563,20 +560,20 @@ export const COMMON = {
         window.URL.revokeObjectURL(url);
       }
     });
-  }
+  },
 };
 
 window.COMMON = {
   async logout() {
-    const rs = await AJAX.post("/member/logout");
-    if (rs) location.href = "/";
+    const rs = await AJAX.post('/member/logout');
+    if (rs) location.href = '/';
   },
   error(message) {
     ALERT.error(message);
   },
   redirectLogin() {
     const redirect = encodeURI(window.location.href);
-    COOKIE.setCookie("redirect", redirect, 1);
-    window.location.href = "/login";
-  }
+    COOKIE.setCookie('redirect', redirect, 1);
+    window.location.href = '/login';
+  },
 };

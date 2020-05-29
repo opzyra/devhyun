@@ -7,6 +7,7 @@ const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
   host: DB_HOST || '',
   dialect: 'mysql',
   timezone: '+09:00',
+  dialectOptions: { charset: 'utf8mb4', dateStrings: true, typeCast: true },
   define: {
     underscored: true,
     freezeTableName: true,

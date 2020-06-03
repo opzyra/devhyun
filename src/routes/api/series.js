@@ -56,6 +56,9 @@ export const updateOne = controller.put(
     const { idx } = req.params;
     let { title, contents, posts, thumbnail } = req.body;
 
+    contents = safeMarkdown(contents);
+    contents = anchorConvert(contents);
+
     const series = await Series.selectOne(idx)(transaction);
 
     await Series.updateOne(

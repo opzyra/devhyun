@@ -40,7 +40,7 @@ export const task = controller.get(
         let group = taskGroups.find(group => group.idx == task.TaskGroupIdx);
         return {
           ...task,
-          color: group.color,
+          color: group ? group.color : null,
         };
       }),
     );

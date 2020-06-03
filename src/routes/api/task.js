@@ -51,12 +51,13 @@ export const insertOne = controller.post(
     const { taskGroupIdx, title, contents, startAt, endAt } = req.body;
 
     const task = await Task.insertOne({
-      taskGroupIdx,
       title,
       contents,
       startAt,
       endAt,
     })(transaction);
+
+    await task.setTaskGroup(taskGroupIdx, { transaction });
 
     res.status(200).json({ message: `등록이 완료 되었습니다`, idx: task.idx });
   },

@@ -57,6 +57,7 @@ Post.selectPaginated = (query, page = 1, limit = 9) => {
         },
       ],
       nest: true,
+      distinct: true,
       transaction,
     };
 

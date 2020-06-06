@@ -310,6 +310,6 @@ export const tagDetail = {
   },
   init() {
     this.query();
-    COMMON.pagination('#page', STATE.tagPage.totalPages, STATE.tagPage.page);
+    COMMON.pagination('#page', STATE.postPage.totalPages, STATE.postPage.page);
   },
 };

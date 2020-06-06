@@ -107,6 +107,7 @@ Post.selectPaginatedRelatedTag = (query, page = 1, limit = 9) => {
         },
       ],
       nest: true,
+      distinct: true,
       transaction,
     });
     let postPage = pagination(count, limit, page);

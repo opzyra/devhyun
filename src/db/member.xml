@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member"> 
+  <select id="selectAdminAllPage">
+    SELECT 
+      * 
+    FROM 
+      member 
+    WHERE 
+      role != 'SUPER_ADMIN'
+    AND
+      role != 'USER'
+    <if test="name != ''">
+      AND name = #{name}
+    </if>
+    <if test="id != ''">
+      AND id = #{id}
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="selectAdmin">
+    SELECT * FROM member 
+    WHERE 
+      role = 'MASTER_ADMIN'
+    OR
+      role = 'MANAGER_ADMIN'
+    OR
+      role = 'MEMBER_ADMIN'
+    AND
+      role != 'USER'
+  </select>
+  <select id="countAdminAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      member 
+    WHERE 
+      role != 'SUPER_ADMIN'
+    AND
+      role != 'USER'
+  <if test="name != ''">
+    AND name = #{name}
+  </if>
+  <if test="id != ''">
+    AND id = #{id}
+  </if>
+  </select>
+
+  <select id="selectMemberAllPage">
+    SELECT 
+      * 
+    FROM 
+      member 
+    WHERE 
+      role = 'USER'
+    <if test="name != ''">
+      AND name = #{name}
+    </if>
+    <if test="id != ''">
+      AND id = #{id}
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countMemberAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      member 
+    WHERE 
+      role = 'USER'
+  <if test="name != ''">
+    AND name = #{name}
+  </if>
+  <if test="id != ''">
+    AND id = #{id}
+  </if>
+  </select>
+
+  <select id="selectById">
+    SELECT * FROM member WHERE id = #{id}
+  </select>
+  <select id="selectByIdx">
+    SELECT * FROM member WHERE idx = #{idx}
+  </select>
+
+  <select id="selectSearchId">
+    SELECT
+     id
+    FROM
+      member
+    WHERE
+      name = #{name}
+    AND
+      birth = #{birth}
+    AND
+      phone = #{phone}
+  </select>
+
+  <select id="selectSearchPassword">
+    SELECT
+     id
+    FROM
+      member
+    WHERE
+      id = #{id}
+    AND
+      birth = #{birth}
+    AND
+      phone = #{phone}
+  </select>
+
+  <insert id="insertAdminOne">
+    INSERT INTO member(id, password, email, name, role, position, phone)
+    VALUES
+    (
+      #{id},
+      #{password},
+      #{email},
+      #{name},
+      #{role},
+      #{position},
+      #{phone}
+    )
+  </insert>
+
+  <insert id="insertMemberOne">
+    INSERT INTO 
+    member
+    (
+      name,
+      id,
+      password,
+      birth,
+      gender,
+      email,
+      phone,
+      zonecode,
+      road_address,
+      more_address,
+      obstacle,
+      ear_birth,
+      job,
+      protector_name,
+      protector_relation,
+      protector_phone,
+      division,
+      role
+    )
+    VALUES
+    (
+      #{name},
+      #{id},
+      #{password},
+      #{birth},
+      ${gender},
+      #{email},
+      #{phone},
+      #{zonecode},
+      #{road_address},
+      #{more_address},
+      ${obstacle},
+      #{ear_birth},
+      #{job},
+      #{protector_name},
+      #{protector_relation},
+      #{protector_phone},
+      #{division},
+      #{role}
+    )
+  </insert>
+
+  <update id="updateMember">
+    UPDATE member
+    <set>
+      <if test="password != ''">
+      password = #{password},
+      </if>
+      <if test="birth != ''">
+      birth = #{birth},
+      </if>
+      <if test="gender != ''">
+      gender = ${gender},
+      </if>
+      <if test="phone != ''">
+      phone = #{phone},
+      </if>
+      <if test="zonecode != ''">
+      zonecode = #{zonecode},
+      </if>
+      <if test="road_address != ''">
+      road_address = #{road_address},
+      </if>
+      <if test="more_address != ''">
+      more_address = #{more_address},
+      </if>
+      <if test="zonecode != ''">
+      zonecode = #{zonecode},
+      </if>
+      <if test="protector_name != ''">
+      protector_name = #{protector_name},
+      </if>
+      <if test="protector_relation != ''">
+      protector_relation = #{protector_relation},
+      </if>
+      <if test="job != ''">
+      job = #{job},
+      </if>
+      <if test="obstacle != ''">
+      obstacle = ${obstacle},
+      </if>
+      protector_phone = #{protector_phone},
+      ear_birth = #{ear_birth},
+    </set>
+    WHERE idx = #{idx}
+  </update>
+
+  <update id="updateAdmin">
+    UPDATE member
+    SET
+      role = #{role},
+      name = #{name},
+      position = #{position},
+      phone = #{phone},
+      email = #{email},
+      active = #{active}
+    WHERE idx = #{idx}
+  </update>
+  <update id="updatePassword">
+    UPDATE member SET password = #{password} WHERE id = #{id}
+  </update>
+  <update id="updateThumbnail">
+    UPDATE member SET thumbnail = #{thumbnail} WHERE id = #{id}
+  </update>
+  <update id="updatePay">
+    UPDATE member
+    SET
+      pay = 1
+    WHERE 
+      idx = #{idx}
+  </update>
+  <update id="updatePassTemp">
+    UPDATE 
+      member
+    SET
+      pass_temp = #{pass_temp}
+    WHERE
+      id = #{id}
+  </update>
+  <update id="updateConsult">
+    UPDATE 
+      member
+    <set>
+      <if test="default_consult != ''">
+      default_consult = ${default_consult},
+      </if>
+      <if test="ha_consult != ''">
+      ha_consult = ${ha_consult},
+      </if>
+      <if test="ci_consult != ''">
+      ci_consult = ${ci_consult},
+      </if>
+    </set>
+    WHERE
+      idx = ${idx}
+  </update>
+
+  <update id="updateWithdraw">
+    UPDATE 
+      member
+    SET
+      withdraw = 1
+    WHERE
+      idx = ${idx}
+  </update>
+
+</mapper>

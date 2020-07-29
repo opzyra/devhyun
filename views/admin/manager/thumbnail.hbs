@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>사진 변경 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mgthumbnail'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">사진 변경</h2>
+          <p class="mg-b-0">자신을 잘 나타낼수 있는 사진으로 변경해 보세요!</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updateThumbnail(); return false;">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  사진 업로드
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="thumbnailInpFile" type="file" onchange="APP.thumbnailChange();" style="display:none;">
+                  <button type="button" class="btn btn-az-primary btn-border pd-x-15 mg-r-5"
+                    onclick="APP.thumbnailButton();"><i class="mdi mdi-cloud-upload-outline"></i> 업로드</button>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  미리보기
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="">
+                    <input id="thumbnailInpHdn" name="thumbnail" type="hidden" value="{{session.member.thumbnail}}">
+                    <img id="preview" src="{{session.member.thumbnail}}"
+                      class="az-img-user wd-200-f m-auto m-md-0 pd-10" alt="thumbnail" onchange="void(0)">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.repwdClear();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      defaultThumb: '{{session.member.thumbnail}}',
+      thumbnailButton: function () { // 썸네일 변경 버튼 클릭
+        $('#thumbnailInpFile').val('');
+        $('#thumbnailInpFile').trigger('click');
+      },
+      thumbnailChange: function () {	// 썸네일 변화 감지
+        var target = event.target;
+        var files = target.files;
+        if (!CHECK.isImageSize(files)) {
+          Swal.fire({ type: 'error', title: '오류', text: '이미지는 최대 2MB까지 업로드가 가능합니다.' });
+          return
+        }
+
+        let multipart = new FormData();
+        multipart.append('file', files[0]);
+
+        AJAX.file('/upload/thumbnail?width=200&height=200', multipart)
+          .then(function (res) {
+            $('#thumbnailInpHdn').val(res.src);
+            $('#preview').attr('src', res.src);
+          });
+      },
+      updateThumbnail: function () {
+        var form = $(event.target).serializeObject();
+        var validate = true;
+        var message = '';
+
+        if (form.thumbnail == APP.defaultThumb) {
+          validate = false;
+          message = '사진을 업로드해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        AJAX.put('/member/thumbnail', form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', html: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                location.reload();
+              });
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

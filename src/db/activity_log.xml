@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ActivityLog">
+  <select id="selectAllPage">
+    <bind name="likeContents" value="'%' + contents + '%'"/>
+    SELECT 
+      * 
+    FROM 
+      activity_log 
+    WHERE 1=1
+    <if test="id != ''">
+      AND id = #{id}
+    </if>
+    <if test="name != ''">
+      AND name = #{name}
+    </if>
+    <if test="contents != ''">
+      AND contents LIKE #{likeContents}
+    </if>
+    <if test="start != ''">
+    <![CDATA[
+      AND reg_date >= REPLACE(#{start}, '-', '')
+    ]]>
+    </if>
+    <if test="end != ''">
+    <![CDATA[
+      AND reg_date <= REPLACE(#{end}, '-', '')
+    ]]>
+    </if>
+    ORDER BY reg_date desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      activity_log
+     WHERE 1=1
+    <if test="id != ''">
+      AND id = #{id}
+    </if>
+    <if test="name != ''">
+      AND name = #{name}
+    </if>
+    <if test="contents != ''">
+      AND contents LIKE #{likeContents}
+    </if>
+    <if test="start != ''">
+    <![CDATA[
+      AND reg_date >= REPLACE(#{start}, '-', '')
+    ]]>
+    </if>
+    <if test="end != ''">
+    <![CDATA[
+      AND reg_date <= REPLACE(#{end}, '-', '')
+    ]]>
+    </if>
+  </select>
+  <insert id="insertOne">
+    INSERT INTO activity_log
+    (
+      device, 
+      ip, 
+      id,
+      name,
+      role,
+      contents,
+      reg_date
+    )
+    VALUES
+    (
+      #{device}, 
+      #{ip}, 
+      #{id}, 
+      #{name}, 
+      #{role}, 
+      #{contents}, 
+      NOW()
+    )
+  </insert>
+</mapper>

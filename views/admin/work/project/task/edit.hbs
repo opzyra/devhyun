@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>프로젝트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wkproject'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">태스크 수정</h2>
+          <p class="mg-b-0">해당 프로젝트에 등록된 태스크를 수정합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/project/detail?idx={{task.project_idx}}" class="nav-link">상세정보</a>
+              <a href="javascript:void(0);" class="nav-link active">수정</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updateTask(); return false;">
+              <input name="idx" type="hidden" value="{{task.idx}}">
+              <div class="form-warp-first"></div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  제목<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="title" type="text" class="form-control d-inline wd-100p wd-md-60p wd-lg-40p mg-r-10"
+                    autocomplete="off" value="{{task.title}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  카테고리<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  {{#isEmpty category}}
+                  {{else}}
+                  <select id="categorySb" class="form-control d-inline wd-100p wd-md-30p wd-lg-15p br-6 mg-b-5"
+                    onchange="APP.categoryChange()">
+                    <option class="selectopt" value="" selected="" disabled="" hidden="">선택</option>
+                    <option class="selectopt" value="new" disabled="" hidden="">새롭게 등록</option>
+                    {{#each category}}
+                    <option class="selectopt" value="{{this}}">{{this}}</option>
+                    {{/each}}
+                  </select>
+                  {{/isEmpty}}
+
+                  <input id="categoryIpn" name="category" type="text"
+                    class="form-control d-inline wd-100p wd-md-50p wd-lg-40p mg-r-10" autocomplete="off"
+                    onkeyup="APP.categoryKey()" placeholder="새로운 카테고리를 적어주세요." value="{{task.category}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  진행률<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="percent" name="progress" type="text"
+                    class="form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10" autocomplete="off"
+                    value="{{task.progress}}%">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  내용 <span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div id="summernote" style="height: 400px">{{{task.contents}}}</div>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  첨부파일
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="custom-file input-sm wd-90p wd-md-50p">
+                    <input id="attachFile" type="file" class="custom-file-input" onchange="APP.fileChange()">
+                    <label class="custom-file-label input-sm pointer br-6 mg-b-0-f" style="z-index:2"
+                      onclick="APP.fileAttatch()">최대 업로드 파일 수 3개</label>
+                  </div>
+                  <div id="fileList" class="pd-y-9">
+                    {{#each files.items}}
+                    <div class="file-item row row-xs align-items-center mg-b-5">
+                      <div class="col-label"></div>
+                      <div class="col-md-10 mg-t-5 mg-md-t-0">
+                        <input class="file-src" type="hidden" value="{{fileSrc}}">
+                        <input class="file-name" type="hidden" value="{{fileName}}">
+                        <span class="file-label" class="tx-12"><i class="mdi mdi-file-outline mg-r-3"></i><a
+                            href="javascript:void(0);">{{fileName}}</a></span>
+                        <i class="mdi mdi-close text-danger pointer mg-l-5 file-delete" onclick="APP.fileDelete();"></i>
+                      </div>
+                    </div>
+                    {{/each}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.cancle();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      FILE: [],
+      CATEGOTY: [],
+      categoryChange: function () {
+        var value = event.target.value;
+        $('#categoryIpn').val(value);
+      },
+      categoryKey: function () {
+        var value = event.target.value;
+        if (APP.CATEGOTY.includes(value)) {
+          $('.selectopt').removeAttr('selected');
+          $('#categorySb').val(value).attr('selected', 'selected');
+        } else {
+          $('#categorySb').val('new').attr('selected', 'selected');
+        }
+      },
+      fileAttatch: function () {
+        $('#attachFile').val('');
+        $('#attachFile').trigger('click');
+      },
+      fileChange: function () {
+
+        var target = event.target;
+        var files = target.files;
+
+        if (!files[0]) return;
+
+        // 동일한 파일명이 있는 경우
+        var fileName = $('.file-name');
+        var fileNameCheck = true;
+        for (var i = 0; i < fileName.length; i++) {
+          if (fileName[i].value == files[0].name) {
+            Swal.fire({ type: 'error', title: '오류', text: '이미 동일한 파일이 업로드되어 있습니다.' });
+            fileNameCheck = false;
+          }
+        }
+
+        if (!fileNameCheck) return;
+
+        // 파일 업로드수 제한 3개
+        var item = $('.file-item').length;
+        if (item >= 3) {
+          Swal.fire({ type: 'error', title: '오류', text: '파일은 최대 3개 까지 업로드가 가능합니다.' });
+          return;
+        }
+
+        // 파일 사이즈 체크
+        if (!CHECK.isFileSize(files)) {
+          Swal.fire({ type: 'error', title: '오류', text: '파일은 최대 5MB까지 업로드가 가능합니다.' });
+          return;
+        }
+
+        var multipart = new FormData();
+        multipart.append('file', files[0]);
+
+        AJAX.file('/upload/file', multipart)
+          .then(function (res) {
+            APP.FILE.push({
+              idx: res.idx,
+              fileSrc: res.src,
+              fileName: res.originalFilename
+            });
+            var idx = $('.file-item').length;
+            var el = '<div class="file-item row row-xs align-items-center mg-t-5"><div class="col-label"></div><div class="col-md-10 mg-t-5 mg-md-t-0"><input class="file-src" type="hidden" value="' + res.src + '"><input class="file-name" type="hidden" value="' + res.originalFilename + '"><span class="file-label" class="tx-12"><i class="mdi mdi-file-outline mg-r-3"></i>' + res.originalFilename + '</span><i class="mdi mdi-close text-danger pointer mg-l-5 file-delete" onclick="APP.fileDelete(' + idx + ');"></i></div></div>';
+            $('#fileList').append(el);
+          });
+
+      },
+      fileDelete: function (idx) {
+
+        var item = event.target;
+        var fileName = $(item).closest('.file-item').find('.file-name').val();
+
+        Swal.fire({ title: '확인', html: '삭제한 파일은 복구가 불가능합니다.<br/>첨부파일을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              APP.FILE = APP.FILE.filter(e => e.fileName != fileName);
+              $(item).closest('.file-item').remove();
+            }
+          })
+      },
+      updateTask: function () {
+
+        var form = $(event.target).serializeObject();
+
+        // 내용
+        var contents = $('#summernote').summernote('code');
+
+        var validate = true;
+        var message = '';
+
+        if (form.title == '') {
+          validate = false;
+          message = '제목을 입력해주세요.';
+        } else if (form.cateogry == '') {
+          validate = false;
+          message = '카테고리를 입력해주세요';
+        } else if (form.progress == '') {
+          validate = false;
+          message = '진행률을 입력해주세요';
+        } else if (contents == '<p><br></p>') {
+          validate = false;
+          message = '내용을 입력해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        // 게시글 처리
+        form.contents = contents;
+
+        // 첨부 파일 업로드
+        form.files = APP.FILE;
+
+        // 퍼센트 치환처리
+        form.progress = form.progress.replace('%', '');
+
+        AJAX.put('/task/' + form.idx, form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+              });
+          });
+
+        return false;
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '입력하신 정보가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 초기 파일
+        var files = {{{ files.data
+    }}};
+
+    APP.FILE = files;
+
+    // 카테고리
+    $('.selectopt').each(function (i, e) {
+      APP.CATEGOTY.push($(e).val());
+    });
+
+    $('.selectopt').removeAttr('selected');
+    $('#categorySb').val($('#categoryIpn').val()).attr('selected', 'selected');
+
+    // 퍼센트
+    $('#percent').asSpinner({
+      min: 0,
+      max: 100,
+      step: 1,
+      format(value) {
+        return value + '%';
+      },
+    });
+
+    // 에디터 초기화
+    $('#summernote').summernote({
+      lang: 'ko-KR',
+      toolbar: [
+        // [groupName, [list of button]]
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['insert', ['picture', 'video', 'link']]
+      ],
+      disableDragAndDrop: true,
+      disableResizeEditor: true,
+      height: 400,
+      placeholder: '',
+      dialogsInBody: true,
+      dialogsFade: true,
+      callbacks: {
+        onImageUpload: function (files) {
+
+          if (!CHECK.isFileSize(files)) {
+            Swal.fire({ type: 'error', title: '오류', text: '파일은 최대 2MB까지 업로드가 가능합니다.' });
+            return;
+          }
+
+          if (!files[0]) return;
+
+          var multipart = new FormData();
+          multipart.append('file', files[0]);
+
+          AJAX.file('/upload/image', multipart)
+            .then(function (res) {
+              if (res) {
+                var node = document.createElement('img');
+                node.classList.add('img-fluid');
+                node.setAttribute('src', res.src);
+                node.setAttribute('alt', res.name);
+                $('#summernote').summernote('insertNode', node);
+              }
+            });
+        },
+        onChange: function (contents, $editable) {
+          if (contents == '<p><br></p>') {
+            $('#summernoteValidate').removeClass('d-none');
+          } else {
+            $('#summernoteValidate').addClass('d-none');
+          }
+        }
+      }
+    });
+
+    // 에디터 CSS 버그 처리
+    $('.note-popover').css('display', 'none');
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

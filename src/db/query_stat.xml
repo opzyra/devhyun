@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="QueryStat">
+  <select id="selectBatch">
+    SELECT 
+      reg_ymd AS ymd, 
+      query, 
+      COUNT(*) AS rcount 
+    FROM 
+      session_log 
+    WHERE 
+      query != '' 
+    AND 
+      reg_ymd = #{ymd} 
+    GROUP BY 
+      query
+  </select>
+
+  <select id="selectQueryList">
+  <![CDATA[
+			SELECT 
+        query, 
+        SUM(rcount) AS rcount 
+      FROM 
+        query_stat 
+      WHERE 
+        ymd >= DATE_FORMAT(#{start}, '%Y%m%d') 
+      AND 
+        ymd <= DATE_FORMAT(#{end}, '%Y%m%d') 
+      GROUP BY 
+        query 
+      ORDER BY 
+        rcount desc
+	]]>
+  </select>
+  
+  <insert id="insertOne">
+    INSERT INTO query_stat
+    (
+      ymd, 
+      query, 
+      rcount, 
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{query}, 
+      ${rcount}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

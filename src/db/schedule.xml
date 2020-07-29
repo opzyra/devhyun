@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Schedule">
+  <select id="selectAll">
+  <![CDATA[
+    SELECT 
+      member.name, member.thumbnail, schedule.* 
+    FROM 
+      schedule, member
+    WHERE
+      schedule.member_idx = member.idx
+    AND
+      schedule.start >= #{start}
+    AND
+      schedule.end <= #{end}
+  ]]>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as name,
+      member.thumbnail as thumbnail,
+      schedule.* 
+    FROM 
+      schedule, member 
+    WHERE 
+      schedule.member_idx = member.idx
+    AND
+      schedule.idx = ${idx}
+  </select>
+  <select id="selectFkMember">
+    SELECT 
+      member.idx, member.name, member.thumbnail
+    FROM
+      schedule_member,
+      member
+    WHERE
+      schedule_member.schedule_idx = ${idx}
+    AND
+      schedule_member.member_idx = member.idx
+  </select>
+  <insert id="insertOne">
+    INSERT INTO schedule
+    (
+      member_idx,
+      title, 
+      location,
+      description, 
+      color,
+      start,
+      end,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx},
+      #{title}, 
+      #{location}, 
+      #{description},
+      #{color},
+      #{start},
+      #{end},
+      NOW()
+    )
+  </insert>
+  <insert id="insertFkMember">
+    INSERT INTO schedule_member
+    (
+      schedule_idx,
+      member_idx
+    )
+    VALUES
+    (
+      ${schedule_idx},
+      ${member_idx}
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      schedule 
+    SET
+      title = #{title},
+      location = #{location},
+      description = #{description},
+      color = #{color},
+      start = #{start},
+      end = #{end}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateDate">
+    UPDATE 
+      schedule 
+    SET
+      start = #{start},
+      end = #{end}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateClear">
+    UPDATE 
+      schedule 
+    SET
+      clear = ${clear}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM schedule
+    WHERE
+      idx = ${idx}
+  </delete>
+  <delete id="deleteFkMember">
+    DELETE
+    FROM schedule_member
+    WHERE
+      schedule_idx = ${schedule_idx}
+  </delete>
+</mapper>

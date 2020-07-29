@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>관리자 활동 로그 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mgactlog'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">관리자 활동 로그</h2>
+          <p class="mg-b-0">등록된 관리자의 활동 로그를 확인하고 관리하세요.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET" onsubmit="return APP.search();">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  기간
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="start" type="text" name="start"
+                    class="air-datepicker form-control d-inline wd-35p wd-md-15p wd-lg-10p" placeholder="시작일"
+                    autocomplete="off" data-position="bottom left">
+                  <span class="mg-x-3">~</span>
+                  <input id="end" type="text" name="end"
+                    class="air-datepicker form-control d-inline wd-35p wd-md-15p wd-lg-10p mg-r-5" placeholder="마지막일"
+                    autocomplete="off" data-position="bottom right">
+                </div>
+              </div>
+              <div class="row form-warp form-sm align-items-center">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline mg-r-5 wd-35p wd-md-15p wd-lg-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="id">아이디</option>
+                      <option value="name">이름</option>
+                      <option value="contents">내용</option>
+                    </select>
+                    <input id="query" type="text" name="name"
+                      class="form-control d-inline wd-55p wd-md-30p wd-lg-20p mg-r-5" placeholder="검색어"
+                      autocomplete="off">
+                    <button class="btn-input btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body">
+            <table class="az-table">
+              <thead>
+                <tr>
+                  <th class="wd-15p wd-md-5p">번호</th>
+                  <th class="wd-25p wd-md-15p">아이디</th>
+                  <th class="d-none d-md-table-cell">이름</th>
+                  <th class="d-none d-md-table-cell">아이피</th>
+                  <th class="d-none d-md-table-cell">권한</th>
+                  <th class="d-none d-md-table-cell">내용</th>
+                  <th class="wd-10p">등록일</th>
+                  <th class="d-md-none wd-5p"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each activiyList.items}}
+                <tr class="item">
+                  <td>{{pageIdx ../activiyList.row ../activiyList.page 20 'desc'}}</td>
+                  <td>{{id}}</td>
+                  <td class="d-none d-md-table-cell">{{name}}</td>
+                  <td class="d-none d-md-table-cell">{{ip}}</td>
+                  <td class="d-none d-md-table-cell">{{parseRole role}}</td>
+                  <td class="d-none d-md-table-cell text-left pd-x-15-f">{{contents}}</td>
+                  <td>{{parseDate reg_date 'YYYY.MM.DD HH:mm:ss'}}</td>
+                  <td class="d-md-none"></td>
+                </tr>
+                <tr class="sub">
+                  <td colspan="8" class="pd-0-f">
+                    <table class="table az-table-sub">
+                      <tbody>
+                        <tr>
+                          <td class="wd-40p">이름</td>
+                          <td>{{name}}</td>
+                        </tr>
+                        <tr>
+                          <td>아이피</td>
+                          <td>{{ip}}</td>
+                        </tr>
+                        <tr>
+                          <td>권한</td>
+                          <td>{{parseRole role}}</td>
+                        </tr>
+                        <tr>
+                          <td>내용</td>
+                          <td>{{contents}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+                {{#equalsLength activiyList.items 0}}
+                <tr class="item">
+                  <td class="item-none" colspan="8">데이터를 찾을 수 없습니다.</td>
+                </tr>
+                {{/equalsLength}}
+              </tbody>
+            </table>
+            <div class="row mg-t-20">
+              <div class="col-12 tx-center">
+                <ul id="page" class="pagination"></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      clearFilter: function () { // 전체 목록 조회
+        location.href = location.href.replace(/\?.+/, '');
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        const value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 데이트 피커
+        $('.air-datepicker').datepicker({
+          language: 'ko',
+          autoClose: true,
+          toggleSelected: false,
+          dateFormat: 'yyyy-mm-dd',
+          maxDate: new Date()
+        });
+
+        // 페이징
+        const totalPages = parseInt('{{activiyList.totalPage}}') || 1;
+        const startPage = parseInt('{{activiyList.page}}') + 1 || 1;
+
+        $('#page').twbsPagination({
+          totalPages: totalPages,
+          startPage: totalPages >= startPage ? startPage : 1,
+          visiblePages: (function () {
+            return BROWSER.isMobile() ? 5 : 10
+          })(),
+          first: '',
+          last: '',
+          prev: '<span>이전</span>',
+          next: '<span>다음</span>',
+          onPageClick: function (event, page) {
+            if (startPage == page) return;
+            if (location.href.indexOf('page') == -1) {
+              var isQuery = location.href.indexOf('?') >= 0;
+              location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+            } else {
+              location.href = location.href.replace(/page=.+/g, 'page=' + page);
+            }
+
+          }
+        });
+
+        // 쿼리스트링 데이터 초기화
+        const qstr = BROWSER.getQueryString();
+
+        if (qstr.id) {
+          $('#query').attr('name', 'id').val(qstr.id); $('#category').val('id');
+        }
+
+        if (qstr.name) {
+          $('#query').attr('name', 'name').val(qstr.name); $('#category').val('name');
+        }
+
+        if (qstr.contents) {
+          $('#query').attr('name', 'contents').val(qstr.contents); $('#category').val('contents');
+        }
+
+        if (qstr.start) {
+          $('#start').datepicker().data('datepicker').selectDate(new Date(qstr.start));
+        }
+
+        if (qstr.end) {
+          $('#end').datepicker().data('datepicker').selectDate(new Date(qstr.end));
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

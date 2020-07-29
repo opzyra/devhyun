@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>프로젝트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wkproject'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">프로젝트 등록</h2>
+          <p class="mg-b-0">새로운 프로젝트를 등록합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/project" class="nav-link">리스트</a>
+              <a href="/admin/work/project/create" class="nav-link active">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.createProject(); return false;">
+              <div class="form-warp-first"></div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  프로젝트명<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="title" type="text" class="form-control d-inline wd-100p wd-md-60p wd-lg-40p mg-r-10"
+                    autocomplete="off">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  프로젝트 개요<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <textarea name="description" rows="5" class="form-control d-inline wd-100p wd-md-60p wd-lg-50p"
+                    style="resize:none;"></textarea>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  중요도<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <select name="important" class="form-control wd-60p wd-md-20p wd-lg-15p">
+                    <option value="" disabled="" hidden="">선택해주세요</option>
+                    <option value="1">높음</option>
+                    <option value="2">중간</option>
+                    <option value="3">낮음</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  시작일<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="start" name="start" type="text"
+                    class="air-datetimepicker form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    autocomplete="off">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  마감일<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="end" name="end" type="text"
+                    class="air-datetimepicker form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    autocomplete="off">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  참여자<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <select class="select2 wd-100p wd-md-60p wd-lg-50p br-6" name="members" multiple>
+                    {{#each admins}}
+                    <option value="{{idx}}">{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.cancle();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      createProject: function () {
+
+        var form = $(event.target).serializeObject();
+
+        var validate = true;
+        var message = '';
+
+        if (form.title == '') {
+          validate = false;
+          message = '제목을 입력해주세요.';
+        } else if (form.description == '') {
+          validate = false;
+          message = '프로젝트 개요를 입력해주세요';
+        } else if (form.important == '') {
+          validate = false;
+          message = '중요도를 선택해주세요.';
+        } else if (form.start == '') {
+          validate = false;
+          message = '시작일을 선택해주세요.';
+        } else if (!form.start.match(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/)) {
+          validate = false;
+          message = '시작일의 형태가 올바르지 않습니다.';
+        } else if (form.end == '') {
+          validate = false;
+          message = '마감일을 선택해주세요.';
+        } else if (!form.end.match(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/)) {
+          validate = false;
+          message = '마감일의 형태가 올바르지 않습니다.';
+        } else if (moment(form.start).isAfter(form.end)) {
+          validate = false;
+          message = '시작일과 마감일을 확인해주세요.';
+        } else if (!form.members) {
+          validate = false;
+          message = '참여자를 선택해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        AJAX.post('/project', form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+              });
+          });
+
+        return false;
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '입력하신 정보가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+        // 데이트 피커
+        $('.air-datetimepicker').datepicker({
+          language: 'ko',
+          autoClose: true,
+          timepicker: false,
+          toggleSelected: false,
+          dateFormat: 'yyyy-mm-dd',
+          timeFormat: 'hh:ii'
+        });
+
+        // 셀렉트박스
+        $('.select2').select2();
+
+        // 쿼리스트링 데이터 초기화
+        var qstr = BROWSER.getQueryString();
+        if (qstr.start) {
+          var start = moment.unix(qstr.start / 1000).subtract(9, 'hour');
+          $('#start').datepicker().data('datepicker').selectDate(start.toDate());
+        }
+
+        if (qstr.end) {
+          var end = moment.unix(qstr.end / 1000).subtract(9, 'hour').subtract(1, 'second');
+          $('#end').datepicker().data('datepicker').selectDate(end.toDate());
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

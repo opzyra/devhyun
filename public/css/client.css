@@ -10,32 +10,22 @@
 
 /* 헤더 */
 header {position: fixed; left: 0; top: 0; width: 100%; z-index: 20; background: #fff;}
-header > div {width: 1200px; margin: 0 auto; height: 81px; position: relative;}
+header > div {width: 1200px; margin: 0 auto; height: 81px;}
 header h1 {float: left; line-height: 81px; height: 81px;}
 header h1 a {display: inline-block;}
 header h1 img {width: 200px; display: block; margin-top: 12px; margin-left: -18px;}
-
+header .lnb {float: right; }
 header .lnb ul {font-size:0px;}
 header .lnb li {display: inline-block; }
-header .lnb li a {display: block; line-height: 81px; padding: 0 20px; font-size: 16px;}
+header .lnb li a {display: block; line-height: 81px; padding: 0 16px; font-size: 16px;}
 header .lnb li a:hover {color:#004abf;}
 header .lnb li a.on {color:#004abf;}
-header .menu {float: left; margin-left: 20px;}
-header .account {float: right;}
-header .account li a {padding: 0px;}
-header .account img {width: 28px; border-radius: 50%; margin-right: 8px; margin-top: -4px;}
-header .account .name {display: inline-block;}
 header.scroll {border-bottom: 1px solid #eee;}
 header.fix {border-bottom: 1px solid #eee;}
 header button {display: none;}
-header .mobile_member {display: none;}
-header .dropdown {position: absolute; visibility: hidden; opacity : 0; transition : .2s ease-in-out; transform : translateY (-20px); top: 82px; right: 0px; width: 150px; background: #fff; border: 1px solid #eee; font-size: 14px; border-radius: 0 0 .28571429rem .28571429rem; box-shadow: 0 1px 3px 0 rgba(0,0,0,.08);}
-header .dropdown.on {visibility : visible; opacity : 1; transform : translateY (0);}
-header .dropdown > a {display: block; margin: 24px 24px 0px;}
-header .dropdown > a:last-child {margin-bottom: 24px;}
 
 /* 레이 아웃 */
-main {min-height: calc(100vh - 185px); padding-top: 81px;}
+main {min-height: calc(100vh - 252px); padding-top: 81px;}
 main section > div {width: 1200px; margin: 0 auto; position: relative; box-sizing: border-box;}
 main > div {padding: 40px 0;}
 main .location {margin: 0 0 20px 0;}
@@ -259,7 +249,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .project_detail .skills a:hover {color:#fff; background: #004abf;}
 
 /* 목록 이동 */
-.project_detail .back {padding: 40px 0px 80px 0;}
+.project_detail .back {padding: 80px 0;}
 .project_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .project_detail .back a {font-size: 16px;}
 .project_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -316,12 +306,11 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .post_list ul li .thumb img {width: 100%; border-radius: 5px 5px 0px 0px;}
 .blog .post_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .post_list ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .post_list ul li .description {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
-.blog .post_list ul li .description h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 56px;}
-.blog .post_list ul li .description h3 a:hover {color:#004abf;}
-.blog .post_list ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
-.blog .post_list ul li .description div {margin: 16px 0 0 0;}
-.blog .post_list ul li .description div span::before {color: #adb5bd; padding: 0px 2px; content: "\B7";}
+.blog .post_list ul li .contents {padding: 30px 15px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); border-top: 0px;}
+.blog .post_list ul li .contents h3 {padding: 0 0 8px; font-size: 16px; font-weight: 500; min-height: 46px;}
+.blog .post_list ul li .contents h3 a:hover {color:#004abf;}
+.blog .post_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px;}
+.blog .post_list ul li .contents div {margin: 16px 0 0 0;}
 .blog .post_none .not {font-size:20px;}
 .blog .post_none .not .keyword {color:#004abf; font-weight: 500;}
 .blog .post_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -336,16 +325,16 @@ footer .info span:nth-child(4)::after {display: none;}
 .blog .series_list .search_count .back::before {display: inline-block; overflow: hidden; background: url(../images/arrow_back.png) no-repeat; text-indent: 9999px; white-space: nowrap;position: absolute; top: 7px; left: 0; width: 24px; height: 15px; content: '';}
 .blog .series_list .search_count .back::after {display: block; width: 100%; height: 1px; background-color: #000; content: '';}
 .blog .series_list ul li {display:flex; width: 100%; margin: 0 0 36px 0;}
-.blog .series_list ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:30%;}
+.blog .series_list ul li .thumb {border: 1px solid hsla(0,0%,60.8%,.17); transition: all .1s linear;display: block; position: relative; width:30%;}
 .blog .series_list ul li .thumb img {width: 100%;}
 .blog .series_list ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .blog .series_list ul li .thumb:hover .white-mask { opacity: 1;}
-.blog .series_list ul li .description {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
-.blog .series_list ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
-.blog .series_list ul li .description h3 a:hover {color:#004abf;}
-.blog .series_list ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
-.blog .series_list ul li .description p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
-.blog .series_list ul li .description div {font-size: 14px;}
+.blog .series_list ul li .contents {padding: 25px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
+.blog .series_list ul li .contents h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
+.blog .series_list ul li .contents h3 a:hover {color:#004abf;}
+.blog .series_list ul li .contents span {margin: 0 0 8px 0; font-size: 14px; display:block;}
+.blog .series_list ul li .contents p {padding: 0px; font-size:14px; min-height: 75px; margin: 0 0 16px 0;}
+.blog .series_list ul li .contents div {font-size: 14px;}
 .blog .series_none .not {font-size:20px;}
 .blog .series_none .not .keyword {color:#004abf; font-weight: 500;}
 .blog .series_none .back {font-size: 16px; margin: 40px 0 0 0; display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -377,7 +366,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .container .area {width: 72%; display: inline-block;}
 
 /* 콘텐츠 네비바 */
-.post_detail .container aside {float:right; width: 230px; margin:48px 0 0 0;}
+.post_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
 .post_detail .sidenav .on {color: #004abf;}
 /* 언더라인
 .post_detail .sidenav .on::after {content: ''; position: absolute; width: 100%; height: 1px; border-bottom: 1px solid #004abf; bottom: -2px; left: 0px;}
@@ -404,41 +393,16 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .tags a:hover {color: #004abf;}
 
 /* 댓글 */
-.post_detail .comments {padding:12px 0px 48px;}
+.post_detail .comments {padding:12px 0px}
 .post_detail .comments h3 {font-size: 20px; margin: 0 0 12px 0;}
-.post_detail .comments ul li {display: flex; padding: 32px 0px; position: relative;}
-.post_detail .comments ul li + li {border-top: 1px solid #e9ecef;}
-.post_detail .comments ul li .thumb { margin-right: 20px;}
-.post_detail .comments ul li img {width: 64px; border-radius: 50%;}
-.post_detail .comments ul li h4 {font-size: 16px; margin-bottom: 8px;}
-.post_detail .comments ul li h4 span {font-size: 12px; margin-left: 8px;}
-.post_detail .comments ul li h5 {font-size: 14px; margin-bottom: 4px; color: #004abf;}
-.post_detail .comments ul li p {font-size: 14px;}
-.post_detail .comments ul li .mode {font-size: 14px; text-align: center; margin-top: 8px; color: #004abf; display: none;}
-.post_detail .comments ul li .description {width: 100%; position: relative;}
-.post_detail .comments ul li.selected .mode {display: block;}
-.post_detail .comments ul li.selected .description::before {content: ''; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; opacity: 0.4; z-index: 100;}
-.post_detail .comments ul li .menu {position: absolute; top: 0px; right: 0px;}
-.post_detail .comments ul li .menu a {margin-right: 4px; cursor: pointer;}
-.post_detail .comments ul li .menu i {margin-right: 2px;}
-.post_detail .comments form {margin-top: 8px;}
-
-.post_detail .comments textarea {padding: 16px; text-indent: 0px; resize: none; min-height: 120px; font-size: 14px;}
-.post_detail .comments select {padding: 8px 16px; height: auto; float:left;}
-.post_detail .comments .submit {text-align: right; margin-top: 12px;}
-.post_detail .comments .submit .btn_submit {background: #004abf; color: #fff; border: 1px solid transparent; padding: 0.5rem 0.95rem; font-size: 0.875rem; line-height: 1.5; border-radius: 6px; font-weight: 400;}
-.post_detail .comments .submit .btn_cancel {margin-left: 4px; border: 1px solid #004abf; padding: 0.5rem 0.95rem; font-size: 0.875rem; line-height: 1.5; border-radius: 6px; font-weight: 400; display: none;}
-.post_detail .comments form.update .btn_cancel {display: inline-block;}
-.post_detail .comments .no-authorized {font-size: 14px; text-align: center;}
-.post_detail .comments .no-authorized a {color: #004abf;}
-
+.post_detail .comments textarea {padding: 16px; text-indent: 0px; resize: none; min-height: 80px; font-size: 14px;}
 
 /* 시리즈 */
 .post_detail .series {padding:0 0 24px 0;}
 .post_detail .series h2 {font-size: 24px;}
 .post_detail .series h2 span {font-size: 16px;}
 .post_detail .series ul li {margin: 20px 0; border: 1px solid #d2d2d2; border-radius: 6px; display: flex;}
-.post_detail .series ul li a {width: 35%; position: relative;}
+.post_detail .series ul li a {width: 35%; transition: all .1s linear; position: relative;}
 .post_detail .series ul li a .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
 .post_detail .series ul li a:hover .white-mask { opacity: 1;}
 .post_detail .series ul li img {width: 100%;}
@@ -473,7 +437,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .post_detail .relation p {font-size: 14px; min-height: 60px;}
 
 /* 목록 이동 */
-.post_detail .back {padding: 40px 0px 80px 0;}
+.post_detail .back {padding: 80px 0;}
 .post_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .post_detail .back a {font-size: 16px;}
 .post_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -494,7 +458,7 @@ footer .info span:nth-child(4)::after {display: none;}
 .series_detail .container .area {width: 72%; display: inline-block;}
 
 /* 콘텐츠 네비바 */
-.series_detail .container aside {float:right; width: 230px; margin:48px 0 0 0;}
+.series_detail .container aside {float:right; width: 200px;margin:48px 24px 0 0;}
 .series_detail .sidenav .on {color: #004abf;}
 .series_detail .sidenav li a {font-size: 16px; position: relative;}
 .series_detail .sidenav > li {margin: 0 0 8px 0;}
@@ -513,23 +477,14 @@ footer .info span:nth-child(4)::after {display: none;}
 
 /* 관련 포스트 */
 .series_detail .post {padding:0 0 16px 0;}
-.series_detail .post h2 {font-size: 24px; line-height: 32px; border-bottom: none; margin: 24px 0 15px 0; color: #333; font-weight: 500;}
+.series_detail .post h2 {font-size: 24px;}
 .series_detail .post h2 span {font-size: 16px;}
-.series_detail .post ul {padding: 10px 0px;}
-.series_detail .post ul li {display:flex; width: 100%; margin: 0 0 16px 0;}
-.series_detail .post ul li .thumb {border-left: 1px solid hsla(0,0%,60.8%,.17); border-top: 1px solid hsla(0,0%,60.8%,.17); border-bottom: 1px solid hsla(0,0%,60.8%,.17); display: block; position: relative; width:36%;}
-.series_detail .post ul li .thumb img {width: 100%;}
-.series_detail .post ul li .thumb .white-mask {position: absolute; border-top-left-radius: 4px; border-top-right-radius: 4px; top: 0; left: 0; width: 100%; height: 100%; background: hsla(0,0%,100%,.25); opacity: 0; -webkit-transition: all .125s ease-in; -o-transition: .125s all ease-in; transition: all .125s ease-in;}
-.series_detail .post ul li .thumb:hover .white-mask { opacity: 1;}
-.series_detail .post ul li .description {padding: 20px; text-align: left; min-height: 164px; box-sizing: border-box; background: #fff; border: 1px solid hsla(0,0%,60.8%,.17); width:70%;}
-.series_detail .post ul li .description h3 {padding: 0 0 12px; font-size: 16px; font-weight: 500;}
-.series_detail .post ul li .description h3 a:hover {color:#004abf;}
-.series_detail .post ul li .description span {margin: 0 0 8px 0; font-size: 14px; display:block;}
-.series_detail .post ul li .description p {padding: 0px; font-size:14px; min-height: 75px;}
-.series_detail .post ul li .description div {font-size: 14px;}
+.series_detail .post ul {margin: 20px 0;}
+.series_detail .post ul li {margin: 8px 0; font-size: 18px;}
+.series_detail .post ul li a { color: #004abf;}
 
 /* 목록 이동 */
-.series_detail .back {padding: 40px 0px 80px 0;}
+.series_detail .back {padding: 80px 0;}
 .series_detail .back h2 {font-size: 24px; margin: 0 0 16px 0;}
 .series_detail .back a {font-size: 16px;}
 .series_detail .back a {display: inline-block; position: relative; padding: 0 0 0 24px;}
@@ -556,75 +511,26 @@ footer .info span:nth-child(4)::after {display: none;}
 /* --  개인정보 처리 방침 끝 -- */
 
 /* -- 로그인 시작 -- */
-.login {position: relative;}
-.login .box {width: 1200px; display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);}
-.login .box > div {width: 50%; padding: 20px 0px;}
+.login { width: 400px; margin: 0 auto; padding: 130px 0;}
+.login h2 {margin: 0 0 30px 0; letter-spacing: 12px; color:#004abf; font-size:48px; text-align: center;}
+.login input { padding: 15px 25px; margin: 0 0 24px 0; box-sizing: border-box; height: auto; font-size: 16px; transition: none;}
+.login input::placeholder {font-size:16px;}
+.login input[type='password'] {margin: 0 0 20px 0;}
+.login .checks {margin:0 0 60px 0;}
+.login .checks input[type="checkbox"] {position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0}
+.login .checks input[type="checkbox"] + label { display: inline-block; position: relative; cursor: pointer; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;}
+.login .checks input[type="checkbox"] + label:before {content: ' '; display: inline-block; width: 21px; height: 21px; line-height: 21px; margin: -2px 8px 0 0; text-align: center;  vertical-align: middle; background: #fafafa; border: 1px solid #cacece; border-radius : 3px; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);}
+.login .checks input[type="checkbox"] + label:active:before,
+.login .checks input[type="checkbox"]:checked + label:active:before { box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);}
+.login .checks input[type="checkbox"]:checked + label:before {content: '\2714'; color: #99a1a7; text-shadow: 1px 1px #fff; background: #e9ecee; border-color: #adb8c0; box-shadow: 0px 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);}
+.login .checks.small input[type="checkbox"] + label { font-size: 12px; }
+.login .checks.small input[type="checkbox"] + label:before { width: 17px; height: 17px; line-height: 17px; font-size: 11px;}
+.login button { display: block; width: 100%; color: #fff; font-size: 16px; background: #004abf; text-align: center; vertical-align: middle; user-select: none; border: 1px solid transparent; padding: 12px 0px; border-radius: 6px; cursor: pointer;}
+.login button:hover {opacity: 0.8; transition: 0.8s;}
+.login ul {padding:0px;}
+.login ul li { display:inline-block; width: 49%; text-align: center; position: relative;}
+.login ul li::after { content: ''; position: absolute; width: 1px; height: 100%; top: 0px; right: 0px; background:#a0a0a0;}
+.login ul li:last-child::after {display:none;}
+.login .checks {position: relative;}
 
-.login .box .left {border-right: 1px solid #eee;}
-.login .box .left img {display: none;}
-.login .box .left h2 {font-size: 28px; font-weight: 300; margin-bottom: 16px;}
-.login .box .left h4 {font-size: 20px;}
-.login .box .left p {font-size: 14px;}
-.login .box .left ul {margin: 40px 0px 36px; display: flex;}
-.login .box .left .btn_login {padding: 16px; width: 120px; text-align: left; font-size: 16px; cursor: pointer; display: block; border: 1px solid #238bfd; border-radius: 16px;}
-.login .box .left li + li {margin-left: 12px;}
-.login .box .left .btn_login:hover {opacity: 0.8;}
-.login .box .left .btn_login div {text-align: center;}
-.login .box .left .btn_login i {font-size: 32px;}
-.login .box .left .btn_login span {font-weight: 500;}
-.login .box .left .git {color: #333; border-color:#333;}
-.login .box .left .google {color: #c92a2a; border-color: #c92a2a;}
-.login .box .left .facebook {color: #1971c2; border-color: #1971c2;}
-.login .box .left a {color: #004abf;}
-.login .box .right {display: flex; align-items: center; justify-content: center;}
-.login .box .right img {width: 90%;}
 /* -- 로그인 끝 -- */
-
-/* -- 마이페이지 시작 -- */
-.mypage .title h2 {font-size: 28px; font-weight: 300;}
-.mypage .info {padding: 48px 0 80px 0; border-bottom: 1px solid #ebebeb;}
-.mypage .info h2 {font-size: 24px; margin: 0 0 16px 0;}
-.mypage .info p {font-size: 16px;}
-.mypage .info .data {display: flex; margin: 28px 0px;}
-.mypage .info .data .thumbnail {margin-right: 28px;}
-.mypage .info .data .thumbnail img {width: 100px; border-radius: 100%; margin-top: 4px;}
-.mypage .info .data ul {font-size: 16px;}
-.mypage .info .data ul li + li {margin-top: 4px;}
-.mypage .info .data ul li .title {font-weight: 500; color: #8a8a8a; width: 80px; display: inline-block;}
-.mypage .info .data .email ul li .title {width: 160px;}
-.mypage .info .data .email ul li:last-child {padding-left: 162px;}
-.mypage .info .data .email {margin-left: 36px; width: 45%;}
-.mypage .info .data .email form {display: inline;}
-.mypage .info .data .email .email_input {width: 35%; border: 1.25px solid #d3d3d3; border-radius: 0px; padding: 0px 8px;}
-.mypage .info .data .email button {border:1px solid #6e6e73; background-color: #fff; color: #6e6e73; padding: 5px 12px; font-weight: 500;}
-.mypage .info .data .email button:hover {color:white; background-color: #004abf; border: 1px solid #004abf}
-.mypage .info .data .email .email_agree {display: none;}
-.mypage .info .data .email .email_agree + label {position: relative; padding-left: 28px; cursor: pointer;}
-.mypage .info .data .email .email_agree + label::before {content: ''; box-sizing: border-box; position: absolute; top: 0; left: 0; bottom: 0; border: 1px solid #d3d3d3; margin: auto; width: 20px; height: 20px; background-color: #fff; transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
-.mypage .info .data .email .email_agree + label::after {content: ''; position: absolute; top: -4px; left: 4px; bottom: 0; margin: auto; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; opacity: 0; transform: rotate(-45deg); transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
-.mypage .info .data .email .email_agree:checked + label::before {border-width: 4px; border-color: #004abf; background-color: #004abf;}
-.mypage .info .data .email .email_agree:checked + label::after {opacity: 1;}
-.mypage .info .data .email .description {font-size: 14px;}
-
-.mypage .withdraw {padding: 80px 0;}
-.mypage .withdraw h2 {font-size: 24px; margin: 0 0 16px 0;}
-.mypage .withdraw p {font-size: 16px;}
-.mypage .withdraw .contents {display: flex; margin: 28px 0px; align-items: center;}
-.mypage .withdraw .contents ul {background-color: #f2f2f2; color: #6e6e73; padding: 16px; font-size: 14px; width: 48%;  margin-right: 24px;}
-.mypage .withdraw .contents ul li div:first-child:before {content: "\F9DD"; display: inline-block; font: normal normal normal 24px/1 "Material Design Icons"; font-size: inherit; text-rendering: auto; line-height: inherit; -webkit-font-smoothing: antialiased;}
-.mypage .withdraw .contents ul li div {padding-left: 14px;}
-.mypage .withdraw .contents ul li div:first-child {padding-left:0px;}
-.mypage .withdraw .contents ul li + li {margin-top: 8px;}
-
-.mypage .withdraw .contents .action {display: flex; flex-direction: column;}
-.mypage .withdraw .contents .action .withdraw_agree {display: none;}
-.mypage .withdraw .contents .action .withdraw_agree + label {position: relative; padding-left: 28px; cursor: pointer;}
-.mypage .withdraw .contents .action .withdraw_agree + label::before {content: ''; box-sizing: border-box; position: absolute; top: 0; left: 0; bottom: 0; border: 1px solid #d3d3d3; margin: auto; width: 20px; height: 20px; background-color: #fff; transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
-.mypage .withdraw .contents .action .withdraw_agree + label::after {content: ''; position: absolute; top: -4px; left: 4px; bottom: 0; margin: auto; width: 10px; height: 6px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; opacity: 0; transform: rotate(-45deg); transition-property: all; transition-duration: .2s; transition-timing-function: ease-out;}
-.mypage .withdraw .contents .action .withdraw_agree:checked + label::before {border-width: 4px; border-color: #004abf; background-color: #004abf;}
-.mypage .withdraw .contents .action .withdraw_agree:checked + label::after {opacity: 1;}
-.mypage .withdraw .contents .action button {margin-top: 20px; width: 24%; padding: 8px; border: 1px solid #004abf; background-color: #004abf; color: #fff;}
-.mypage .withdraw .contents .action button:hover {opacity: 0.8;}
-.mypage .withdraw .contents .action button:disabled {border: 1px solid #6e6e73; background-color: #fff; color: #6e6e73;}
-.mypage .withdraw .contents .action button:disabled:hover {opacity: 1;}
-/* -- 마이페이지 끝 -- */

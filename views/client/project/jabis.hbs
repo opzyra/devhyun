@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='project' fix='fix'}}
 
@@ -39,11 +39,12 @@
 					</h2>
 					<p class="date">2018.07 ~ 2018.08</p>
 					<div class="icon">
+						<img src="/images/production.png" alt="배포" data-tippy-content="배포">
 						<img src="/images/responsive.png" alt="반응형" data-tippy-content="반응형">
 					</div>
 					<p class="url">
-						<span><i class="mdi mdi-github-circle"></i></span>
-						<a href="https://github.com/opzyra/jabis" target="_blank">https://github.com/opzyra/jabis</a>
+						<span><i class="mdi mdi-eventbrite"></i></span>
+						<a href="https://www.jabis.kr" target="_blank">https://www.jabis.kr</a>
 					</p>
 				</div>
 			</section>
@@ -100,7 +101,23 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'projectDetail')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			toolTip: function () {
+				tippy('.icon img', {
+					placement: 'bottom',
+					theme: 'devhyun',
+					distance: 2
+				});
+			},
+			init: function () {
+				APP.toolTip();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

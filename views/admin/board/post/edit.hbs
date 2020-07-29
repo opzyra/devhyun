@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>포스트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='bopost'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">포스트 수정</h2>
+          <p class="mg-b-0">등록된 포스트를 수정합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/board/post" class="nav-link">리스트</a>
+              <a href="javascript:void(0);" class="nav-link active">수정</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updatePost(); return false;">
+              <input name="idx" type="hidden" value="{{post.idx}}">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  제목 <span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="title" name="title" type="text" class="form-control d-inline wd-100p mg-r-10"
+                    autocomplete="off" value="{{post.title}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  썸네일
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div>
+                    <img id="thumbnailImg" alt="thumbnail" src="{{post.thumbnail}}" class="img-fluid mg-b-5 pointer"
+                      onclick="APP.thumbnailButton();">
+                  </div>
+                  <input id="thumbnailHdn" name="thumbnail" type="hidden" value="{{post.thumbnail}}">
+                  <input id="thumbnailInpFile" type="file" onchange="APP.thumbnailChange();" style="display:none;">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  내용 <span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div id="markdown">
+                    {{{post.contents}}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  태그
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input type="text" name="tags" class="form-control d-none wd-100p wd-md-100p" autocomplete="off"
+                    data-role="tagsinput" value="{{post.tags}}">
+                </div>
+              </div>
+
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.cancle();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div id="modalTemp" class="modal effect-scale">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content modal-content-demo">
+        <div class="modal-header">
+          <h6 class="modal-title">임시 저장글</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" onsubmit="return APP.submitSearchTemp();">
+            <div class="form-group d-sm-flex">
+              <input id="tempQuery" name="query" type="text" class="form-control input-sm" placeholder="임시 저장글을 검색해주세요."
+                autocomplete="off">
+              <div class="mg-sm-l-10 mg-t-10 mg-sm-t-0">
+                <button type="submit" class="btn btn-az-primary pd-x-20 pd-y-5"><i class="mdi mdi-magnify"></i></button>
+              </div>
+            </div>
+          </form>
+          <div id="tempList" style="height: 400px; overflow-y: scroll;"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-az-primary" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      EDITOR: {},
+      SAVEKEY: COMMON.randomString(20),
+      thumbnailButton: function () { // 이미지 업로드 클릭 처리
+        $('#thumbnailInpFile').val('');
+        $('#thumbnailInpFile').trigger('click');
+      },
+      thumbnailChange: function () {	// 이미지 변화 감지
+        var target = event.target;
+        var files = target.files;
+        if (!CHECK.isImageSize(files)) {
+          Swal.fire({ type: 'error', title: '오류', text: '이미지는 최대 2MB까지 업로드가 가능합니다.' });
+          return
+        }
+
+        let multipart = new FormData();
+        multipart.append('file', files[0]);
+
+        AJAX.thumbnail('/upload/thumbnail', { width: 627, height: 414 }, multipart)
+          .then(function (res) {
+            var img = res.src;
+            $('#thumbnailImg').attr('src', img);
+            $('#thumbnailImg').css('display', 'block');
+            $('#thumbnailBtn').css('display', 'none');
+            $('#thumbnailHdn').val(img);
+          });
+      },
+      updatePost: function () {
+
+        var form = $(event.target).serializeObject();
+
+        // 내용
+        var contents = APP.EDITOR.getMarkdown();
+
+        var validate = true;
+        var message = '';
+
+        if (form.title == '') {
+          validate = false;
+          message = '제목을 입력해주세요.';
+        } else if (contents == '') {
+          validate = false;
+          message = '내용을 입력해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        // 게시글 처리
+        form.contents = contents;
+
+        // 첨부 파일 업로드
+        form.files = APP.FILE;
+
+        AJAX.put('/board/post/' + form.idx, form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                location.href = '/admin/board/post/detail?idx=' + form.idx;
+              });
+          });
+
+        return false;
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '입력하신 정보가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              history.back();
+            }
+          });
+      },
+      save: function () {
+        var contents = APP.EDITOR.getMarkdown();
+        var title = $('#title').val();
+        var thumbnail = $('#thumbnailHdn').val();
+
+        if (contents == '') return;
+
+        var params = {
+          save_key: APP.SAVEKEY,
+          title: title || '임시 저장',
+          thumbnail: thumbnail || '/images/default_post.png',
+          contents: contents
+        }
+
+        AJAX.post('/editor/temp', params)
+          .then(function (res) {
+            COMMON.toast(res.message);
+          });
+      },
+      submitSearchTemp: function () {
+        var form = $(event.target).serializeObject();
+        var query = form.query;
+
+        AJAX.get('/editor/temp', { query: query })
+          .then(function (res) {
+            var items = res.temp;
+            $('#tempList').html('');
+            if (items.length == 0) {
+              var node = '<div class="text-center">검색결과가 없습니다.</div>';
+              $('#tempList').append(node);
+              return;
+            }
+
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var node = '<div class="search-item bd pd-y-10 pd-x-15 mg-b-10 mg-r-10"><div class="row pos-relative"><div class="col-12"><div class="pos-absolute t-0 r-20 tx-15-f z-index-10"><a href="javascript:void(0);" class="mg-l-5" onclick="APP.clickAddTemp(\'' + item.save_key + '\');"><i class="mdi mdi-plus"></i></a><a href="javascript:void(0);" class="mg-l-5" onclick="APP.clickDeleteTemp(\'' + item.save_key + '\');"><i class="mdi mdi-delete-empty"></i></a></div><h5 class="tx-inverse tx-16 mg-0"><span class="date">' + moment(item.reg_date).format('YYYY.MM.DD') + '</span><span class="mg-x-10 title">' + item.title + '</span></h5></div></div></div>';
+              $('#tempList').append(node);
+            }
+          });
+        return false;
+      },
+      buttonTempList: function () {
+        $('#tempQuery').val('');
+
+        // 임시 저장글 가져오기
+        AJAX.get('/editor/temp')
+          .then(function (res) {
+            var items = res.temp;
+            $('#tempList').html('');
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var node = '<div class="search-item bd pd-y-10 pd-x-15 mg-b-10 mg-r-10"><div class="row pos-relative"><div class="col-12"><div class="pos-absolute t-0 r-20 tx-15-f z-index-10"><a href="javascript:void(0);" class="mg-l-5" onclick="APP.clickAddTemp(\'' + item.save_key + '\');"><i class="mdi mdi-plus"></i></a><a href="javascript:void(0);" class="mg-l-5" onclick="APP.clickDeleteTemp(\'' + item.save_key + '\');"><i class="mdi mdi-delete-empty"></i></a></div><h5 class="tx-inverse tx-16 mg-0"><span class="date">' + moment(item.reg_date).format('YYYY.MM.DD') + '</span><span class="mg-x-10 title">' + item.title + '</span></h5></div></div></div>';
+              $('#tempList').append(node);
+            }
+
+            $('#modalTemp').modal('show');
+
+          });
+
+      },
+      clickAddTemp: function (save_key) {
+        Swal.fire({ title: '확인', html: '기존에 등록된 데이터가 삭제됩니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              AJAX.get('/editor/temp/' + save_key)
+                .then(function (res) {
+                  var temp = res.temp;
+                  $('#title').val(temp.title);
+                  $('#thumbnailImg').attr('src', temp.thumbnail);
+                  $('#thumbnailHdn').val(temp.thumbnail);
+                  APP.EDITOR.setHtml(temp.contents);
+                  APP.SAVEKEY = save_key;
+                  $('#modalTemp').modal('hide');
+                });
+            }
+          });
+      },
+      clickDeleteTemp: function (save_key) {
+        var target = $(event.target).closest('.search-item');
+        Swal.fire({ title: '확인', html: '임시저장된 글을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              AJAX.delete('/editor/temp/' + save_key)
+                .then(function (res) {
+                  target.remove();
+                });
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 에디터 초기화
+        APP.EDITOR = new tui.Editor({
+          el: document.querySelector('#markdown'),
+          initialEditType: 'markdown',
+          previewStyle: BROWSER.isMobile() ? 'tab' : 'vertical',
+          height: '700px',
+          language: 'ko_KR',
+          previewDelayTime: 0,
+          // exts: ['scrollSync'],
+          hooks: {
+            addImageBlobHook: function (blob, callback) {
+              if (!CHECK.isFileSize(blob)) {
+                Swal.fire({ type: 'error', title: '오류', text: '파일은 최대 2MB까지 업로드가 가능합니다.' });
+                return;
+              }
+
+              if (!blob) return;
+
+              var multipart = new FormData();
+              multipart.append('file', blob);
+
+              AJAX.file('/upload/image', multipart)
+                .then(function (res) {
+                  if (res) {
+                    callback(res.src, res.name);
+                  }
+                });
+            }
+          }
+        });
+
+        var toolbar = APP.EDITOR.getUI().getToolbar();
+
+        toolbar.addButton({
+          name: 'emoji',
+          tooltip: '이모티콘',
+          $el: $('<button class="emoji button"></button>')
+        }, 14);
+
+        toolbar.addButton({
+          name: 'temp',
+          tooltip: '임시저장',
+          $el: $('<button class="temp button"></button>')
+        }, 15);
+
+        toolbar.addButton({
+          name: 'load',
+          tooltip: '불러오기',
+          $el: $('<button class="load button"></button>')
+        }, 16);
+
+        $('.emoji').lsxEmojiPicker({
+          width: 240,
+          twemoji: true,
+          onSelect: function (emoji) {
+            var value = APP.EDITOR.getHtml();
+            APP.EDITOR.setHtml(value + emoji.value);
+          }
+        });
+
+        $('.temp').click(function () { APP.save(); });
+        $('.load').click(function () { APP.buttonTempList(); });
+
+        // ctrl + s 임시저장
+        APP.EDITOR.commandManager.keyMapCommand['CTRL+S'] = 'Save';
+        $('#markdown').keydown(function (e) {
+          if (e.keyCode == 83 && e.ctrlKey) {
+            APP.save();
+          }
+        });
+
+      }
+
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

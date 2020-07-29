@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Project">
+  <select id="selectAllPage">
+    <choose>
+      <when test="sort == 'important'">
+        <bind name="sort" value="important"/>
+      </when>
+      <when test="sort == 'end'">
+        <bind name="sort" value="end"/>
+      </when>
+      <when test="sort == 'progress'">
+        <bind name="sort" value="progress"/>
+      </when>
+      <otherwise>
+      </otherwise>
+    </choose>
+    SELECT 
+      member.name, member.thumbnail, project.* 
+    FROM 
+      project, member
+    <if test="join != ''">
+      ,project_member
+    </if>
+    WHERE
+      project.member_idx = member.idx
+    <if test="join != ''">
+    AND project_member.member_idx = ${member_idx}
+    </if>
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="important != ''">
+    AND important = ${important}
+    </if>
+    <if test="now != '' AND complete == ''">
+    <![CDATA[
+    AND progress < 100
+    ]]>
+    </if>
+    <if test="now == '' AND complete != ''">
+    <![CDATA[
+    AND progress = 100
+    ]]>
+    </if>
+    
+    <trim prefix="ORDER BY" prefixOverrides=",">
+    <if test="sort != ''">
+    ,${sort}
+    <if test="order != ''">
+       desc
+    </if>
+    </if>
+    ,idx desc
+    </trim>
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      project
+    <if test="join != ''">
+      ,project_member
+    </if>
+    WHERE
+      1=1
+    <if test="join != ''">
+    AND project_member.member_idx = ${member_idx}
+    </if>
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="important != ''">
+    AND important = ${important}
+    </if>
+    <if test="now != '' AND complete == ''">
+    <![CDATA[
+    AND progress < 100
+    ]]>
+    </if>
+    <if test="now == '' AND complete != ''">
+    <![CDATA[
+    AND progress = 100
+    ]]>
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as name,
+      member.thumbnail as thumbnail,
+      project.* 
+    FROM 
+      project, member 
+    WHERE 
+      project.member_idx = member.idx
+    AND
+      project.idx = ${idx}
+  </select>
+  <select id="selectFkMember">
+    SELECT 
+      member.idx, member.name, member.thumbnail
+    FROM
+      project_member,
+      member
+    WHERE
+      project_member.project_idx = ${idx}
+    AND
+      project_member.member_idx = member.idx
+  </select>
+  <insert id="insertOne">
+    INSERT INTO project
+    (
+      member_idx,
+      title, 
+      description, 
+      important,
+      progress,
+      start,
+      end,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx},
+      #{title}, 
+      #{description},
+      ${important},
+      ${progress},
+      #{start},
+      #{end},
+      NOW()
+    )
+  </insert>
+  <insert id="insertFkMember">
+    INSERT INTO project_member
+    (
+      project_idx,
+      member_idx
+    )
+    VALUES
+    (
+      ${project_idx},
+      ${member_idx}
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      project 
+    SET
+      title = #{title},
+      description = #{description},
+      important = ${important},
+      start = #{start},
+      end = #{end}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateProgress">
+    UPDATE 
+      project 
+    SET
+      progress = ${progress}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM project
+    WHERE
+      idx = ${idx}
+  </delete>
+  <delete id="deleteFkMember">
+    DELETE
+    FROM project_member
+    WHERE
+      project_idx = ${project_idx}
+  </delete>
+</mapper>

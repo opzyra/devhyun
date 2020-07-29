@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="EditorTemp">
+  <select id="selectAll">
+    SELECT 
+      *
+    FROM 
+      editor_temp
+    WHERE
+      1=1
+    <if test="query != ''">
+    AND 
+    (
+      title LIKE CONCAT('%', #{query}, '%')
+      OR 
+      contents LIKE CONCAT('%', #{query}, '%')
+    )
+    </if>
+    ORDER BY
+      reg_date DESC
+  </select>
+  <select id="selectOne">
+    SELECT 
+      *
+    FROM 
+      editor_temp
+    WHERE
+      save_key = #{save_key}
+  </select>
+  <insert id="insertOne">
+  <![CDATA[
+    INSERT INTO editor_temp
+    (
+      save_key,
+      title,
+      thumbnail,
+      contents, 
+      reg_date
+    )
+    VALUES
+    (
+      #{save_key}, 
+      #{title}, 
+      #{thumbnail}, 
+      #{contents}, 
+      NOW()
+    )
+    ON DUPLICATE KEY UPDATE
+    title = #{title},
+    thumbnail = #{thumbnail},
+    contents = #{contents},
+    reg_date = NOW()
+  ]]>
+  </insert>
+  <delete id="deleteOne">
+    DELETE
+    FROM editor_temp
+    WHERE
+      save_key = #{save_key}
+  </delete>
+</mapper>

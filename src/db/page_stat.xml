@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PageStat">
+  <select id="selectBatch">
+    SELECT 
+      reg_ymd AS ymd, 
+      page, 
+      COUNT(*) AS rcount 
+    FROM 
+      session_log 
+    WHERE 
+      page != '' 
+    AND 
+      reg_ymd = #{ymd} 
+    GROUP BY 
+      page
+  </select>
+  <select id="selectPageList">
+  <![CDATA[
+    SELECT 
+      page, 
+      SUM(rcount) AS rcount 
+    FROM 
+      page_stat 
+    WHERE 
+      ymd >= DATE_FORMAT(#{start}, '%Y%m%d') 
+    AND 
+      ymd <= DATE_FORMAT(#{end}, '%Y%m%d') 
+    GROUP BY 
+      page 
+    ORDER BY 
+      rcount DESC
+  ]]>
+  </select>
+  <insert id="insertOne">
+    INSERT INTO page_stat
+    (
+      ymd, 
+      page, 
+      rcount, 
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{page}, 
+      ${rcount}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

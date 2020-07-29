@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DtStat">
+  <select id="selectBatch">
+  <![CDATA[
+    SELECT 
+      #{ymd} as ymd, 
+      reg_dow as dow, 
+      reg_hh AS hour, 
+      COUNT(*) AS rcount 
+    FROM 
+      session_log 
+    WHERE 
+      reg_ymd = #{ymd} 
+    GROUP BY 
+      reg_hh
+  ]]>
+  </select>
+  <select id="selectDtData">
+  <![CDATA[
+    SELECT IFNULL(SUM(vds.rcount), 0) AS rcount FROM 
+			(SELECT * FROM dt_stat WHERE ymd <= #{ymd}) AS vds RIGHT JOIN
+			(
+				SELECT dowtable.dow, hourtable.hour FROM 
+			(
+				SELECT 0 AS dow
+				UNION ALL
+				SELECT 1 AS dow
+				UNION ALL
+				SELECT 2 AS dow
+				UNION ALL
+				SELECT 3 AS dow
+				UNION ALL
+				SELECT 4 AS dow
+				UNION ALL
+				SELECT 5 AS dow
+				UNION ALL
+				SELECT 6 AS dow
+			) AS dowtable CROSS JOIN
+			(
+				SELECT '23' AS hour
+				UNION ALL
+				SELECT '22' AS hour
+				UNION ALL
+				SELECT '21' AS hour
+				UNION ALL
+				SELECT '20' AS hour
+				UNION ALL
+				SELECT '19' AS hour
+				UNION ALL
+				SELECT '18' AS hour
+				UNION ALL
+				SELECT '17' AS hour
+				UNION ALL
+				SELECT '16' AS hour
+				UNION ALL
+				SELECT '15' AS hour
+				UNION ALL
+				SELECT '14' AS hour
+				UNION ALL
+				SELECT '13' AS hour
+				UNION ALL
+				SELECT '12' AS hour
+				UNION ALL
+				SELECT '11' AS hour
+				UNION ALL
+				SELECT '10' AS hour
+				UNION ALL
+				SELECT '09' AS hour
+				UNION ALL
+				SELECT '08' AS hour
+				UNION ALL
+				SELECT '07' AS hour
+				UNION ALL
+				SELECT '06' AS hour
+				UNION ALL
+				SELECT '05' AS hour
+				UNION ALL
+				SELECT '04' AS hour
+				UNION ALL
+				SELECT '03' AS hour
+				UNION ALL
+				SELECT '02' AS hour
+				UNION ALL
+				SELECT '01' AS hour
+				UNION ALL
+				SELECT '00' AS hour
+			) AS hourtable
+		) AS dt
+		ON vds.dow = dt.dow AND vds.HOUR = dt.HOUR
+		GROUP BY dt.dow, dt.HOUR
+		ORDER BY dt.dow, dt.hour DESC
+  ]]>
+  </select>
+  <insert id="insertOne">
+    INSERT INTO dt_stat
+    (
+      ymd, 
+      dow, 
+      hour, 
+      rcount,
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{dow},
+      #{hour},
+      ${rcount}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

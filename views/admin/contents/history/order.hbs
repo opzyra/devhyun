@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>타임라인 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='cthistory'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">타임라인 순서</h2>
+          <p class="mg-b-0">타임라인의 순서를 관리합니다. 연도와 월의 순서로 먼저 정렬되고 그 후에 지정한 순서로 정렬됩니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/contents/history" class="nav-link">리스트</a>
+              <a href="/admin/contents/history/order" class="nav-link active">순서</a>
+              <a href="/admin/contents/history/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <div class="row mg-b-20">
+              <div class="col-12 col-md-10 d-none d-md-block"><span class="">※</span> 마우스로 드래그하여 순서를 변경한 후 저장
+                버튼을 꼭 클릭해주세요.</div>
+              <div class="col-12 col-md-2 text-right">전체 {{historyList.row}}개</div>
+            </div>
+
+            <ul id="sortable">
+              {{#each historyList.items}}
+              <li class="item" data-idx="{{idx}}">
+                <div class="bd pd-20 mg-b-20">
+                  <div class="row pos-relative">
+                    <div class="pos-absolute t-0 r-20 tx-15-f z-index-10 d-md-none">
+                      <a href="javascript:void(0);" class="mg-l-5" onclick="APP.buttonUpHistory()"><i
+                          class="mdi mdi-arrow-up"></i></a>
+                      <a href="javascript:void(0);" onclick="APP.buttonDownHistory()"><i
+                          class="mdi mdi-arrow-down"></i></a>
+                    </div>
+                    <div class="pos-absolute t-0 r-20 tx-15-f z-index-10 d-none d-md-block">
+                      <a href="javascript:void(0);" class="mg-l-5"><i class="mdi mdi-drag-variant"></i></a>
+                    </div>
+                    <div class="col-12">
+                      <h5 class="tx-inverse">{{this.year}}.{{month}}<span class="mg-x-10">{{contents}}</span></h5>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              {{else}}
+              <li>
+                <div class="text-center">
+                  등록된 타임라인이 없습니다.
+                </div>
+              </li>
+              {{/each}}
+            </ul>
+            {{#equalsLength historyList.items 0}}
+            {{else}}
+            <div class="row mg-t-20">
+              <div class="col-12 text-right">
+                <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                  onclick="APP.cancle();">취소</button>
+                <button type="button" class="btn btn-az-primary btn-border pd-x-20"
+                  onclick="APP.buttonOrderHistory();">저장</button>
+              </div>
+            </div>
+            {{/equalsLength}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      buttonUpHistory: function () {
+        var target = event.target;
+        // 최상단에 있는 경우
+        if ($('.item').first().attr('data-idx') == $(target).attr('data-idx')) {
+          return;
+        }
+
+        var item = $(target).closest('.item');
+        item.after(item.prev());
+      },
+      buttonDownHistory: function () {
+        var target = event.target;
+        // 최하단에 있는 경우
+        if ($('.item').last().attr('data-idx') == $(target).attr('data-idx')) {
+          return;
+        }
+
+        var item = $(target).closest('.item');
+        item.before(item.next());
+      },
+      buttonOrderHistory: function () { // 협력기업 순서 변경
+
+        var items = $('.item').map(function (i, e) {
+          return $(e).attr('data-idx')
+        }).toArray();
+
+        AJAX.post('/history/order', { items: items })
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () { location.href = '/admin/contents/history' });
+          });
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '순서가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              history.back();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+        $("#sortable").sortable();
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

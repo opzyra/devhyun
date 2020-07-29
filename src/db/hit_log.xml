@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HitLog">
+  <select id="selectOne">
+    SELECT 
+      * 
+    FROM 
+      hit_log
+    WHERE
+      ip = #{ip}
+    AND
+      board = #{board}
+    AND
+      board_idx = ${board_idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO hit_log
+    (
+      ip,
+      board,
+      board_idx, 
+      reg_date
+    )
+    VALUES
+    (
+      #{ip}, 
+      #{board}, 
+      ${board_idx},
+      NOW()
+    )
+  </insert>
+  <delete id="deleteYmd">
+  <![CDATA[
+    DELETE
+    FROM hit_log
+    WHERE
+      DATE_FORMAT(reg_date,'%y%m%d') <= #{ymd}
+  ]]>
+  </delete>
+</mapper>

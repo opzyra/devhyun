@@ -19,7 +19,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='blog' fix='fix'}}
 
@@ -43,9 +43,9 @@
 						{{post.title}}
 					</h2>
 					<div class="date">
-						{{parseDate post.reg 'YYYY.MM.DD'}}
+						{{parseDate post.reg_date 'YYYY.MM.DD'}}
 						<div class="icon">
-							{{#isNewPost post.reg}}
+							{{#isNewPost post.reg_date}}
 							<img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
 							{{/isNewPost}}
 							{{#isHotPost post.hit}}
@@ -80,62 +80,14 @@
 							<a href="/blog/tag/{{this}}">{{this}}</a>
 							{{/each}}
 						</div>
+						{{!--
 						<div class="comments">
 							<div>
-								<h3>{{length comments}}개의 댓글</h3>
-								<ul>
-									{{#each comments}}
-									<li>
-										<div class="thumb">
-											<img src="{{thumbnail}}" alt="{{name}}">
-											<div class="mode">선택</div>
-										</div>
-										<div class="description">
-											<h4>{{name}}<span>{{parseDiffDate reg}}</span></h4>
-											{{#if target_idx}}<h5>@{{target_name}}</h5>{{/if}}
-											<p>{{{lineBreak contents}}}</p>
-											<div class="menu">
-												{{#if ../session.member}}
-												{{#neq ../session.member.idx member_idx}}
-												<a href="javascript:;" onclick="APP.reply({{member_idx}})"><i
-														class="mdi mdi-plus-outline"></i>댓글</a>
-												{{else}}
-												<a href="javascript:;" onclick="APP.updateModeComment({{idx}})"><i
-														class="mdi mdi mdi-pen"></i>수정</a>
-												<a href="javascript:;" onclick="APP.deleteComment({{idx}})"><i
-														class="mdi mdi-window-close"></i>삭제</a>
-												{{/neq}}
-												{{/if}}
-											</div>
-										</div>
-									</li>
-									{{/each}}
-								</ul>
-								{{#if session.member}}
-								<form id="commentForm" method="POST" onsubmit="APP.createComment()" class="">
-									<input name="board" type="hidden" value="post">
-									<input name="board_idx" type="hidden" value="{{post.idx}}">
-									<textarea name="contents" rows="1"></textarea>
-									<div class="submit">
-										{{#if comments_member}}
-										<select name="target_idx">
-											<option value="">글쓴이를 선택하세요</option>
-											{{#each comments_member}}
-											<option value="{{idx}}">{{name}}</option>
-											{{/each}}
-										</select>
-										{{/if}}
-										<button class="btn_submit" type="submit">작성</button>
-										<button class="btn_cancel" type="button" onclick="APP.updateModeCommentCancel()">취소</button>
-									</div>
-								</form>
-								{{else}}
-								<div class="no-authorized">
-									<a href="javascript:;" onclick="COMMON.redirectLogin();">로그인</a>을 하시면 댓글을 작성할 수 있어요 !
-								</div>
-								{{/if}}
+								<h3>0개의 댓글</h3>
+								<textarea rows="1"></textarea>
 							</div>
 						</div>
+						--}}
 						{{#if series}}
 						<div class="series">
 							<h2>시리즈</h2>
@@ -180,7 +132,7 @@
 								{{#each relation}}
 								<li {{#eq idx ../post.idx}}class="this" {{/eq}}>
 									<a href="{{#eq idx ../post.idx}}javascript:void(0);{{else}}/blog/post/{{idx}}{{/eq}}">
-										<div class="date">{{parseDate reg 'YYYY.MM.DD'}}</div>
+										<div class="date">{{parseDate reg_date 'YYYY.MM.DD'}}</div>
 										<h3>{{title}}</h3>
 										<p class="visual_pc">{{parseMarkdown contents 200}}</p>
 										<p class="visual_mobile">{{parseMarkdown contents 80}}</p>
@@ -208,7 +160,70 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'postDetail')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			toolTip: function () {
+				tippy('.icon img', {
+					placement: 'bottom',
+					theme: 'devhyun',
+					distance: 2
+				});
+			},
+			aside: function () {
+				$('aside').stick_in_parent({ offset_top: 80 });
+				var tocs = $('#toc a').map(function (i, e) {
+					var item = $(e).attr('href');
+					return $(item)[0].offsetTop + 50;
+				}).toArray();
+
+				var scroll = _.throttle(function () {
+					var top = $(document).scrollTop();
+					for (var i = 0; i < tocs.length; i++) {
+						var item = tocs[i];
+						var item_next = tocs[i + 1] ? tocs[i + 1] : $(document).innerHeight();
+						if (top >= item && top < item_next) {
+							$('#toc a').removeClass('on');
+							$('#toc a').eq(i).addClass('on');
+							break;
+						}
+					}
+				}, 250);
+
+				$(document).scroll(scroll);
+
+			},
+			seriesSlide: function () {
+				var odr = $('.swiper-slide.this').each(function (i, e) {
+					var init = parseInt($(e).attr('data-idx'));
+					new Swiper('.series-swiper' + i, {
+						slidesPerView: 1,
+						initialSlide: init,
+						simulateTouch: false,
+						speed: 500,
+						spaceBetween: 30,
+						loop: false,
+						pagination: {
+							el: '.swiper-pagination',
+							type: 'fraction',
+						},
+						navigation: {
+							nextEl: '.swiper-next',
+							prevEl: '.swiper-prev',
+						},
+					});
+				});
+
+			},
+			init: function () {
+				APP.aside();
+				APP.toolTip();
+				APP.seriesSlide();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

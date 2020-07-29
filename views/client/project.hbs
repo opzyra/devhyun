@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='project' fix='fix'}}
 
@@ -172,7 +172,23 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'project')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			scroll: function () {
+				var query = BROWSER.getQueryString();
+				if (query.scroll == 'private') {
+					$('html').scrollTop(BROWSER.isMobile() ? 1000 : 735);
+				}
+			},
+			init: function () {
+				APP.scroll();
+
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>회원 정보 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white-box">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mblist'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">회원 정보</h2>
+          <p class="mg-b-0">회원의 상세 정보 입니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/member/list" class="nav-link">리스트</a>
+              <a href="javascript:void(0);" class="nav-link active">상세정보</a>
+              <a href="/admin/member/adjournal/create?idx={{member.idx}}" class="nav-link">상담등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row row-sm">
+        <div class="col-12">
+          <div class="card card-body mg-b-20">
+            <h3 class="card-title">{{member.name}}<span class="tx-14 mg-l-5">({{member.id}})</span></h3>
+            <div class="more">
+              {{#if member.withdraw}}
+              <span class="d-inline-block text-center tx-28 mg-l-10">
+                <i class="mdi mdi-close-box-outline"></i>
+                <span class="tx-14 d-none d-md-block">탈퇴</span>
+              </span>
+              {{else}}
+              {{#if member.active}}
+              <span class="d-inline-block text-center tx-28 mg-l-10">
+                <i class="mdi mdi-account-box"></i>
+                <span class="tx-14 d-none d-md-block">활성화</span>
+              </span>
+              {{else}}
+              <span class="d-inline-block text-center tx-28 mg-l-10">
+                <i class="mdi mdi-close-circle"></i>
+                <span class="tx-14 d-none d-md-block">정지</span>
+              </span>
+              {{/if}}
+              {{/if}}
+
+              {{#if member.pay}}
+              <span class="d-inline-block text-center tx-28 mg-l-10">
+                <i class="mdi mdi-face-profile"></i>
+                <span class="tx-14 d-none d-md-block">가입비</span>
+              </span>
+              {{/if}}
+              {{#if member.default_consult}}
+              <span class="d-inline-block text-center tx-28 mg-l-10">
+                <i class="mdi mdi-check"></i>
+                <span class="tx-14 d-none d-md-block">설문</span>
+              </span>
+              {{/if}}
+            </div>
+            <p class="az-profile-name-text">
+              {{#if (eq member.division "개인")}}
+              <span>{{genderTxt member.gender}}</span>
+              <span class="mg-x-3">|</span>
+              <span>{{parseAge member.birth}}세</span>
+              <span class="mg-x-3">|</span>
+              {{/if}}
+              <span>{{memberGrade member.role member.pay}}</span>
+              <span class="mg-x-3">|</span>
+              <span>{{member.division}}</span>
+            </p>
+          </div>
+        </div>
+        <div class="col-12 col-lg-3">
+          <div class="card card-body mg-b-20">
+            <h5 class="card-title mg-b-20">기본 정보</h5>
+            <div class="az-profile-social-list">
+              {{#if (eq member.division "개인")}}
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-calendar"></i></div>
+                <div class="media-body">
+                  <span class="label">생년월일</span>
+                  <a>{{parseDateTxt member.birth}}</a>
+                </div>
+              </div>
+              {{/if}}
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-cellphone"></i></div>
+                <div class="media-body">
+                  <span class="label">연락처</span>
+                  <a href="tel:{{member.phone}}">{{member.phone}}</a>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-map-marker-outline"></i></div>
+                <div class="media-body">
+                  <span class="label">주소</span>
+                  <span>{{member.road_address}} {{member.more_address}} ({{member.zonecode}})</span>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-email"></i></div>
+                <div class="media-body">
+                  <span class="label">이메일</span>
+                  <span>{{member.email}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {{#if member.protector_name}}
+          <div class="card card-body mg-b-20">
+            <h5 class="card-title mg-b-20">보호자 정보</h5>
+            <div class="az-profile-social-list">
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-account-outline"></i></div>
+                <div class="media-body">
+                  <span class="label">이름</span>
+                  <a>{{member.protector_name}}</a>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-human-male-female"></i></div>
+                <div class="media-body">
+                  <span class="label">관계</span>
+                  <a>{{member.protector_relation}}</a>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-cellphone"></i></div>
+                <div class="media-body">
+                  <span class="label">연락처</span>
+                  <a href="tel:{{member.protector_phone}}">{{member.protector_phone}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{/if}}
+
+          <div class="card card-body mg-b-20">
+            <h5 class="card-title mg-b-20">상담 내역</h5>
+            <div class="az-profile-social-list">
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-checkbox-marked-circle-outline"></i></div>
+                <div class="media-body">
+                  <span class="label">상담 횟수</span>
+                  <a>{{adjournalList.row}}회</a>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-icon"><i class="mdi mdi-calendar"></i></div>
+                <div class="media-body">
+                  <span class="label">마지막 상담일</span>
+                  <a>{{latest_date}}</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-9">
+          {{#if (eq member.division "개인")}}
+          <div class="card card-body mg-b-20 az-contact-info-body">
+            <h5 class="card-title mg-b-20">추가 정보</h5>
+            <div class="media-list">
+              <div class="media">
+                <div class="media-body">
+                  <div>
+                    <label>장애유형 및 등급</label>
+                    <span class="tx-medium">
+                      {{#eq member.obstacle 0}}
+                      등급 없음
+                      {{else}}
+                      {{member.obstacle}}급
+                      {{/eq}}
+                    </span>
+                  </div>
+                  <div>
+                    <label>듣기 나이</label>
+                    <span class="tx-medium">
+                      {{#if member.ear_birth}}
+                      만 {{parseRealAge member.ear_birth}}세
+                      {{else}}
+                      미입력
+                      {{/if}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-body">
+                  <div>
+                    <label>직업</label>
+                    <span class="tx-medium">
+                      {{#if member.job}}
+                      {{member.job}}
+                      {{else}}
+                      미입력
+                      {{/if}}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="media">
+              </div>
+            </div>
+          </div>
+          {{/if}}
+          <div class="card card-body mg-b-20 az-contact-info-body card-item br-0">
+            <h5 class="card-title mg-b-0 pointer" onclick="APP.cardCollapse()">서비스 이용 내역</h5>
+            <div class="card-actions">
+              <span class="d-inline-block text-center mg-l-10">
+                <a class="card-collapse" href="javascript:void(0);" onclick="APP.moreService('{{member.name}}')"><i
+                    class="mdi mdi-magnify"></i></a>
+                <a class="card-action" onclick="APP.cardCollapse()"><i class="mdi panel-toggle"></i></a>
+              </span>
+            </div>
+            <div class="card-body mg-t-20">
+              <div class="table-responsive">
+                <table class="table table-striped table-talk-time">
+                  <thead>
+                    <tr>
+                      <th class="wd-10p text-center">번호</th>
+                      <th class="wd-10p text-center">상태</th>
+                      <th class="wd-20p text-center">분류</th>
+                      <th class="wd-20p text-center">이용금액</th>
+                      <th class="d-none d-md-table-cell text-center">접수일</th>
+                      <th class="d-none d-md-table-cell text-center">종료일</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each serviceList}}
+                    <tr class="pointer" onclick="APP.serviceDetail({{idx}});">
+                      <td class="text-center">{{mkIdxlimitUpper ../serviceList.length}}</td>
+                      <td class="text-center">{{status}}</td>
+                      <td class="text-center">{{type}}</td>
+                      <td class="text-center">{{numberMoney price}}</td>
+                      <td class="d-none d-md-table-cell text-center">{{fmtymd reg_date}}</td>
+                      <td class="d-none d-md-table-cell text-center">
+                        {{#if end_date}}{{fmtymd end_date}}{{else}}-{{/if}}
+                      </td>
+                    </tr>
+                    {{else}}
+                    <tr>
+                      <td colspan="6" class="text-center">서비스 이용내역이 없습니다.</td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+
+          {{#if member.default_consult}}
+          <div class="card card-body mg-b-20 az-contact-info-body az-content-body-profile card-item br-0">
+            <h5 class="card-title mg-b-0">상담 초기 설문지</h5>
+            <div class="card-actions">
+              <span class="d-inline-block text-center mg-l-10">
+                <a class="card-collapse" style="display:none;" href="javascript:void(0);"
+                  onclick="APP.adjournalCollapse()"><i class="mdi mdi-collapse-all"></i></a>
+                <a class="card-action" onclick="APP.cardCollapse()"><i class="mdi panel-toggle"></i></a>
+              </span>
+            </div>
+            <div class="card-body mg-t-20">
+              <div class="media-list">
+                <h5 class="mg-b-15 tx-16 interview-title"><i class="mdi mdi-check mg-r-5"></i>상담 기본 정보</h5>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>어지럼증</label>
+                      <span class="tx-medium">{{booleanToText interview.dizziness}}</span>
+                    </div>
+                    <div>
+                      <label>이명</label>
+                      <span class="tx-medium">{{booleanToText interview.tinnitus}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>내이 기형, 청신경 병증 진단</label>
+                      <span class="tx-medium">{{booleanToText interview.inear}}</span>
+                    </div>
+                    <div>
+                      <label>내수막염, 당뇨</label>
+                      <span class="tx-medium">{{booleanToText interview.meningitis}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>가족력</label>
+                      <span class="tx-medium">{{booleanToText interview.famillyhis}}</span>
+                    </div>
+                    <div>
+                      <label>내수막염, 당뇨 유무</label>
+                      <span class="tx-medium">{{booleanToText interview.meningitis}}</span>
+                    </div>
+                  </div>
+                </div>
+                {{#if interview.diagnosis}}
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>청각장애 진단명</label>
+                      <span class="tx-medium">{{textIfNull interview.diagnosis}}</span>
+                    </div>
+                    <div>
+                      <label>청각장애 진단 병원</label>
+                      <span class="tx-medium">{{textIfNull interview.hospital}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>청각장애 진단일</label>
+                      <span class="tx-medium">{{parseDateTxt interview.diagnosis}}</span>
+                    </div>
+                  </div>
+                </div>
+                {{/if}}
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>청력손실 발견시기</label>
+                      <span class="tx-medium">{{interview.loss_find}}</span>
+                    </div>
+                    <div>
+                      <label>청력손실 원인</label>
+                      <span class="tx-medium">{{textIfNull loss_cause}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>중복장애</label>
+                      <span class="tx-medium">{{textIfNull interview.dobstacle}}</span>
+                    </div>
+                    <div>
+                      <label>의사소통 방식</label>
+                      <span class="tx-medium">{{textIfNull interview.communication}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <h5 class="mg-b-15 tx-16 interview-title"><i class="mdi mdi-check mg-r-5"></i>청력평가</h5>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 미착용</label>
+                      <span class="tx-medium">{{textIfNull interview.lndb}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 미착용</label>
+                      <span class="tx-medium">{{textIfNull interview.rndb}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 착용</label>
+                      <span class="tx-medium">{{textIfNull interview.ldb}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 착용</label>
+                      <span class="tx-medium">{{textIfNull interview.rdb}}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {{#if member.ha_consult}}
+                <h5 class="mg-b-15 tx-16 interview-title"><i class="mdi mdi-check mg-r-5"></i>보청기 관련 정보</h5>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 착용 시기</label>
+                      <span class="tx-medium">{{parseDateTxt interview.lha_date}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 착용 시기</label>
+                      <span class="tx-medium">{{parseDateTxt interview.rha_date}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 착용 기간</label>
+                      <span class="tx-medium">{{interview.lha_period}} 개월</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 착용 기간</label>
+                      <span class="tx-medium">{{interview.rha_period}} 개월</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 브랜드</label>
+                      <span class="tx-medium">{{textIfNull interview.lha_brand}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 브랜드</label>
+                      <span class="tx-medium">{{textIfNull interview.rha_brand}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 착용 유형</label>
+                      <span class="tx-medium">{{textIfNull interview.lha_type}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 착용 유형</label>
+                      <span class="tx-medium">{{textIfNull interview.rha_type}}</span>
+                    </div>
+                  </div>
+                </div>
+                {{/if}}
+
+                {{#if member.ci_consult}}
+                <h5 class="mg-b-15 tx-16 interview-title"><i class="mdi mdi-check mg-r-5"></i>인공와우 관련 정보</h5>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 이식 시기</label>
+                      <span class="tx-medium">{{parseDateTxt interview.lci_date}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 이식 시기</label>
+                      <span class="tx-medium">{{parseDateTxt interview.rci_date}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 브랜드</label>
+                      <span class="tx-medium">{{textIfNull interview.lci_brand}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 브랜드</label>
+                      <span class="tx-medium">{{textIfNull interview.rci_brand}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 이식 병원</label>
+                      <span class="tx-medium">{{interview.lci_hospital}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 이식 병원</label>
+                      <span class="tx-medium">{{interview.rci_hospital}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="media">
+                  <div class="media-body">
+                    <div>
+                      <label>왼쪽 담당 의사</label>
+                      <span class="tx-medium">{{textIfNull interview.lci_doctor}}</span>
+                    </div>
+                    <div>
+                      <label>오른쪽 담당 의사</label>
+                      <span class="tx-medium">{{textIfNull interview.rci_doctor}}</span>
+                    </div>
+                  </div>
+                </div>
+                {{/if}}
+
+              </div>
+            </div>
+          </div>
+          {{/if}}
+
+          {{#if adjournalList.items}}
+          <div class="card card-body mg-b-20 az-contact-info-body card-item br-0">
+            <h5 class="card-title mg-b-0 pointer" onclick="APP.cardCollapse()">상담 일지</h5>
+            <div class="card-actions">
+              <span class="d-inline-block text-center mg-l-10">
+                <a id="collapseOn" class="card-collapse" href="javascript:void(0);" onclick="APP.adjournalCollapse()"><i
+                    class="mdi mdi-expand-all"></i></a>
+                <a id="collapseOff" class="card-collapse" style="display:none;" href="javascript:void(0);"
+                  onclick="APP.adjournalCollapse()"><i class="mdi mdi-collapse-all"></i></a>
+                <a class="card-action" onclick="APP.cardCollapse()"><i class="mdi panel-toggle"></i></a>
+              </span>
+            </div>
+            <div class="card-body mg-t-10">
+              <div id="list">
+                {{#each adjournalList.items}}
+                <div class="card card-body pd-0-f list">
+                  <div class="panel-item consult-item is-collapse">
+                    <div class="panel-actions" style="right:0px !important;">
+                      <span class="badge badge-primary">{{way}}</span>
+                      {{#or own ma}}
+                      {{#if own}}
+                      <a href="/admin/member/adjournal/edit?idx={{idx}}" class="panel-action"><i
+                          class="mdi mdi-square-edit-outline"></i></a>
+                      {{/if}}
+                      <a class="panel-action" onclick="APP.buttonDeleteConsult({{idx}})"><i
+                          class="mdi mdi mdi-delete-empty"></i></a>
+                      {{/or}}
+                      <a class="panel-action" onclick="APP.adjournalPanel()"><i class="mdi panel-toggle"></i></a>
+                    </div>
+                    <div class="panel-heading">
+                      <div class="panel-title pd-x-0-f">
+                        <div class="d-inline-block az-img-user online mg-r-3">
+                          <img src="{{admin_thumbnail}}" alt="{{admin_name}}" data-toggle="tooltip-primary"
+                            data-placement="bottom" title="{{admin_name}}">
+                        </div>
+                        <span class="task-date d-sm-none">{{fmtymdhm consult_date}}</span>
+                        <span class="task-title d-block d-sm-inline mg-t-5 mg-r-3 pointer"
+                          onclick="APP.adjournalPanel()">{{type}}</span>
+                        <span class="task-date d-none d-sm-inline">{{fmtymdhm consult_date}}</span>
+                      </div>
+                    </div>
+                    <div class="panel-body pd-x-0-f">
+                      <div>
+                        {{{textToHtml contents}}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {{/each}}
+              </div>
+              {{#itemsMaxLength adjournalList.items 20}}
+              <div id="more" class="card card-body text-center list pd-20-f">
+                <a href="javascript:void(0);" onclick="APP.buttonMoreConsult()">더보기</a>
+              </div>
+              {{/itemsMaxLength}}
+            </div>
+
+          </div>
+          {{/if}}
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      COLLAPSED: false,
+      PAGE: 1,
+      TOTAL: 0,
+      cardCollapse: function () {
+        $(event.target).closest('.card-item').toggleClass('is-collapse');
+      },
+      adjournalPanel: function () {
+        $(event.target).closest('.panel-item').toggleClass('is-collapse');
+      },
+      adjournalCollapse: function () {
+        if (!APP.COLLAPSED) {
+          $('.consult-item').removeClass('is-collapse');
+          $('#collapseOn').css('display', 'none');
+          $('#collapseOff').css('display', 'inline');
+        } else {
+          $('.consult-item').addClass('is-collapse');
+          $('#collapseOn').css('display', 'inline');
+          $('#collapseOff').css('display', 'none');
+        }
+
+        APP.COLLAPSED = !APP.COLLAPSED;
+      },
+      buttonMoreConsult: function () {
+        if (APP.PAGE > APP.TOTAL - 1) return;
+        var param = BROWSER.getQueryString();
+        param.page = APP.PAGE + 1;
+        AJAX.get('/adjournal/', param)
+          .then(function (res) {
+            APP.PAGE = APP.PAGE + 1;
+            var items = res.adjournalList.items;
+
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var node = '<div class="card card-body pd-0-f list"><div class="panel-item consult-item ' + (APP.COLLAPSED ? '' : 'is-collapse') + '"><div class="panel-actions" style="right:0px !important;"><span class="badge badge-primary">' + item.way + '</span> '
+                + (item.ma || item.own ? (item.own ? ' <a href="/admin/member/adjournal/edit?idx=' + item.idx + '" class="panel-action"><i class="mdi mdi-square-edit-outline"></i></a>' : '') + ' <a class="panel-action" onclick="APP.buttonDeleteConsult(' + item.idx + ')"><i class="mdi mdi mdi-delete-empty"></i></a> <a class="panel-action" onclick="APP.adjournalPanel()"><i class="mdi panel-toggle"></i></a>' : '')
+                + '</div><div class="panel-heading"><div class="panel-title pd-x-0-f"><div class="d-inline-block az-img-user online mg-r-3"><img src="' + item.admin_thumbnail + '" alt="' + item.admin_name + '" data-toggle="tooltip-primary" data-placement="bottom" title="' + item.admin_name + '">'
+                + '</div><span class="task-date d-sm-none">' + moment(item.adjournal_date).format('YYYY.MM.DD') + '</span> <span class="task-title d-block d-sm-inline mg-t-5 mg-r-3 pointer" onclick="APP.adjournalPanel()">' + item.type + '</span>'
+                + ' <span class="task-date d-none d-sm-inline">' + moment(item.consult_date).format('YYYY.MM.DD') + '</span></div></div><div class="panel-body pd-x-0-f"><div>' + item.contents + '</div></div></div>';
+              $('#list').append(node);
+            }
+
+            if (APP.PAGE > APP.TOTAL - 1) {
+              $('#more').remove();
+            }
+          });
+      },
+      buttonDeleteConsult: function (idx) {
+        Swal.fire({ title: '확인', text: '상담일지를 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/adjournal/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { location.reload(); });
+                });
+            }
+          });
+      },
+      moreService: function (name) {
+        location.href = '/admin/service/provide?name=' + encodeURI(name);
+      },
+      serviceDetail: function (idx) {
+        location.href = '/admin/service/provide/detail?idx=' + idx;
+      },
+      init: function () { // 초기 스크립트 실행
+        // 전체 페이지 수
+        var total = {{{ adjournalList.totalPage
+    }}};
+    APP.TOTAL = total;
+
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

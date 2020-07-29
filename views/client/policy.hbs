@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header fix='fix'}}
 
@@ -103,7 +103,7 @@
 						<p>이메일: opzyra@gmail.com</p>
 						<br>
 						<p>기타 개인정보침해에 대한 신고나 상담이 필요한 경우에는 아래 회사에 문의하시기 바랍니다.</p>
-						<p>개인정보침해신고센터 (<a href="https://privacy.kisa.or.kr/" target="_blank">privacy.kisa.or.kr</a> / kisa)</p>
+						<p>개인정보침해신고센터 (<a href="http://www.118.or.kr" target="_blank">www.118.or.kr</a> / 118)</p>
 					</div>
 
 					<div>
@@ -118,7 +118,16 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'policy')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			init: function () {
+
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

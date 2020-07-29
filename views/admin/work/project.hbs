@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>프로젝트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wkproject'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">프로젝트</h2>
+          <p class="mg-b-0">진행중인 프로젝트를 확인하고 관리합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/project" class="nav-link active">리스트</a>
+              <a href="/admin/work/project/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET" onsubmit="return APP.search();">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  상태
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="pd-y-9">
+                    <div class="d-inline-block mg-t-5 mg-r-10">
+                      <label class="ckbox">
+                        <input id="now" name="now" type="checkbox" value="1"><span>진행</span>
+                      </label>
+                    </div>
+                    <div class="d-inline-block mg-t-5 mg-r-10">
+                      <label class="ckbox">
+                        <input id="complete" name="complete" type="checkbox" value="1"><span>완료</span>
+                      </label>
+                    </div>
+                    <div class="d-inline-block mg-t-5">
+                      <label class="ckbox">
+                        <input id="join" name="join" type="checkbox" value="1"><span>참여</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row form-warp form-sm align-items-center">
+                <div class="form-title">
+                  중요도
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <select id="important" name="important" class="form-control wd-60p wd-md-20p wd-lg-15p">
+                    <option value="">전체</option>
+                    <option value="1">높음</option>
+                    <option value="2">중간</option>
+                    <option value="3">낮음</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row form-warp form-sm align-items-center">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline ipn-sm mg-r-5 wd-30p wd-md-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="title">프로젝트명</option>
+                    </select>
+                    <input id="query" type="text" name="title"
+                      class="form-control d-inline ipn-sm wd-50p wd-md-20p mg-r-5" placeholder="검색어" autocomplete="off">
+                    <button class="btn-input ipn-sm btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body pd-t-0 ht-xl-100p">
+            <table class="az-table">
+              <thead>
+                <tr>
+                  <th class="wd-25p wd-md-10p"><a href="javascript:void(0);"
+                      onclick="BROWSER.orderQueryString('important');">중요도</a></th>
+                  <th>프로젝트명</th>
+                  <th class="d-none d-md-table-cell wd-20p">참여자</th>
+                  <th class="d-none d-md-table-cell wd-10p"><a href="javascript:void(0);"
+                      onclick="BROWSER.orderQueryString('end');">마감일</a></th>
+                  <th class="d-none d-md-table-cell wd-10p"><a href="javascript:void(0);"
+                      onclick="BROWSER.orderQueryString('end');">잔여일</a></th>
+                  <th class="d-none d-md-table-cell wd-5p"><a href="javascript:void(0);"
+                      onclick="BROWSER.orderQueryString('progress');">진행률</a></th>
+                  <th class="d-md-none wd-5p"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each projectList.items}}
+                <tr class="item">
+                  <td>
+                    {{{projectImpt important}}}
+                  </td>
+                  <td class="tx-center pd-0 tx-md-left-f pd-md-l-20-f"><a
+                      href="/admin/work/project/detail?idx={{idx}}">{{title}}</a></td>
+                  <td class="d-none d-md-table-cell text-left pd-x-20-f">
+                    {{#each members}}
+                    <div class="d-inline-block az-img-user online mg-r-5 mg-b-5"><img src="{{thumbnail}}" alt="{{name}}"
+                        data-toggle="tooltip-primary" data-placement="bottom" title="{{name}}"></div>
+                    {{/each}}
+                  </td>
+                  <td class="d-none d-md-table-cell">{{parseDate end 'YYYY.MM.DD'}}</td>
+                  <td class="d-none d-md-table-cell">{{projectRestDay end}}</td>
+                  <td class="d-none d-md-table-cell">{{projectProgress progress}}</td>
+                  <td class="d-md-none"></td>
+                </tr>
+                <tr class="sub">
+                  <td colspan="11" class="pd-0-f">
+                    <table class="table az-table-sub">
+                      <tbody>
+                        <tr>
+                          <td class="wd-40p">마감일</td>
+                          <td>{{parseDate end 'YYYY.MM.DD'}}</td>
+                        </tr>
+                        <tr>
+                          <td>잔여일</td>
+                          <td>{{projectRestDay end}}</td>
+                        </tr>
+                        <tr>
+                          <td>진행률</td>
+                          <td>{{projectProgress progress}}</td>
+                        </tr>
+                        <tr>
+                          <td>참여자</td>
+                          <td>
+                            {{#each members}}
+                            <div class="d-inline-block az-img-user online mg-r-5 mg-b-5"><img src="{{thumbnail}}" alt="{{name}}"
+                                data-toggle="tooltip-primary" data-placement="bottom" title="{{name}}"></div>
+                            {{/each}}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>작성자</td>
+                          <td>{{name}}</td>
+                        </tr>
+                        <tr>
+                          <td>작성일</td>
+                          <td>{{parseDate reg_date 'YYYY.MM.DD'}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                {{else}}
+                <tr class="item">
+                  <td class="item-none" colspan="6">데이터를 찾을 수 없습니다.</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            <div class="row mg-t-20">
+              <div class="col-12 tx-center">
+                <ul id="page" class="pagination"></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      clearFilter: function () { // 전체 목록 조회
+        location.href = location.href.replace(/\?.+/, '');
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        var value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      init: function () { // 초기 스크립트 실행
+        // 페이징
+        var totalPages = parseInt('{{projectList.totalPage}}') || 1;
+        var startPage = parseInt('{{projectList.page}}') + 1 || 1;
+
+        $('#page').twbsPagination({
+          totalPages: totalPages,
+          startPage: totalPages >= startPage ? startPage : 1,
+          visiblePages: (function () {
+            return BROWSER.isMobile() ? 5 : 10
+          })(),
+          first: '',
+          last: '',
+          prev: '<span>이전</span>',
+          next: '<span>다음</span>',
+          onPageClick: function (event, page) {
+            if (startPage == page) return;
+            if (location.href.indexOf('page') == -1) {
+              var isQuery = location.href.indexOf('?') >= 0;
+              location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+            } else {
+              location.href = location.href.replace(/page=.+/g, 'page=' + page);
+            }
+
+          }
+        });
+
+        // 쿼리스트링 데이터 초기화
+        var qstr = BROWSER.getQueryString();
+
+        if (qstr.title) {
+          $('#query').attr('name', 'title').val(qstr.title); $('#category').val('title');
+        }
+
+        if (qstr.now) {
+          $("#now").prop('checked', true);
+        }
+
+        if (qstr.complete) {
+          $('#complete').prop('checked', true);
+        }
+
+        if (qstr.join) {
+          $('#join').prop('checked', true);
+        }
+
+        if (qstr.important) {
+          $('#important').val(qstr.important);
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

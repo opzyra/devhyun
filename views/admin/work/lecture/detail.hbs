@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>노트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wklecture'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">노트 상세정보</h2>
+          <p class="mg-b-0">노트에 등록된 글의 상세 정보입니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/lecture" class="nav-link">리스트</a>
+              <a href="javascript:void(0);" class="nav-link active">상세정보</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <div class="form-warp-first"></div>
+            <div class="row form-warp align-items-center mg-t-0-f">
+              <div class="form-title">
+                작성자
+              </div>
+              <div class="form-input half mg-t-5 mg-md-t-0">
+                <div class="d-inline-block az-img-user online mg-r-5"><img src="{{lecture.member_thumbnail}}"
+                    alt="thumbnail">
+                </div>
+                <div class="d-inline-block pd-y-9">{{lecture.member_name}}</div>
+              </div>
+              <div class="form-title mg-t-15 mg-md-t-0">
+                작성일
+              </div>
+              <div class="form-input half mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{parseDate lecture.reg_date 'YYYY.MM.DD HH:mm:ss'}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title">
+                제목
+              </div>
+              <div class="form-input mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{lecture.title}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title">
+                내용
+              </div>
+              <div class="form-input mg-t-5 mg-md-t-0">
+                <div class="tui-editor-contents" style="min-height: 700px">
+                  {{{lecture.contents}}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row mg-t-20">
+              <div class="col-12 text-right">
+                <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                  onclick="APP.back();">뒤로</button>
+                {{#if lecture.own}}
+                <button type="button" class="btn btn-danger btn-border pd-x-20 mg-r-5"
+                  onclick="APP.deleteLecture({{lecture.idx}})">삭제</button>
+                <button type="button" class="btn btn-az-primary btn-border pd-x-20"
+                  onclick="location.href='/admin/work/lecture/edit?idx={{lecture.idx}}'">수정</button>
+                {{/if}}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      deleteLecture: function (idx) { // 삭제
+        Swal.fire({ title: '확인', text: '노트을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/lecture/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back() });
+                });
+            }
+          });
+      },
+      back: function () { // 뒤로가기 처리
+        history.back();
+      },
+      init: function () { // 초기 스크립트 실행
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

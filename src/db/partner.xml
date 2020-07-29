@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Partner">
+  <select id="selectAll">
+    SELECT 
+      * 
+    FROM 
+      partner
+    ORDER BY
+      odr
+  </select>
+  <select id="selectAllPage">
+    SELECT * FROM partner WHERE 1=1
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    ORDER BY odr
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countAllPage">
+    SELECT COUNT(*) AS row FROM partner
+    WHERE 1=1
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT * FROM partner WHERE idx = ${idx}
+  </select>
+  <select id="countAll">
+    SELECT COUNT(*) AS row FROM partner
+  </select>
+  <insert id="insertOne">
+    INSERT INTO partner
+    (
+      name,
+      odr,
+      logo, 
+      description,
+      url,
+      reg_date
+    )
+    VALUES
+    (
+      #{name}, 
+      ${odr},
+      #{logo}, 
+      #{description},
+      #{url},
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      partner 
+    SET
+      name = #{name}, 
+      logo = #{logo}, 
+      description = #{description},
+      url = #{url}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOrder">
+    UPDATE 
+      partner 
+    SET
+      odr = ${odr}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM partner
+    WHERE
+      idx = ${idx}
+  </delete>
+</mapper>

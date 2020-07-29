@@ -1,0 +1,255 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PostBoard">
+  <select id="selectAllQuery">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      post_board.* 
+    FROM 
+      post_board, member
+    WHERE
+      post_board.member_idx = member.idx
+    AND 
+    (
+      post_board.title LIKE CONCAT('%', #{query}, '%')
+      OR 
+      post_board.contents LIKE CONCAT('%', #{query}, '%')
+    )
+  </select>
+  <select id="selectAllPage">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      post_board.*
+    FROM 
+      post_board, member
+    WHERE
+      post_board.member_idx = member.idx
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="selectLatest">
+    SELECT 
+      * 
+    FROM 
+      post_board
+    ORDER BY
+      idx DESC
+    LIMIT
+      0, 5
+  </select>
+  <select id="selectAllHit">
+    SELECT 
+      * 
+    FROM 
+      post_board
+    ORDER BY
+      hit DESC,
+      idx DESC
+    LIMIT
+      0, 5
+  </select>
+  <select id="selectAllPageClient">
+    SELECT 
+      *
+    FROM 
+      post_board
+    WHERE
+      1=1
+    <if test="query != ''">
+    AND title LIKE CONCAT('%', #{query}, '%')
+    OR contents LIKE CONCAT('%', #{query}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 9
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      post_board
+    WHERE
+      1=1
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+  </select>
+  <select id="countAllPageClient">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      post_board
+    WHERE
+      1=1
+    <if test="query != ''">
+    AND title LIKE CONCAT('%', #{query}, '%')
+    OR contents LIKE CONCAT('%', #{query}, '%')
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      post_board.* 
+    FROM 
+      post_board, member
+    WHERE
+      post_board.member_idx = member.idx
+    AND
+      post_board.idx = ${idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO post_board
+    (
+      member_idx, 
+      title,
+      thumbnail,
+      contents,
+      tags,
+      hit,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx}, 
+      #{title},
+      #{thumbnail},
+      #{contents},
+      #{tags},
+      0,
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      post_board 
+    SET
+      title = #{title}, 
+      contents = #{contents},
+      thumbnail = #{thumbnail},
+      tags = #{tags}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOneHit">
+    UPDATE 
+      post_board 
+    SET
+      hit = hit+1
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM post_board
+    WHERE
+      idx = ${idx}
+  </delete>
+
+  <!-- post_tag -->
+  <select id="selectFkTagPost">
+    SELECT 
+      post_board.* 
+    FROM 
+      post_board, post_tag 
+    WHERE 
+      post_board.idx = post_tag.post_idx 
+    AND 
+      post_tag.tag = #{query}
+    ORDER BY 
+      post_board.idx DESC
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countFkTagPost">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      post_board, post_tag 
+    WHERE 
+      post_board.idx = post_tag.post_idx 
+    AND 
+      post_tag.tag = #{query}
+  </select>
+  <select id="selectFkRelation">
+    SELECT DISTINCT
+      post_board.* 
+    FROM 
+      post_board, post_tag 
+    WHERE 
+      post_board.idx = post_tag.post_idx
+    AND 
+      post_tag.tag IN
+      <foreach collection="tags" item="tag"  open="(" close=")" separator=",">
+        #{tag}    
+      </foreach>
+    ORDER BY post_board.idx DESC
+    LIMIT 0, 5
+  </select>
+
+  <select id="selectFkSeries">
+    SELECT 
+      sp1.*, sb.title AS sb_title, sb.thumbnail AS sb_thumbnail, pb.title AS pb_title, pb.thumbnail AS pb_thumbnail, pb.contents AS pb_contents
+    FROM series_post AS sp1, series_board AS sb, post_board AS pb 
+    WHERE 
+      sp1.series_idx = sb.idx
+    AND
+      sp1.post_idx = pb.idx
+    AND 
+    EXISTS (SELECT * FROM series_post AS sp2 WHERE sp1.series_idx = sp2.series_idx AND sp2.post_idx = ${post_idx})
+  </select>
+
+  <select id="selectAlFkTag">
+    SELECT DISTINCT 
+      tag, 
+      COUNT(*) AS count 
+    FROM 
+      post_tag 
+    GROUP BY 
+      tag 
+    ORDER BY 
+      count DESC
+  </select>
+
+  <select id="countAllPostFkTag">
+    SELECT
+	    (SELECT COUNT(*) FROM post_board) AS post_count,
+	    (SELECT COUNT(DISTINCT tag) FROM post_tag) AS tag_count
+  </select>
+
+  <insert id="insertFkTag">
+    INSERT INTO post_tag
+    (
+      post_idx, 
+      tag
+    )
+    VALUES
+    (
+      ${post_idx}, 
+      #{tag}
+    )
+  </insert>
+
+  <delete id="deleteFkTag">
+    DELETE
+    FROM post_tag
+    WHERE
+      post_idx = ${post_idx}
+  </delete>
+
+</mapper>

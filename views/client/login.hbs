@@ -14,49 +14,89 @@
 
 <body>
 
-  {{>cl-common}}
+  {{>cl-loader}}
 
-  {{>cl-header fix='fix'}}
+  <section class="login">
+    <h2><img src="/images/logo.png" alt="Devhyun"></h2>
+    <form method="POST" onsubmit="APP.login(); return false;">
+      <input id="id" name="id" type="text" placeholder="아이디">
+      <input name="password" type="password" placeholder="비밀번호" autocomplete="off">
 
-  <main id="contents" class="login">
-    <div>
-      <section class="box">
-        <div class="left">
-          <h2>간편 로그인</h2>
-          <h4>아래의 플랫폼으로 간단하게 가입하여 이용하실 수 있습니다.<br />데브현에서 제공하는 다양한 정보를 취득해보세요 !</h4>
-          <img src="/images/login.png" alt="로그인">
-          <ul>
-            <li>
-              <a class="btn_login git" href="{{loginUrl.github}}">
-                <div><i class="mdi mdi-github-circle"></i></div>
-                <div>Github</div>
-              </a>
-            </li>
-            <li>
-              <a class="btn_login google" href="{{loginUrl.google}}">
-                <div><i class="mdi mdi-google"></i></div>
-                <div>Google</div>
-              </a>
-            </li>
-            <li>
-              <a class="btn_login facebook" href="{{loginUrl.facebook}}">
-                <div><i class="mdi mdi-facebook-box"></i></div>
-                <div>Facebook</div>
-              </a>
-            </li>
-          </ul>
-          <p>로그인 버튼을 누르시면 <a href="/policy">개인정보 처리 방침</a>에 동의하시는 것으로 간주됩니다.</p>
-        </div>
-        <div class="right">
-          <img src="/images/login.png" alt="로그인">
-        </div>
-      </section>
-    </div>
-  </main>
+      <div class="checks">
+        <input type="checkbox" id="save" name="save">
+        <label for="save">아이디 저장</label>
+      </div>
 
-  {{>cl-footer}}
+      <button type="submit">로그인</button>
 
-  {{>cl-script MODULE=(config 'client' 'login')}}
+    </form>
+  </section>
+
+  {{>cl-script}}
+
+  <script>
+    window.APP = {
+      login: function () { // 로그인 처리
+
+        // 유효성 검사
+        var form = $(event.target).serializeObject();
+
+        var validate = true;
+        var message = '';
+
+        if (form.id == '') {
+          validate = false;
+          message = '아이디를 입력해주세요.';
+        } else if (form.password == '') {
+          validate = false;
+          message = '비밀번호를 입력해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '오류',
+            text: message,
+            confirmButtonColor: '#004abf',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        // 이메일 저장 로직
+        var id = $('#id').val();
+        var save = $('#save').is(":checked");
+        if (save) {
+          COOKIE.setCookie('loginId', id, 1);
+        } else {
+          COOKIE.setCookie('loginId', '', -1);
+        }
+
+        AJAX.post('/member/login', form)
+          .then(function () {
+            location.href = '/admin';
+          });
+
+        return false;
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 저장된 이메일 쿠키에서 로드
+        var id = COOKIE.getCookie('loginId');
+
+        if (id) {
+          $('#save').attr("checked", true);
+          $('#id').val(id);
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
 
 </body>
 

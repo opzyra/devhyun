@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>일정 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active="wkschedule"}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">일정</h2>
+          <p class="mg-b-0">일정을 확인하고 관리합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/schedule" class="nav-link active">리스트</a>
+              <a href="/admin/work/schedule/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET" onsubmit="return APP.search();">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  일시
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="date" type="text" name="date"
+                    class="air-datepicker form-control d-inline wd-50p wd-md-30p wd-lg-20p" placeholder=""
+                    autocomplete="off" data-position="bottom left">
+                  <button class="btn-input btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-dashboard-four pd-t-0">
+            <div class="loader text-center">
+
+            </div>
+            <div id="fullCalendar" class="az-calendar"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="modalDetail" class="modal effect-scale">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content modal-content-demo">
+        <div id="modalColor" class="modal-header">
+          <h6 id="modalTitle" class="modal-title"></h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true" style="color: white;">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input id="suIdx" name="idx" type="hidden">
+          <div class="d-none d-md-block" style="border-bottom: 1px solid #e8e8e8;"></div>
+          <div class="row form-warp align-items-center mg-t-0-f">
+            <div class="form-title">
+              일시
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div class="pd-y-9">
+                <span id="modalStart"></span>
+                <span class="mg-x-3">-</span>
+                <span id="modalEnd"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row form-warp align-items-center">
+            <div class="form-title">
+              상태
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div class="pd-y-9">
+                <span id="modalStatus"></span>
+                <span><a href="javascript:void(0);" id="modalStatusSwitch"><i
+                      class="mdi mdi-redo-variant"></i></a></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row form-warp align-items-center">
+            <div class="form-title">
+              장소
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div class="pd-y-9">
+                <span id="modalLocation"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row form-warp align-items-center">
+            <div class="form-title">
+              설명
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div class="pd-y-9">
+                <span id="modalDescription"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row form-warp align-items-center">
+            <div class="form-title">
+              관계자
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div id="modalMembers" class="pd-y-9"></div>
+            </div>
+          </div>
+
+          <div class="row form-warp align-items-center">
+            <div class="form-title">
+              작성자
+            </div>
+            <div class="form-input mg-t-5 mg-md-t-0">
+              <div class="d-inline-block az-img-user online mg-r-5"><img id="modalWriterThumbnail" src=""
+                  alt="thumbnail">
+              </div>
+              <div id="modalWriter" class="d-inline-block pd-y-9"></div>
+            </div>
+          </div>
+
+          <div id="modalOption" class="text-center mg-t-20">
+            <button id="modalDelete" type="button" class="btn btn-danger" onclick="APP.deleteSchedule()">삭제</button>
+            <button id="modalEdit" type="button" class="btn btn-indigo" onclick="APP.editSchedule()">수정</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      search: function () {
+        var form = $(event.target).serializeObject();
+
+        var validate = true;
+        var message = '';
+
+        if (form.date == '') {
+          validate = false;
+          message = '일시를 선택해주세요.';
+        } else if (!form.date.match(/^(19|20)\d{2}-(0[1-9]|1[012])$/)) {
+          validate = false;
+          message = '일시의 형태가 올바르지 않습니다.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        var year = form.date.split('-')[0];
+        var month = form.date.split('-')[1];
+        location.href = '/admin/work/schedule?year=' + year + '&month=' + month;
+
+        return false;
+      },
+      editSchedule: function (idx) {
+        location.href = '/admin/work/schedule/edit?idx=' + idx;
+      },
+      deleteSchedule: function (idx) {
+        Swal.fire({ title: '확인', text: '선택하신 일정을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/schedule/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () {
+                      location.reload();
+                    });
+                });
+            }
+          });
+      },
+      switchSchedule: function (idx) {
+        AJAX.put('/schedule/clear/' + idx)
+          .then(function (res) {
+            $('#modalStatus').text(res.clear ? '완료' : '진행');
+            var events = $('#fullCalendar').fullCalendar('clientEvents').map(function (el) {
+              if (el.idx == idx) {
+                el.clear = res.clear;
+                el.className = res.clear ? 'clear' : '';
+              }
+              return el;
+            });
+            $('#fullCalendar').fullCalendar('removeEvents');
+            $('#fullCalendar').fullCalendar('addEventSource', events);
+            $('#fullCalendar').fullCalendar('calendarRefetchEvents');
+          });
+      },
+      calendarGetHoliday: function (mnt) {
+        FETCH.get('https://api.manana.kr/calendar.json', { year: mnt.format('YYYY'), month: mnt.format('MM'), day: '00', category: 'holiday', nation: 'kr' })
+          .then(function (res) {
+
+            for (var i = 0; i < res.length; i++) {
+
+              var node = $('<span class="fc-month-holiday">' + res[i].name + '</span>');
+              $('.fc-day-top[data-date="' + res[i].date + '"]').prepend(node);
+              $('.fc-list-heading[data-date="' + res[i].date + '"]').find('.fc-list-heading-main').addClass('fc-list-holiday');
+            }
+
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 데이트 피커
+        $('.air-datepicker').datepicker({
+          language: 'ko',
+          autoClose: true,
+          toggleSelected: false,
+          view: 'months',
+          minView: 'months',
+          dateFormat: 'yyyy-mm'
+        });
+
+        var defaultDate = moment();
+        var qstr = BROWSER.getQueryString();
+        if (qstr.year && qstr.month) {
+          defaultDate = qstr.year + '-' + qstr.month + (qstr.type == 'prev' ? '-28' : '-01');
+        }
+
+        var view = qstr.view;
+
+        $('#date').datepicker().data('datepicker').selectDate(new Date(defaultDate));
+
+
+        // 캘린더
+        var events = {{{ schedules.data
+    }}};
+    events.forEach(function (e, i) {
+      if (e.clear) {
+        e.className = 'clear';
+      }
+    });
+    APP.events = events;
+    var calendar = $('#fullCalendar').fullCalendar({
+      locale: 'ko',
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay'
+      },
+      navLinks: true,
+      selectable: true,
+      selectLongPressDelay: 100,
+      editable: true,
+      nowIndicator: true,
+      defaultView: view ? view : 'month',
+      defaultDate: defaultDate,
+      views: {
+        agenda: {
+          columnHeaderHtml: function (mom) {
+            return '<span>' + mom.format('ddd') + '</span>' +
+              '<span>' + mom.format('DD') + '</span>';
+          }
+        },
+        day: { columnHeader: false },
+        listMonth: {
+          listDayFormat: 'ddd DD',
+          listDayAltFormat: false
+        },
+        listWeek: {
+          listDayFormat: 'ddd DD',
+          listDayAltFormat: false
+        },
+        agendaThreeDay: {
+          type: 'agenda',
+          duration: { days: 3 },
+          titleFormat: 'MMMM YYYY'
+        },
+        month: {
+          displayEventEnd: true,
+          timeFormat: 'HH:mm'
+        }
+      },
+      events: APP.events,
+      viewRender: function (view, element) {
+        var b = $('#fullCalendar').fullCalendar('getDate');
+        var date = b.format('YYYYMM');
+        APP.calendarGetHoliday(b);
+      },
+      eventAfterAllRender: function (view) {
+        $('.loader').css('display', 'none');
+        if (view.name === 'listMonth' || view.name === 'listWeek') {
+          var dates = view.el.find('.fc-list-heading-main');
+          dates.each(function () {
+            var text = $(this).text().split(' ');
+            var now = moment().format('DD');
+
+            $(this).html(text[0] + '<span>' + text[1] + '</span>');
+            if (now === text[1]) { $(this).addClass('now'); }
+          });
+        }
+      },
+      eventRender: function (event, element) {
+
+        if (event.description) {
+          element.find('.fc-list-item-title').append('<span class="fc-desc">' + event.description + '</span>');
+          element.find('.fc-content').append('<span class="fc-desc">' + event.description + '</span>');
+        }
+
+        var eBorderColor = event.backgroundColor;
+        element.find('.fc-list-item-time').css({
+          color: eBorderColor,
+          borderColor: eBorderColor
+        });
+
+        element.find('.fc-list-item-title').css({
+          borderColor: eBorderColor
+        });
+
+        element.css('borderLeftColor', eBorderColor);
+      },
+      select: function (startDate, endDate) {
+        location.href = '/admin/work/schedule/create?start=' + startDate + '&end=' + endDate;
+      },
+      eventClick: function (calEvent, jsEvent, view) {
+        AJAX.get('/schedule/' + calEvent.idx)
+          .then(function (res) {
+            $('#modalOption').css('display', 'none');
+            $('#modalStatusSwitch').css('display', 'none');
+            $('#modalStatus').text(res.schedule.clear ? '완료' : '진행');
+            if (res.schedule.own) {
+              $('#modalOption').css('display', 'block');
+              $('#modalDelete').attr('onclick', 'APP.deleteSchedule(' + res.schedule.idx + ')');
+              $('#modalEdit').attr('onclick', 'APP.editSchedule(' + res.schedule.idx + ')');
+            }
+            if (res.schedule.mown) {
+              $('#modalStatusSwitch').css('display', 'inline');
+              $('#modalStatusSwitch').attr('onclick', 'APP.switchSchedule(' + res.schedule.idx + ')');
+            }
+            $('#modalColor').css('background-color', calEvent.color);
+            $('#modalTitle').text(calEvent.title);
+            $('#modalWriter').text(calEvent.name);
+            $('#modalWriterThumbnail').attr('src', calEvent.thumbnail);
+            $('#modalStart').text(moment(calEvent.start).format('YYYY.MM.DD HH:mm:ss'));
+            $('#modalEnd').text(moment(calEvent.end).format('YYYY.MM.DD HH:mm:ss'));
+            $('#modalLocation').text(calEvent.location || '미등록');
+
+            if (calEvent.description) {
+              calEvent.description = calEvent.description.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+            }
+
+            $('#modalDescription').html(calEvent.description || '미등록');
+            $('#modalMembers').html('');
+            var members = res.schedule.members;
+            if (members.length == 0) {
+              $('#modalMembers').append('<div>미등록</div>');
+              $('#modalDetail').modal('show');
+              return;
+            }
+            for (var i = 0; i < members.length; i++) {
+              var nd = '<div class="mg-r-10 d-inline-block"><div class="d-inline-block az-img-user online mg-r-5"><img id="modalWriterThumbnail" src="' + members[i].thumbnail + '" alt="thumbnail"></div><div class="d-inline-block pd-y-9">' + members[i].name + '</div></div>';
+              $('#modalMembers').append(nd);
+            }
+
+            $('#modalDetail').modal('show');
+
+          });
+      },
+      eventDrop: function (calEvent, jsEvent, revertFunc) {
+
+        Swal.fire({ title: '확인', text: '선택하신 일정의 시간을 변경할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.put('/schedule/move/' + calEvent.idx, { title: calEvent.title, location: calEvent.location, description: calEvent.description, color: calEvent.color, start: calEvent.start.format('YYYY-MM-DD HH:mm'), end: calEvent.end.format('YYYY-MM-DD HH:mm') }).catch(function () {
+                revertFunc();
+              });
+            } else {
+              revertFunc();
+            }
+          });
+      },
+      eventResize: function (calEvent, jsEvent, revertFunc) {
+        Swal.fire({ title: '확인', text: '선택하신 일정의 시간을 변경할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.put('/schedule/move/' + calEvent.idx, { title: calEvent.title, location: calEvent.location, description: calEvent.description, color: calEvent.color, start: calEvent.start.format('YYYY-MM-DD HH:mm'), end: calEvent.end.format('YYYY-MM-DD HH:mm') }).catch(function () {
+                revertFunc();
+              });
+            } else {
+              revertFunc();
+            }
+          });
+      }
+    });
+
+    // 이전 달 버튼
+    $('.fc-prev-button').on('click', function () {
+      var view = $('#fullCalendar').fullCalendar('getView');
+      var date = $('#fullCalendar').fullCalendar('getDate');
+      if (view.type != 'month') {
+        var month = date.format('MM');
+        var qstr = BROWSER.getQueryString();
+        if (qstr.month == month) return;
+      }
+      var height = $('.fc-view-container').height();
+      $('.fc-view-container').html('').height(height);
+      location.href = '/admin/work/schedule?year=' + date.format('YYYY') + '&month=' + date.format('MM') + '&type=prev&view=' + view.type;
+
+    });
+
+    // 다음 달 버튼
+    $('.fc-next-button').on('click', function () {
+      var view = $('#fullCalendar').fullCalendar('getView');
+      var date = $('#fullCalendar').fullCalendar('getDate');
+      if (view.type != 'month') {
+        var month = date.format('MM');
+        var qstr = BROWSER.getQueryString();
+        if (qstr.month == month) return;
+      }
+      var height = $('.fc-view-container').height();
+      $('.fc-view-container').html('').height(height);
+      location.href = '/admin/work/schedule?year=' + date.format('YYYY') + '&month=' + date.format('MM') + '&type=next&view=' + view.type;
+    });
+
+    // 오늘 버튼
+    $('.fc-today-button').on('click', function () {
+      var height = $('.fc-view-container').height();
+      $('.fc-view-container').html('').height(height);
+      var date = $('#fullCalendar').fullCalendar('getDate');
+      location.href = '/admin/work/schedule?year=' + date.format('YYYY') + '&month=' + date.format('MM');
+    });
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

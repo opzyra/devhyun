@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='project' fix='fix'}}
 
@@ -43,7 +43,7 @@
 					</div>
 					<p class="url">
 						<span><i class="mdi mdi-github-circle"></i></span>
-						<a href="https://github.com/opzyra/codepresso" target="_blank">https://github.com/opzyra/codepresso</a>
+						<a href="https://github.com/opzyra/Codepresso" target="_blank">https://github.com/opzyra/Codepresso</a>
 					</p>
 				</div>
 			</section>
@@ -100,7 +100,23 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'projectDetail')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			toolTip: function () {
+				tippy('.icon img', {
+					placement: 'bottom',
+					theme: 'devhyun',
+					distance: 2
+				});
+			},
+			init: function () {
+				APP.toolTip();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

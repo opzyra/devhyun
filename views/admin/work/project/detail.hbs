@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>프로젝트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white-box">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wkproject'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">프로젝트 상세정보</h2>
+          <p class="mg-b-0">프로젝트 상세 정보입니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/project" class="nav-link">리스트</a>
+              <a href="/admin/work/project/detail?idx={{project.idx}}" class="nav-link active">상세정보</a>
+              {{#if project.in}}
+              <a href="/admin/work/project/task/create?idx={{project.idx}}" class="nav-link">등록</a>
+              {{/if}}
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row row-sm">
+        <div class="col-12 col-xl-3 mg-b-20">
+          <div class="card card-body">
+            <div class="form-warp-first"></div>
+            <div class="row form-warp align-items-center mg-t-0-f">
+              <div class="form-title form-col-3">
+                프로젝트명
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{project.title}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                개요
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{{lineBrTag project.description}}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                중요도
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{{projectImpt project.important}}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                기간
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">
+                  {{parseDate project.start 'YYYY.MM.DD'}}<span
+                    class="mg-x-3">-</span>{{parseDate project.end 'YYYY.MM.DD'}}
+                </div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                잔여일
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{projectRestDay project.end}}일</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                진행률
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">{{projectProgress project.progress}}</div>
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                참여자
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                {{#each project.members}}
+                <div class="mg-r-10 mg-b-5 d-inline-block">
+                  <div class="d-inline-block az-img-user online">
+                    <img src="{{thumbnail}}" alt="{{name}}" data-toggle="tooltip-primary" data-placement="bottom"
+                      title="{{name}}">
+                  </div>
+                </div>
+                {{/each}}
+              </div>
+            </div>
+
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                관리자
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="mg-r-10 mg-b-5 d-inline-block">
+                  <div class="d-inline-block az-img-user online">
+                    <img src="{{project.thumbnail}}" alt="{{project.name}}" data-toggle="tooltip-primary"
+                      data-placement="bottom" title="{{project.name}}">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {{#or project.own project.ma}}
+            <div class="row form-warp align-items-center">
+              <div class="form-title form-col-3">
+                관리
+              </div>
+              <div class="form-input form-col-9 mg-t-5 mg-md-t-0">
+                <div class="pd-y-9">
+                  {{#if project.own}}
+                  <a href="/admin/work/project/edit?idx={{project.idx}}" class="mg-l-5"><i
+                      class="mdi mdi-square-edit-outline"></i></a>
+                  {{/if}}
+                  <a href="javascript:void(0);" onclick="APP.buttonDeleteProject({{project.idx}})"><i
+                      class="mdi mdi-delete-empty"></i></a>
+                </div>
+              </div>
+            </div>
+            {{/or}}
+          </div>
+        </div>
+
+        <div class="col-12 col-xl-9 mg-b-20">
+          <div class="card card-body mg-b-20">
+            <form method="GET" onsubmit="return APP.search();">
+              <input id="projectIdx" name="idx" type="hidden" value="{{project.idx}}">
+              <div class="form-warp-first"></div>
+
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  필터
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="pd-y-9">
+                    <div class="d-inline-block mg-t-5 mg-r-10">
+                      <label class="ckbox">
+                        <input id="now" name="now" type="checkbox" value="1"><span>진행</span>
+                      </label>
+                    </div>
+                    <div class="d-inline-block mg-t-5 mg-r-10">
+                      <label class="ckbox">
+                        <input id="complete" name="complete" type="checkbox" value="1"><span>완료</span>
+                      </label>
+                    </div>
+                    <div class="d-inline-block mg-t-5">
+                      <label class="ckbox">
+                        <input id="join" name="join" type="checkbox" value="1"><span>작성</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div class="row form-warp form-sm align-items-center">
+                <div class="form-title">
+                  카테고리
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="pjCategory" name="category" class="form-control d-inline ipn-sm mg-r-5 wd-100p wd-md-25p">
+                      <option value="">전체</option>
+                      {{#each category}}
+                      <option value="{{category}}">{{category}}</option>
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row form-warp form-sm align-items-center">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline ipn-sm mg-r-5 wd-30p wd-md-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="title">제목</option>
+                      <option value="contents">내용</option>
+                      <option value="name">작성자</option>
+                    </select>
+                    <input id="query" type="text" name="title"
+                      class="form-control d-inline ipn-sm wd-50p wd-md-20p mg-r-5" placeholder="검색어" autocomplete="off">
+                    <button class="btn-input ipn-sm btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div id="list">
+            {{#each taskList.items}}
+            <div class="card card-body pd-0-f mg-b-20">
+              <div class="panel-item is-collapse" data-opened="0">
+                <div class="panel-actions">
+                  <span class="badge badge-primary">{{category}}</span>
+                  {{{taskProgress progress}}}
+                  {{#or own ma}}
+                  {{#if own}}
+                  <a href="/admin/work/project/task/edit?idx={{idx}}" class="panel-action"><i
+                      class="mdi mdi-square-edit-outline"></i></a>
+                  {{/if}}
+                  <a class="panel-action" onclick="APP.buttonDeleteTask({{idx}})"><i
+                      class="mdi mdi mdi-delete-empty"></i></a>
+                  {{/or}}
+                  <a class="panel-action" onclick="APP.panel({{idx}})"><i class="mdi panel-toggle"></i></a>
+                </div>
+                <div class="panel-heading">
+                  <div class="panel-title">
+                    <div class="d-inline-block az-img-user online mg-r-3">
+                      <img src="{{thumbnail}}" alt="{{name}}" data-toggle="tooltip-primary" data-placement="bottom"
+                        title="{{name}}">
+                    </div>
+                    <span class="task-date d-sm-none">{{parseDate reg_date 'YYYY.MM.DD'}}</span>
+                    <span class="task-title d-block d-sm-inline mg-t-5 mg-r-3 pointer"
+                      onclick="APP.panel({{idx}})">{{title}}</span>
+                    <span class="task-date d-none d-sm-inline">{{parseDate reg_date 'YYYY.MM.DD'}}</span>
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div>
+                    {{{contents}}}
+                  </div>
+                  <div id="fileList{{idx}}"></div>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <div class="card card-body mg-b-20 text-center">
+              태스크가 없습니다.
+            </div>
+            {{/each}}
+          </div>
+          {{#ifPageNext taskList.items 20}}
+          <div id="more" class="card card-body mg-b-20 text-center">
+            <a href="javascript:void(0);" onclick="APP.buttonMoreTask()">더보기</a>
+          </div>
+          {{/ifPageNext}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      PAGE: 1,
+      TOTAL: 0,
+      panel: function (idx) {
+        var item = $(event.target).closest('.panel-item');
+        var opened = item.attr('data-opened');
+        var toggled = item.hasClass('is-collapse');
+        $(event.target).closest('.panel-item').toggleClass('is-collapse');
+
+        // 첨부파일 로드
+        if (toggled && opened == 0) {
+          item.attr('data-opened', 1);
+          AJAX.get('/task/files/' + idx)
+            .then(function (res) {
+              if (res.files) {
+                var node = $('#fileList' + idx);
+                // 초기화
+                node.html('');
+                for (var i = 0; i < res.files.length; i++) {
+                  var item = res.files[i];
+                  var tag = '<div class="file-item row row-xs align-items-center mg-b-5"><div class="col-md-12 mg-t-5 mg-md-t-0"><input class="file-src" type="hidden" value="' + item.fileSrc + '"><input class="file-name" type="hidden" value="' + item.fileName + '"><span class="file-label" class="tx-12"><i class="mdi mdi-file-outline mg-r-3"></i><a href="javascript:void(0);" onclick="COMMON.fileDownload(\'' + item.fileSrc + '\', \'' + item.fileName + '\')">' + item.fileName + '</a></span></div></div>'
+                  node.append(tag);
+                }
+              }
+            });
+        }
+
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        var value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      buttonDeleteProject: function (idx) { // 삭제
+        Swal.fire({ title: '확인', html: '프로젝트와 관련된 모든 정보가<br>삭제되며 복구가 불가능합니다. 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/project/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back() });
+                });
+            }
+          });
+      },
+      buttonDeleteTask: function (idx) {
+        Swal.fire({ title: '확인', text: '태스크를 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/task/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { location.reload(); });
+                });
+            }
+          });
+      },
+      buttonMoreTask: function () {
+        if (APP.PAGE > APP.TOTAL - 1) return;
+        var param = BROWSER.getQueryString();
+        param.page = APP.PAGE + 1;
+        AJAX.get('/task/', param)
+          .then(function (res) {
+            APP.PAGE = APP.PAGE + 1;
+            var items = res.taskList.items;
+
+            for (var i = 0; i < items.length; i++) {
+              var item = items[i];
+              var node = '<div class="card card-body pd-0-f mg-b-20"><div class="panel-item is-collapse" data-opened="0"><div class="panel-actions"><span class="badge badge-primary">' + item.category + '</span> '
+                + (item.progress == 100 ? '<span class="badge badge-success">완료</span>' : ('<span class="badge badge-dark">' + item.progress + '%</span>'))
+                + (item.ma || item.own ? (item.own ? ' <a href="/admin/work/project/task/edit?idx=' + item.idx + '" class="panel-action"><i class="mdi mdi-square-edit-outline"></i></a>' : '') + ' <a class="panel-action" onclick="APP.buttonDeleteTask(' + item.idx + ')"><i class="mdi mdi mdi-delete-empty"></i></a>' : '') + '<a class="panel-action" onclick="APP.panel(' + item.idx + ')"><i class="mdi panel-toggle"></i></a>'
+                + '</div><div class="panel-heading"><div class="panel-title"><div class="d-inline-block az-img-user online mg-r-3"><img src="' + item.thumbnail + '" alt="' + item.name + '" data-toggle="tooltip-primary" data-placement="bottom" title="' + item.name + '">'
+                + '</div><span class="task-date d-sm-none">' + moment(item.reg_date).format('YYYY.MM.DD') + '</span> <span class="task-title d-block d-sm-inline mg-t-5 mg-r-3 pointer" onclick="APP.panel(' + item.idx + ')">' + item.title + '</span>'
+                + ' <span class="task-date d-none d-sm-inline">' + moment(item.reg_date).format('YYYY.MM.DD') + '</span></div></div><div class="panel-body"><div>' + item.contents + '</div><div id="fileList' + item.idx + '"></div></div></div></div>';
+              $('#list').append(node);
+            }
+
+            if (APP.PAGE > APP.TOTAL - 1) {
+              $('#more').remove();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 전체 페이지 수
+        var total = {{{ taskList.totalPage
+    }}};
+    APP.TOTAL = total;
+
+
+    // 쿼리스트링 데이터 초기화
+    var qstr = BROWSER.getQueryString();
+    if (qstr.title) {
+      $('#query').attr('name', 'title').val(qstr.title); $('#category').val('title');
+    }
+
+    if (qstr.contents) {
+      $('#query').attr('name', 'contents').val(qstr.contents); $('#category').val('contents');
+    }
+
+    if (qstr.name) {
+      $('#query').attr('name', 'name').val(qstr.name); $('#category').val('name');
+    }
+
+    if (qstr.now) {
+      $("#now").prop('checked', true);
+    }
+
+    if (qstr.complete) {
+      $('#complete').prop('checked', true);
+    }
+
+    if (qstr.join) {
+      $('#join').prop('checked', true);
+    }
+
+    if (qstr.category) {
+      $('#pjCategory').val(qstr.category);
+    } 
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+#progress .progress {
+  position: fixed;
+  top: 0;
+  z-index: 10006;
+  width: 100%;
+  border-radius: 0px;
+  height: 5px;
+}
+#progress .progress-bar {
+  background-color: #5b47fb;
+  background-image: none;
+  height: 4px;
+  border-radius: 0px;
+  color: #5b47fb;
+}
+#progress .progress-bar > span {
+  display: none;
+}

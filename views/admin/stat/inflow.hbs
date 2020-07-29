@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>유입 통계 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white-box">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='stinflow'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">유입 통계</h2>
+          <p class="mg-b-0">지난 기간동안 홈페이지로 유입된 통계 자료입니다.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row row-sm">
+
+        <div class="col-12 mg-b-20">
+          <form method="GET" onsubmit="return APP.search();">
+            <div class="form-warp-first"></div>
+            <div class="row form-warp form-sm align-items-center mg-t-0-f">
+              <div class="form-title">
+                기간
+              </div>
+              <div class="form-input mg-t-5 mg-md-t-0">
+                <input id="start" type="text" name="start"
+                  class="air-datepicker form-control d-inline wd-35p wd-md-15p wd-lg-10p" placeholder="시작일"
+                  autocomplete="off" data-position="bottom left">
+                <span class="mg-x-3">~</span>
+                <input id="end" type="text" name="end"
+                  class="air-datepicker form-control d-inline wd-35p wd-md-15p wd-lg-10p mg-r-5" placeholder="마지막일"
+                  autocomplete="off" data-position="bottom right">
+                <button type="submit" class="btn-input btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <h6 class="card-title">기간별 유입 인원수</h6>
+            <span class="card-text">기간 동안 홈페이지로 유입된 수 입니다. </span>
+            <div class="card-body">
+              <canvas id="count" style="max-height: 155px;"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-3 col-xl-3 mg-t-20">
+          <div class="row row-sm">
+            <div class="col-md-6 col-lg-12 mg-b-20 mg-md-b-0 mg-lg-b-20">
+              <div class="card card-dashboard-five pd-20">
+                <div class="card-header">
+                  <h6 class="card-title">유입 인원수</h6>
+                  <span class="card-text">전체 유입은 동일한 PC에서 재접속 하는 경우를 포함하며, 실제 유입은 PC당 한명을
+                    기준으로 측정합니다.</span>
+                </div>
+                <div class="card-body row row-sm">
+                  <div class="col-6 d-sm-flex align-items-center">
+                    <div class="card-chart bg-primary">
+                      <span class="peity-bar"
+                        data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 20, &quot;height&quot;: 20 }"
+                        style="display: none;">6,4,7,5,7</span><svg class="peity" height="20" width="20">
+                        <rect data-value="6" fill="#fff" x="0.4" y="2.8571428571428577" width="3.2"
+                          height="17.142857142857142"></rect>
+                        <rect data-value="4" fill="#fff" x="4.4" y="8.571428571428573" width="3.1999999999999993"
+                          height="11.428571428571427"></rect>
+                        <rect data-value="7" fill="#fff" x="8.4" y="0" width="3.1999999999999993" height="20"></rect>
+                        <rect data-value="5" fill="#fff" x="12.4" y="5.7142857142857135" width="3.1999999999999993"
+                          height="14.285714285714286"></rect>
+                        <rect data-value="7" fill="#fff" x="16.4" y="0" width="3.200000000000003" height="20"></rect>
+                      </svg>
+                    </div>
+                    <div>
+                      <label>전체 유입</label>
+                      <h4>{{inflowCount.acount}}</h4>
+                    </div>
+                  </div>
+                  <div class="col-6 d-sm-flex align-items-center">
+                    <div class="card-chart bg-purple">
+                      <span class="peity-bar"
+                        data-peity="{&quot;fill&quot;: [&quot;#fff&quot;], &quot;width&quot;: 21, &quot;height&quot;: 20 }"
+                        style="display: none;">7,4,5,7,2</span><svg class="peity" height="20" width="21">
+                        <rect data-value="7" fill="#fff" x="0.42000000000000004" y="0" width="3.3600000000000003"
+                          height="20"></rect>
+                        <rect data-value="4" fill="#fff" x="4.62" y="8.571428571428573" width="3.3599999999999994"
+                          height="11.428571428571427"></rect>
+                        <rect data-value="5" fill="#fff" x="8.82" y="5.7142857142857135" width="3.3599999999999994"
+                          height="14.285714285714286"></rect>
+                        <rect data-value="7" fill="#fff" x="13.020000000000001" y="0" width="3.3599999999999977"
+                          height="20"></rect>
+                        <rect data-value="2" fill="#fff" x="17.22" y="14.285714285714286" width="3.360000000000003"
+                          height="5.7142857142857135"></rect>
+                      </svg>
+                    </div>
+                    <div>
+                      <label>실제 유입</label>
+                      <h4>{{inflowCount.rcount}}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-12">
+              <div class="card card-dashboard-five pd-25">
+                <div class="card-header">
+                  <h6 class="card-title">방문 비율</h6>
+                  <span class="card-text">신규 유입 비율은 새로운 PC에서의 유입의 비율이며, 재방문 비율은 동일한
+                    PC에서 다시 방문한 비율 입니다.</span>
+                </div>
+                <div class="card-body row row-sm">
+                  <div class="col-6 d-sm-flex align-items-center">
+                    <div class="mg-b-10 mg-sm-b-0 mg-sm-r-10">
+                      <span class="peity-donut"
+                        data-peity='{ "fill": ["#007bff", "#cad0e8"],  "innerRadius": 14, "radius": 20 }'>{{inflowCount.rcount}}/{{inflowCount.acount}}</span>
+                    </div>
+                    <div>
+                      <label>신규 유입 비율</label>
+                      <h4>
+                        {{percent inflowCount.acount inflowCount.rcount}}%
+                      </h4>
+                    </div>
+                  </div>
+                  <div class="col-6 d-sm-flex align-items-center">
+                    <div class="mg-b-10 mg-sm-b-0 mg-sm-r-10">
+                      <span class="peity-donut"
+                        data-peity='{ "fill": ["#00cccc", "#cad0e8"],  "innerRadius": 14, "radius": 20 }'>{{reInflowPercent inflowCount.acount inflowCount.rcount}}</span>
+                    </div>
+                    <div>
+                      <label>재방문 비율</label>
+                      <h4>
+                        {{percent inflowCount.acount inflowCount.rcount 'reverse'}}%
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-9 mg-t-20">
+          <div class="card card-dashboard-four">
+            <div class="card-header">
+              <h6 class="card-title mg-b-5-f">채널별 유입 비율</h6>
+              <p class="mg-b-20 card-text" style="font-size: 12px;">
+                기간 동안 검색엔진에 의해 유입 된경우 유입 검색어 별 유입 현황입니다.
+              </p>
+            </div>
+            <div class="card-body row">
+              <div class="col-md-5 d-flex align-items-center">
+                <div class="chart">
+                  <canvas id="channel"></canvas>
+                </div>
+              </div>
+              <div class="col-md-7 mg-t-20 mg-md-t-0">
+                <div class="az-traffic-detail-item">
+                  <div>
+                    <span>검색엔진</span>
+                    <span>{{inflowCount.search}}<span class="mg-l-2">(
+                        {{percent inflowCount.acount inflowCount.search}}%
+                        )</span>
+                    </span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-purple"
+                      style="width: {{percent inflowCount.acount inflowCount.search}}%">
+                    </div>
+                  </div>
+                </div>
+                <div class="az-traffic-detail-item">
+                  <div>
+                    <span>소셜 네트워크</span>
+                    <span>{{inflowCount.social}}<span class="mg-l-2">(
+                        {{percent inflowCount.acount inflowCount.social}}%
+                        )</span>
+                    </span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-primary"
+                      style="width: {{percent inflowCount.acount inflowCount.social}}%">
+                    </div>
+                  </div>
+                </div>
+                <div class="az-traffic-detail-item">
+                  <div>
+                    <span>이메일</span>
+                    <span>{{inflowCount.email}}<span class="mg-l-2">(
+                        {{percent inflowCount.acount inflowCount.email}}%
+                        )</span>
+                    </span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-info" style="width: {{percent inflowCount.acount inflowCount.email}}%">
+                    </div>
+                  </div>
+                </div>
+                <div class="az-traffic-detail-item">
+                  <div>
+                    <span>주소 입력</span>
+                    <span>{{inflowCount.url}}<span class="mg-l-2">(
+                        {{percent inflowCount.acount inflowCount.url}}%
+                        )</span>
+                    </span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-teal" style="width: {{percent inflowCount.acount inflowCount.url}}%">
+                    </div>
+                  </div>
+                </div>
+                <div class="az-traffic-detail-item">
+                  <div>
+                    <span>기타</span>
+                    <span>{{inflowCount.etc}}<span class="mg-l-2">(
+                        {{percent inflowCount.acount inflowCount.etc}}%
+                        )</span>
+                    </span>
+                  </div>
+                  <div class="progress">
+                    <div class="progress-bar bg-gray-500"
+                      style="width: {{percent inflowCount.acount inflowCount.etc}}%">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-xl-3 mg-t-20">
+          <div class="card card-body ht-xl-100p card-dashboard-five">
+            <h6 class="card-title tx-14 mg-b-10">디바이스 종류</h6>
+            <p class="mg-b-15 card-text">기간 동안 이용자가 사용한 디바이스 종류에 따른 통계 자료 입니다.</p>
+            <div class="d-flex flex-column align-items-center mg-b-25">
+              <canvas id="device"></canvas>
+            </div>
+            <div class="row row-sm">
+              <div class="col-6 text-center">
+                <label><span class="bg-indigo"></span> 데스크톱</label>
+                <h5>{{inflowCount.desktop}}</h5>
+              </div>
+              <div class="col-6 text-center">
+                <label><span class="bg-gray-500"></span> 모바일</label>
+                <h5>{{inflowCount.mobile}}</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9 col-xl-9 mg-t-20">
+          <div class="card card-dashboard-pageviews ht-100p" style="height: 380px;">
+            {{#isEmpty queryList}}
+            {{else}}
+            <div class="more"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalQuery"><i
+                  class="fas fa-external-link-alt mg-r-5"></i>상세 정보</a></div>
+            {{/isEmpty}}
+            <div class="card-header">
+              <h6 class="card-title">유입 검색어</h6>
+              <p class="card-text" style="font-size: 12px;">기간 동안 검색엔진에 의해 유입 된경우 유입 검색어 별 유입 현황입니다.</p>
+            </div>
+            <div class="card-body">
+              {{#eachLimit queryList 5}}
+              <div class="az-list-item">
+                <div>
+                  <h6>{{query}}</h6>
+                </div>
+                <div>
+                  <span class="tx-primary">{{rcount}}</span><span> ({{percent ../queryAcount rcount}}%)</span>
+                </div>
+              </div>
+              {{/eachLimit}}
+              {{#isEmpty queryList}}
+              <div class="az-list-item">
+                <span class="text-danger"><i class="mdi mdi-close-circle-outline mg-r-5"></i>해당 기간에 조회된 자료가
+                  없습니다.</span>
+              </div>
+              {{/isEmpty}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mg-t-20">
+          <div class="card card-dashboard-pageviews ht-100p" style="height: 380px;">
+            {{#isEmpty domainList}}
+            {{else}}
+            <div class="more"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalDomain"><i
+                  class="fas fa-external-link-alt mg-r-5"></i>상세 정보</a></div>
+            {{/isEmpty}}
+            <div class="card-header">
+              <h6 class="card-title">유입 경로 도메인</h6>
+              <p class="card-text" style="font-size: 12px;">기간 동안 홈페이지로 유입된 도메인의 정보입니다.</p>
+            </div>
+            <div class="card-body">
+              {{#eachLimit domainList 5}}
+              <div class="az-list-item">
+                <div>
+                  <h6>{{domain}}</h6>
+                </div>
+                <div>
+                  <span class="tx-primary">{{rcount}}</span><span>
+                    ({{percent ../domainAcount rcount}}%)</span>
+                </div>
+              </div>
+              {{/eachLimit}}
+              {{#isEmpty domainList}}
+              <div class="az-list-item">
+                <span class="text-danger"><i class="mdi mdi-close-circle-outline mg-r-5"></i>해당 기간에 조회된 자료가
+                  없습니다.</span>
+              </div>
+              {{/isEmpty}}
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mg-t-20">
+          <div class="card card-dashboard-pageviews ht-100p">
+            {{#isEmpty pageList}}
+            {{else}}
+            <div class="more"><a href="javascript:void(0);" data-toggle="modal" data-target="#modalPage"><i
+                  class="fas fa-external-link-alt mg-r-5"></i>상세 정보</a></div>
+            {{/isEmpty}}
+            <div class="card-header">
+              <h6 class="card-title">유입 페이지</h6>
+              <p class="card-text" style="font-size: 12px;">기간 동안 유입된 페이지별 통계 정보 입니다.</p>
+            </div>
+            <div class="card-body">
+              {{#eachLimit pageList 5}}
+              <div class="az-list-item">
+                <div>
+                  <h6>{{page}}</h6>
+                </div>
+                <div>
+                  <span class="tx-primary">{{rcount}}</span><span> ({{percent ../pageAcount rcount}}%)</span>
+                </div>
+              </div>
+              {{/eachLimit}}
+              {{#isEmpty pageList}}
+              <div class="az-list-item">
+                <span class="text-danger"><i class="mdi mdi-close-circle-outline mg-r-5"></i>해당 기간에 조회된 자료가
+                  없습니다.</span>
+              </div>
+              {{/isEmpty}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="modalQuery" class="modal effect-scale">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-demo">
+        <div class="modal-header">
+          <h6 class="modal-title">유입 검색어 상세 정보</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mg-b-15-f">조회 기간 <i class="mdi mdi-chevron-double-right"></i> <span class="modalStart"></span> ~
+            <span class="modalEnd"></span></p>
+          <div class="table-responsive table-hover">
+            <table class="table mg-b-0">
+              <thead>
+                <tr>
+                  <th class="wd-60p wd-md-80p">
+                    검색어
+                  </th>
+                  <th>
+                    유입
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table-responsive table-hover" style="max-height: 300px;">
+            <table class="table">
+              <tbody>
+                {{#each queryList}}
+                <tr>
+                  <td class="wd-60p wd-md-80p">
+                    {{query}}
+                  </td>
+                  <td>
+                    <strong>{{rcount}}</strong> ({{percent ../queryAcount rcount}}%)
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-indigo" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalDomain" class="modal effect-scale">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-demo">
+        <div class="modal-header">
+          <h6 class="modal-title">유입 경로 도메인 상세 정보</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mg-b-15-f">조회 기간 <i class="mdi mdi-chevron-double-right"></i> <span class="modalStart"></span> ~
+            <span class="modalEnd"></span></p>
+          <div class="table-responsive table-hover">
+            <table class="table mg-b-0">
+              <thead>
+                <tr>
+                  <th class="wd-60p wd-md-80p">
+                    도메인
+                  </th>
+                  <th>
+                    유입
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table-responsive table-hover" style="max-height: 300px;">
+            <table class="table">
+              <tbody>
+                {{#each domainList}}
+                <tr>
+                  <td class="wd-60p wd-md-80p">
+                    {{domain}}
+                  </td>
+                  <td>
+                    <strong>{{rcount}}</strong> ({{percent ../domainAcount rcount}}%)
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-indigo" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalPage" class="modal effect-scale">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content modal-content-demo">
+        <div class="modal-header">
+          <h6 class="modal-title">유입 페이지 상세 정보</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mg-b-15-f">조회 기간 <i class="mdi mdi-chevron-double-right"></i> <span class="modalStart"></span> ~
+            <span class="modalEnd"></span></p>
+          <div class="table-responsive table-hover">
+            <table class="table mg-b-0">
+              <thead>
+                <tr>
+                  <th class="wd-60p wd-md-80p">
+                    페이지
+                  </th>
+                  <th>
+                    유입
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="table-responsive table-hover" style="max-height: 300px;">
+            <table class="table">
+              <tbody>
+                {{#each pageList}}
+                <tr>
+                  <td class="wd-60p wd-md-80p">
+                    {{page}}
+                  </td>
+                  <td>
+                    <strong>{{rcount}}</strong> ({{percent ../pageAcount rcount}}%)
+                  </td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-indigo" data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      search: function () { // 필터링 조회
+        // 유효성 검사
+        var filter = event.target;
+        if (filter.start.value == '') {
+          Swal.fire({ type: 'error', title: '오류', text: '시작일을 입력해주세요.', confirmButtonColor: '#5b47fb', confirmButtonText: '확인' });
+          return false;
+        }
+
+        if (filter.end.value == '') {
+          Swal.fire({ type: 'error', title: '오류', text: '종료을 입력해주세요.', confirmButtonColor: '#5b47fb', confirmButtonText: '확인' });
+          return false;
+        }
+
+        // 시작일과 종료일 사이 체크
+        if (moment(filter.start.value).isAfter(filter.end.value)) {
+          Swal.fire({ type: 'error', title: '오류', text: '시작과 종료일을 확인해주세요.', confirmButtonColor: '#5b47fb', confirmButtonText: '확인' });
+          return false;
+        }
+
+        return true;
+
+      },
+      init: function () { // 초기 스크립트 실행
+        // 데이트 피커
+        $('.air-datepicker').datepicker({
+          language: 'ko',
+          autoClose: true,
+          maxDate: moment().subtract(1, 'days').toDate(),
+          minDate: moment().subtract(91, 'days').toDate()
+        });
+
+        // peity 초기화
+        $('.peity-donut').peity('donut');
+
+        // 차트 기본 옵션
+        var optionpie = {
+          maintainAspectRatio: false,
+          responsive: true,
+          legend: {
+            display: false,
+          },
+          animation: {
+            animateScale: true,
+            animateRotate: true
+          },
+          plugins: {
+            datalabels: {
+              display: false
+            }
+          }
+        };
+
+        // 기간 차트 초기화
+        var ymdArray = {{{ inflowChart.ymd
+    }}};
+    var countAllArray = {{{ inflowChart.acount }}};
+    var countRealArray = {{{ inflowChart.rcount }}};
+
+    var countChart = new Chart(document.getElementById('count'), {
+      type: 'line',
+      data: {
+        labels: ymdArray,
+        datasets: [{
+          label: '전체 유입',
+          data: countAllArray,
+          borderColor: '#3366ff',
+          borderWidth: 1,
+          fill: false
+        }, {
+          label: '실제 유입',
+          data: countRealArray,
+          borderColor: '#6f42c1',
+          borderWidth: 1,
+          fill: false
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            display: false
+          }
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              fontSize: 10,
+            }
+          }],
+          xAxes: [{
+            ticks: {
+              beginAtZero: true,
+              fontSize: 11
+            }
+          }]
+        },
+        plugins: {
+          datalabels: {
+            display: false
+          }
+        }
+      }
+    });
+
+    // 디바이스 종류 차트 초기화
+    var deviceDesktop = parseInt('{{inflowCount.desktop}}') || 0;
+    var deviceMobile = parseInt('{{inflowCount.mobile}}') || 0;
+
+    var deviceDatapie = {
+      labels: ['데스크톱', '모바일'],
+      datasets: [{
+        data: [deviceDesktop, deviceMobile],
+        backgroundColor: ['#007bff', '#00cccc']
+      }]
+    };
+
+    var deviceChart = new Chart(document.getElementById('device'), {
+      type: 'doughnut',
+      data: deviceDatapie,
+      options: optionpie
+    });
+
+    // 채널 차트 초기화
+    var channelSearch = parseInt('{{inflowCount.search}}') || 0;
+    var channelSocial = parseInt('{{inflowCount.social}}') || 0;
+    var channelEmail = parseInt('{{inflowCount.email}}') || 0;
+    var channelUrl = parseInt('{{inflowCount.url}}') || 0;
+    var channelEtc = parseInt('{{inflowCount.etc}}') || 0;
+
+    var channelDatapie = {
+      labels: ['검색엔진', '소셜 네트워크', '이메일', '주소 입력', '기타'],
+      datasets: [{
+        data: [channelSearch, channelSocial, channelEmail, channelUrl, channelEtc],
+        backgroundColor: ['#6f42c1', '#007bff', '#17a2b8', '#00cccc', '#adb2bd']
+      }]
+    };
+
+    var channelChart = new Chart(document.getElementById('channel'), {
+      type: 'doughnut',
+      data: channelDatapie,
+      options: optionpie
+    });
+
+    // 쿼리스트링 데이터 초기화
+    var qrs = BROWSER.getQueryString();
+    if (qrs.start) {
+      $('#start').datepicker().data('datepicker').selectDate(new Date(qrs.start));
+    } else {
+      qrs.start = moment().subtract(7 + 1, 'days').format('YYYY-MM-DD');
+      $('#start').datepicker().data('datepicker').selectDate(moment().subtract(7 + 1, 'days').toDate());
+    }
+
+    if (qrs.end) {
+      $('#end').datepicker().data('datepicker').selectDate(new Date(qrs.end));
+    } else {
+      qrs.end = moment().subtract(1, 'days').format('YYYY-MM-DD');
+      $('#end').datepicker().data('datepicker').selectDate(moment().subtract(1, 'days').toDate());
+    }
+
+    $('.modalStart').html(qrs.start);
+    $('.modalEnd').html(qrs.end);
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

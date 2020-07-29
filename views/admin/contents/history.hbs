@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>타임라인 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='cthistory'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">타임라인</h2>
+          <p class="mg-b-0">타임라인을 관리합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/contents/history" class="nav-link active">리스트</a>
+              <a href="/admin/contents/history/order" class="nav-link">순서</a>
+              <a href="/admin/contents/history/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <div class="history-count">
+              <span>전체 {{historyCount}}개</span>
+            </div>
+            <div class="history">
+              {{#each historys}}
+              <p class="year text-primary">{{this.year}}년</p>
+              <ul class="timeline">
+                {{#each list}}
+                <li>
+                  <div class="text-primary">{{this.month}}월</div>
+                  {{#each list}}
+                  <p class="history-item">- {{contents}}
+                    <a href="/admin/contents/history/edit?idx={{idx}}" class="mg-l-5"><i
+                        class="mdi mdi-square-edit-outline"></i></a>
+                    <a href="javascript:void(0);" onclick="APP.buttonDeleteHistory({{idx}})"><i
+                        class="mdi mdi-delete-empty"></i></a>
+                  </p>
+                  {{/each}}
+                </li>
+                {{/each}}
+              </ul>
+              {{else}}
+              <div class="text-center">
+                등록된 타임라인이 없습니다.
+              </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      buttonDeleteHistory: function (idx) { // 타임라인 삭제
+        Swal.fire({ title: '확인', text: '선택하신 타임라인을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/history/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { location.reload() });
+                });
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+        // 데이트 피커
+        $('.air-datepicker').datepicker({
+          language: 'ko',
+          autoClose: true,
+          toggleSelected: false,
+          view: 'months',
+          minView: 'months',
+          dateFormat: 'yyyy-mm',
+          maxDate: new Date()
+        });
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InflowStat">
+  <select id="selectBatch">
+    SELECT
+			#{ymd} AS ymd,
+			(SELECT COUNT(*) FROM session_log WHERE reg_ymd = #{ymd}) AS acount,
+			(SELECT COUNT(sl.count) FROM (SELECT ip, COUNT(*) as count FROM session_log WHERE reg_ymd = #{ymd} GROUP BY ip) AS sl) AS rcount,
+			(SELECT COUNT(CASE WHEN domain LIKE '%google%' THEN 1 WHEN domain LIKE '%search.naver%' THEN 1 WHEN domain LIKE '%search.daum%' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS search,
+			(SELECT COUNT(CASE WHEN domain LIKE '%facebook%' THEN 1 WHEN domain LIKE '%instagram%' THEN 1 WHEN domain LIKE '%blog.naver%' THEN 1 WHEN domain LIKE '%blog.daum%' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS social,
+			(SELECT COUNT(CASE WHEN domain LIKE '%mail.%' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS email,
+			(SELECT COUNT(CASE WHEN domain = '' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS url,
+			(SELECT COUNT(CASE WHEN device='Chrome' THEN 1 WHEN device='MSIE' THEN 1 WHEN device='Opera' THEN 1 WHEN device='Firefox' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS desktop,
+			(SELECT COUNT(CASE WHEN device='Iphone' THEN 1 WHEN device='Ipad' THEN 1 WHEN device='Android' THEN 1 END) FROM session_log WHERE reg_ymd = #{ymd}) AS mobile
+  </select>
+  <select id="selectInflow">
+  <![CDATA[
+    SELECT 
+      IFNULL(SUM(acount), 0) AS acount, 
+      IFNULL(SUM(rcount), 0) AS rcount, 
+      IFNULL(SUM(search), 0) AS search, 
+      IFNULL(SUM(social), 0) AS social, 
+      IFNULL(SUM(email), 0) AS email, 
+      IFNULL(SUM(url), 0) AS url, 
+      IFNULL(SUM(etc), 0) AS etc, 
+      IFNULL(SUM(desktop), 0) AS desktop, 
+      IFNULL(SUM(mobile), 0) AS mobile 
+    FROM 
+      inflow_stat 
+    WHERE 
+      ymd >= DATE_FORMAT(#{start}, '%Y%m%d') 
+    AND 
+      ymd <= DATE_FORMAT(#{end}, '%Y%m%d')
+  ]]>
+  </select>
+
+  <select id="selectInflowChart">
+  <![CDATA[
+			SELECT DATE_FORMAT(ds.ymd, '%m.%d') AS ymd, IFNULL(ics.acount, 0) AS acount, IFNULL(ics.rcount, 0) AS rcount FROM inflow_stat AS ics RIGHT JOIN
+			(select DATE_FORMAT(ymd, '%Y%m%d') AS ymd from 
+			(select adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) ymd from
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v
+			where ymd between DATE_FORMAT(#{start}, '%Y-%m-%d') and DATE_FORMAT(#{end}, '%Y-%m-%d')) AS ds
+			ON ics.ymd = ds.ymd
+			ORDER BY ds.ymd
+		]]>
+  </select>
+
+  <insert id="insertOne">
+    INSERT INTO inflow_stat
+    (
+      ymd, 
+      email, 
+      search, 
+      social, 
+      url, 
+      etc, 
+      acount, 
+      rcount, 
+      desktop, 
+      mobile, 
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      ${email}, 
+      ${search}, 
+      ${social}, 
+      ${url}, 
+      ${etc}, 
+      ${acount}, 
+      ${rcount}, 
+      ${desktop}, 
+      ${mobile}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

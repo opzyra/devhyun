@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>포스트 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='bopost'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">포스트</h2>
+          <p class="mg-b-0">블로그에 게시된 포스트 입니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/board/post" class="nav-link active">리스트</a>
+              <a href="/admin/board/post/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET" onsubmit="return APP.search();">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline ipn-sm mg-r-5 wd-30p wd-md-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="title">제목</option>
+                      <option value="contents">내용</option>
+                      <option value="name">작성자</option>
+                    </select>
+                    <input id="query" type="text" name="title"
+                      class="form-control d-inline ipn-sm wd-50p wd-md-20p mg-r-5" placeholder="검색어" autocomplete="off">
+                    <button class="btn-input ipn-sm btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <table class="az-table">
+              <thead>
+                <tr>
+                  <th class="wd-15p wd-md-10p">번호</th>
+                  <th>제목</th>
+                  <th class="d-none d-md-table-cell wd-10p">조회수</th>
+                  <th class="d-none d-md-table-cell wd-10p">작성자</th>
+                  <th class="d-none d-md-table-cell wd-15p">작성일시</th>
+                  <th class="d-md-none wd-5p"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each postList.items}}
+                <tr class="item">
+                  <td>{{pageIdx ../postList.row ../postList.page 20 'desc'}}</td>
+                  <td class="tx-center pd-0 tx-md-left-f pd-md-l-20-f"><a
+                      href="/admin/board/post/detail?idx={{idx}}">{{title}}</a></td>
+                  <td class="d-none d-md-table-cell">{{hit}}</td>
+                  <td class="d-none d-md-table-cell">{{member_name}}</td>
+                  <td class="d-none d-md-table-cell">{{parseDate reg_date 'YYYY.MM.DD HH:mm'}}</td>
+                  <td class="d-md-none"></td>
+                </tr>
+                <tr class="sub">
+                  <td colspan="11" class="pd-0-f">
+                    <table class="table az-table-sub">
+                      <tbody>
+                        <tr>
+                          <td class="wd-40p">조회수</td>
+                          <td>{{hit}}</td>
+                        </tr>
+                        <tr>
+                          <td>작성자</td>
+                          <td>{{member_name}}</td>
+                        </tr>
+                        <tr>
+                          <td>작성일시</td>
+                          <td>{{parseDate reg_date 'YYYY.MM.DD HH:mm'}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                {{else}}
+                <tr class="item">
+                  <td class="item-none" colspan="6">데이터를 찾을 수 없습니다.</td>
+                </tr>
+                {{/each}}
+              </tbody>
+            </table>
+            <div class="row mg-t-20">
+              <div class="col-12 tx-center">
+                <ul id="page" class="pagination"></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      clearFilter: function () { // 전체 목록 조회
+        location.href = location.href.replace(/\?.+/, '');
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        var value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      init: function () { // 초기 스크립트 실행
+        // 페이징
+        var totalPages = parseInt('{{postList.totalPage}}') || 1;
+        var startPage = parseInt('{{postList.page}}') + 1 || 1;
+
+        $('#page').twbsPagination({
+          totalPages: totalPages,
+          startPage: totalPages >= startPage ? startPage : 1,
+          visiblePages: (function () {
+            return BROWSER.isMobile() ? 5 : 10
+          })(),
+          first: '',
+          last: '',
+          prev: '<span>이전</span>',
+          next: '<span>다음</span>',
+          onPageClick: function (event, page) {
+            if (startPage == page) return;
+            if (location.href.indexOf('page') == -1) {
+              var isQuery = location.href.indexOf('?') >= 0;
+              location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+            } else {
+              location.href = location.href.replace(/page=.+/g, 'page=' + page);
+            }
+
+          }
+        });
+
+        // 쿼리스트링 데이터 초기화
+        var qstr = BROWSER.getQueryString();
+
+        if (qstr.title) {
+          $('#query').attr('name', 'title').val(qstr.title); $('#category').val('title');
+        }
+
+        if (qstr.contents) {
+          $('#query').attr('name', 'contents').val(qstr.contents); $('#category').val('contents');
+        }
+
+        if (qstr.name) {
+          $('#query').attr('name', 'name').val(qstr.name); $('#category').val('name');
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

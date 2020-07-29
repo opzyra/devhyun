@@ -1,30 +1,5 @@
-import moment from "moment";
-import htmlToText2 from "html-to-text2";
-import { formatDistance, format } from "date-fns";
-import { ko } from "date-fns/locale";
-import { go, map, reduce } from "fxjs";
-
-const core = {
-  config: function(scope, namespace) {
-    return `<script>CONFIG('${scope}', '${namespace}')</script>`;
-  },
-  store: function(states, option) {
-    let session = option.data.root.session;
-
-    const state = JSON.stringify({
-      session: session.member
-        ? {
-            name: session.member.name,
-            role_name: session.member.role_name,
-            thumbnail: session.member.thumbnail
-          }
-        : "guest",
-      ...states
-    });
-
-    return `<script>STATE=${state};</script>`;
-  }
-};
+import moment from 'moment';
+import htmlToText2 from 'html-to-text2';
 
 const check = {
   isNull: function(v1) {
@@ -33,7 +8,7 @@ const check = {
   ifNullDef: function(value, def) {
     if (value == null || value == undefined) return def;
     else return value;
-  }
+  },
 };
 
 const math = {
@@ -45,9 +20,9 @@ const math = {
   numIdx: function(odr, option) {
     if (!option) {
       option = odr;
-      odr = "asc";
+      odr = 'asc';
     }
-    if (odr && odr.toLowerCase() == "desc") {
+    if (odr && odr.toLowerCase() == 'desc') {
       return value - option.data.index;
     }
 
@@ -61,10 +36,10 @@ const math = {
   pageIdx: function(row, page, size, odr, option) {
     if (!option) {
       option = odr;
-      odr = "asc";
+      odr = 'asc';
     }
 
-    if (odr && odr.toLowerCase() == "desc") {
+    if (odr && odr.toLowerCase() == 'desc') {
       return row - size * page - option.data.index;
     }
 
@@ -86,7 +61,7 @@ const math = {
     }
 
     return Math.floor((v2 / v1) * 100);
-  }
+  },
 };
 
 const convert = {
@@ -96,29 +71,8 @@ const convert = {
    * OUT: 문자(STRING)
    */
   parseDate: function(value, format) {
-    if (value == 0 || !value || value == "") return "-";
+    if (value == 0 || !value || value == '') return '-';
     return moment(value).format(format);
-  },
-  /**
-   * 날짜의 기간을 적절한 텍스트로 변환
-   * IN: 날짜(DATE)
-   * OUT: 문자(STRING)
-   */
-  parseDiffDate: function(date) {
-    const now = new Date();
-    const givenDate = new Date(date);
-    const diff = now - givenDate;
-    if (diff < 1000 * 60) {
-      return "방금 전";
-    }
-    if (diff < 1000 * 60 * 60 * 24 * 7) {
-      const distanceString = formatDistance(givenDate, now, {
-        locale: ko,
-        addSuffix: true
-      });
-      return distanceString;
-    }
-    return format(givenDate, "yyyy.MM.dd");
   },
   /**
    * 핸드폰 연락처 분할 처리
@@ -129,13 +83,74 @@ const convert = {
     if (
       !phone ||
       !phone.match(
-        /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-[0-9]{3,4}-[0-9]{4}$/
+        /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-[0-9]{3,4}-[0-9]{4}$/,
       ) ||
       (!index && index != 0)
     ) {
-      return "-";
+      return '-';
     }
-    return phone.split("-")[index];
+    return phone.split('-')[index];
+  },
+  /**
+   * 관리자 권한을 텍스트로 변환
+   * IN: 권한(STRING)
+   * OUT: 권한 이름(STRING)
+   */
+  parseRole: function(role) {
+    let res = '-';
+
+    if (!role) return res;
+
+    switch (role) {
+      case 'SUPER_ADMIN':
+        res = '개발자';
+        break;
+      case 'MASTER_ADMIN':
+        res = '대표';
+        break;
+      case 'MANAGER_ADMIN':
+        res = '매니저';
+        break;
+      case 'MEMBER_ADMIN':
+        res = '직원';
+        break;
+      default:
+        res = '회원';
+        break;
+    }
+
+    return res;
+  },
+  /**
+   * 활성화 상태를 텍스트로 변환
+   * IN: 활성화 상태(BOOLEAN)
+   * OUT: 활성화 상태 이름(STRING)
+   */
+  parseActive: function(v1) {
+    let res = '-';
+    if (!v1) return res;
+    return v1 == 1 ? '활성화' : '정지';
+  },
+  /**
+   * 계정 상태를 텍스트로 변환
+   * IN: 계정 상태(BOOLEAN), 탈퇴 상태(BOOLEAN)
+   * OUT: 활성화 상태 이름(STRING)
+   */
+  parseStatus: function(active, withdraw) {
+    let res = '-';
+    if (!active || !withdraw) return res;
+
+    if (active == 0) {
+      status = '정지';
+    } else {
+      status = '활성화';
+    }
+
+    if (withdraw == 1) {
+      status = '탈퇴';
+    }
+
+    return status;
   },
   /**
    * 성별을 텍스트로 변환
@@ -143,7 +158,7 @@ const convert = {
    * OUT: 성별 텍스트(STRING)
    */
   parseGender: function(value) {
-    return value == 0 ? "남성" : "여성";
+    return value == 0 ? '남성' : '여성';
   },
   /**
    * 나이 계산
@@ -151,9 +166,9 @@ const convert = {
    * OUT: 나이(INTEGER)
    */
   parseAge: function(value) {
-    if (value == 0) return "";
+    if (value == 0) return '';
     let year = value.substring(0, 4);
-    let now = moment().format("YYYY");
+    let now = moment().format('YYYY');
 
     return parseInt(now) - parseInt(year) + 1;
   },
@@ -163,17 +178,17 @@ const convert = {
    * OUT: 만 나이(INTEGER)
    */
   parseRealAge: function(birth) {
-    if (birth == 0) return "";
+    if (birth == 0) return '';
     let date = new Date();
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
 
-    if (month < 10) month = "0" + month;
-    if (day < 10) day = "0" + day;
+    if (month < 10) month = '0' + month;
+    if (day < 10) day = '0' + day;
 
     let monthDay = month + day;
-    birth = birth.replace("-", "").replace("-", "");
+    birth = birth.replace('-', '').replace('-', '');
 
     let birthdayy = birth.substr(0, 4);
     let birthdaymd = birth.substr(4, 4);
@@ -186,17 +201,17 @@ const convert = {
    * OUT: 일반 문자열(STRING)
    */
   parseMarkdown: function(markdown, wordwrap) {
-    markdown = markdown.replace(/(?:\r\n|\r|\n)/g, " ");
-    markdown = markdown.replace(/(<code data).*(<\/code>)/g, "");
+    markdown = markdown.replace(/(?:\r\n|\r|\n)/g, ' ');
+    markdown = markdown.replace(/(<code data).*(<\/code>)/g, '');
 
     let text = htmlToText2.fromString(markdown, {
       ignoreHref: true,
-      ignoreImage: true
+      ignoreImage: true,
     });
 
-    text = text.replace(/(?:\r\n|\r|\n)/g, " ");
+    text = text.replace(/(?:\r\n|\r|\n)/g, ' ');
     return string.cutString(text, wordwrap).trim();
-  }
+  },
 };
 
 const string = {
@@ -206,8 +221,8 @@ const string = {
    * OUT: 콤마가 삽입된 문자열(STRING)
    */
   decimal: function(value) {
-    if (!value) return "";
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    if (!value) return '';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   },
   /**
    * 문자 사이에 문자 삽입
@@ -228,7 +243,7 @@ const string = {
       max = value.length;
       isOver = false;
     }
-    return value.substring(0, max) + (isOver ? "..." : "");
+    return value.substring(0, max) + (isOver ? '...' : '');
   },
   /**
    * 문자열 자르기
@@ -236,9 +251,9 @@ const string = {
    * OUT: 잘린 문자열(STRING)
    */
   subString: function(value, start, end) {
-    if (!value) return "";
+    if (!value) return '';
     return value.substring(start, end);
-  }
+  },
 };
 
 const array = {
@@ -254,12 +269,8 @@ const array = {
     for (let i = 0; i < max && i < ary.length; ++i)
       result.push(options.fn(ary[i]));
 
-    return result.join("");
+    return result.join('');
   },
-  length: function(ary) {
-    if (!ary || !(ary instanceof Array)) return 0;
-    return ary.length;
-  }
 };
 
 const html = {
@@ -269,21 +280,23 @@ const html = {
    * OUT: 문자열(STRING)
    */
   checkbox: function(value) {
-    return value == 1 ? 'checked=""' : "";
+    return value == 1 ? 'checked=""' : '';
   },
-  selected: function(v1, v2) {
-    let vs1 = String(v1);
-    let vs2 = String(v2);
-    let rs = "";
-    if (vs1 == vs2) {
-      rs = 'selected=""';
-    }
-    return rs;
+  lineBrTag: function(value, count) {
+    if (!value || value == '') return '-';
+    return value.replace(
+      /(?:\r\n|\r|\n)/g,
+      count
+        ? (count => {
+            let res = '';
+            for (let i = 0; i < count; i++) {
+              res += '<br/>';
+            }
+            return res;
+          })(count)
+        : '<br/>',
+    );
   },
-  lineBreak: function(value, count) {
-    if (!value || value == "") return "-";
-    return value.replace(/(\n|\r\n)/g, "<br>");
-  }
 };
 
 const condition = {
@@ -293,33 +306,12 @@ const condition = {
     }
     return options.inverse(this);
   },
-  isNull: function(value, options) {
-    if (value && value.length > 0) {
-      return options.inverse(this);
-    }
-    return options.fn(this);
-  },
   isNotNull: function(value, options) {
     if (value && value.length > 0) {
       return options.fn(this);
     }
     return options.inverse(this);
   },
-  isAdmin: function(member, options) {
-    if (member && member.role.indexOf("ADMIN") >= 0) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  },
-  neq: function(v1, v2, options) {
-    if (v1 !== v2) {
-      return options.fn(this);
-    }
-    return options.inverse(this);
-  }
-};
-
-const client = {
   isHotPost: function(value, options) {
     if (value && value >= 20) {
       return options.fn(this);
@@ -328,10 +320,10 @@ const client = {
   },
   isNewPost: function(value, options) {
     let target = moment(value);
-    let max = moment().format("YYYY-MM-DD HH:mm:ss");
+    let max = moment().format('YYYY-MM-DD HH:mm:ss');
     let min = moment()
-      .subtract(5, "days")
-      .format("YYYY-MM-DD HH:mm:ss");
+      .subtract(5, 'days')
+      .format('YYYY-MM-DD HH:mm:ss');
 
     if (target.isBetween(min, max)) {
       return options.fn(this);
@@ -344,48 +336,98 @@ const client = {
     }
     return options.inverse(this);
   },
-  memberIdEllipse: function(value, options) {
-    const [platform, id] = value.split("_");
-    return `${platform}_${id.substring(0, 2)}*****`;
-  }
 };
 
-const admin = {
-  restDate: function(date) {
-    const serverDate = moment(date);
-    return Math.floor(moment.duration(serverDate.diff(moment())).asDays());
+const dependency = {
+  /**
+   * 관리자 통계 재방문 비율 계산
+   * IN: 대상 인원(INTEGER), 전체 인원(INTEGER)
+   * OUT: 비율(INTEGER)
+   */
+  reInflowPercent: function(acount, rcount) {
+    return (acount - rcount) / acount;
   },
-  restPercent: function(date) {
-    const serverDate = moment(date);
-    const restDays = Math.floor(
-      moment.duration(serverDate.diff(moment())).asDays()
-    );
-    return 100 - Math.floor((restDays / 365) * 100);
+  visitSum: function(array) {
+    let acount = 0;
+    for (let i = 1; i < array.length; i++) {
+      acount += parseInt(array[i]);
+    }
+    return acount;
   },
-  restDonut: function(date) {
-    const serverDate = moment(date);
-    const restDays = Math.floor(
-      moment.duration(serverDate.diff(moment())).asDays()
-    );
+  visitAvg: function(array) {
+    let acount = 0;
+    for (let i = 1; i < array.length; i++) {
+      acount += parseInt(array[i]);
+    }
+    let avg = acount / 12;
+    return avg.toFixed(1);
+  },
+  projectImpt: function(value) {
+    let html = '';
+    switch (value) {
+      case 1:
+        html = '<span class="badge badge-pill badge-primary">높음</span>';
+        break;
+      case 2:
+        html = '<span class="badge badge-pill badge-info">중간</span>';
+        break;
+      default:
+        html = '<span class="badge badge-pill badge-secondary">낮음</span>';
+    }
+    return html;
+  },
+  projectProgress: function(value) {
+    let rs = '';
+    if (value == 100) {
+      rs = '완료';
+    } else {
+      rs = value + '%';
+    }
+    return rs;
+  },
+  projectRestDay: function(value) {
+    let day = moment.duration(moment(value).diff(moment())).asDays();
+    return day < 0 ? 0 : Math.ceil(day);
+  },
+  taskProgress: function(value, opttions) {
+    let html = '';
+    /**
+    if (value == 0) {
+      html = `<span class="badge badge-danger">${value}%</span>`;
+    } else if (value > 0 && value <= 30) {
+      html = `<span class="badge badge-dark">${value}%</span>`;
+    } else if (value > 30 && value <= 60) {
+      html = `<span class="badge badge-info">${value}%</span>`;
+    } else if (value > 60 && value <= 99) {
+      html = `<span class="badge badge-primary">${value}%</span>`;
+    } else {
+      html = `<span class="badge badge-success">완료</span>`;
+    }
+    */
+    if (value == 100) {
+      html = `<span class="badge badge-success">완료</span>`;
+    } else {
+      html = `<span class="badge badge-dark">${value}%</span>`;
+    }
+    return html;
+  },
+  tagBox: function(value) {
+    if (!value) return '<div class="pd-y-9">　</div>';
+    let html = '';
+    const tags = value.split(',');
+    for (let i = 0; i < tags.length; i++) {
+      let item = tags[i];
+      html += `<span class="badge badge-info tag">${item}</span>`;
+    }
 
-    return `${365 - restDays}/365`;
+    return html;
   },
-  noteStyle: function(groups) {
-    return `<style>
-      ${go(
-        groups,
-        map(
-          e =>
-            `.note .lib .right .list ul a.group${e.idx}:hover {border-color: ${e.color};} .note .lib .right .list ul a.group${e.idx}:hover span {border-color: ${e.color};}`
-        ),
-        reduce((a, b) => `${a}${b}`)
-      )}
-    </style>`;
-  }
+  isActive: function(value) {
+    return value == 1 ? '활성화' : '정지';
+  },
 };
 
 export default Object.assign(
-  core,
   check,
   math,
   convert,
@@ -393,6 +435,5 @@ export default Object.assign(
   array,
   html,
   condition,
-  client,
-  admin
+  dependency,
 );

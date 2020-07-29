@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DomainStat">
+  <select id="selectBatch">
+    SELECT 
+      reg_ymd AS ymd, 
+      domain, 
+      COUNT(*) AS rcount 
+    FROM 
+      session_log 
+    WHERE 
+      domain != '' 
+    AND 
+      reg_ymd = #{ymd} 
+    GROUP BY 
+      domain
+  </select>
+  <select id="selectDomainList">
+  <![CDATA[
+    SELECT 
+      domain, SUM(rcount) AS rcount 
+    FROM 
+      domain_stat 
+    WHERE 
+      ymd >= DATE_FORMAT(#{start}, '%Y%m%d') 
+    AND 
+      ymd <= DATE_FORMAT(#{end}, '%Y%m%d') 
+    GROUP BY 
+      domain 
+    ORDER BY 
+      rcount DESC
+  ]]>
+  </select>
+  <insert id="insertOne">
+    INSERT INTO domain_stat
+    (
+      ymd, 
+      domain, 
+      rcount, 
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{domain}, 
+      ${rcount}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

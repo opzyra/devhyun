@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Upload">
+  <select id="selectFkBoard">
+    SELECT
+      upload.idx,
+      upload.name as fileName,
+      upload.src as fileSrc
+    FROM
+      upload_board, upload
+    WHERE
+      upload_board.upload_idx = upload.idx
+    AND
+      upload_board.board = #{board}
+    AND
+      upload_board.board_idx = ${board_idx}
+  </select>
+  <select id="selectFkTask">
+    SELECT
+      upload.idx,
+      upload.name as fileName,
+      upload.src as fileSrc
+    FROM
+      upload_task, upload
+    WHERE
+      upload_task.upload_idx = upload.idx
+    AND
+      upload_task.task_idx = ${task_idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO upload
+    (
+      mimetype, 
+      member_idx, 
+      ext, 
+      name, 
+      size, 
+      src, 
+      reg_date
+    ) 
+    VALUES
+    (
+      #{mimetype}, 
+      ${memberIdx}, 
+      #{ext}, 
+      #{name}, 
+      ${size}, 
+      #{src}, 
+      NOW()
+    )
+  </insert>
+  <insert id="insertFkBoard">
+    INSERT INTO upload_board
+    (
+      board, 
+      board_idx, 
+      upload_idx
+    ) 
+    VALUES
+    (
+      #{board}, 
+      ${board_idx}, 
+      ${upload_idx}
+    )
+  </insert>
+  <insert id="insertFkTask">
+    INSERT INTO upload_task
+    (
+      task_idx, 
+      upload_idx
+    ) 
+    VALUES
+    (
+      ${task_idx}, 
+      ${upload_idx}
+    )
+  </insert>
+  <delete id="deleteFkBoard">
+    DELETE
+    FROM upload_board
+    WHERE
+      board = #{board}
+    AND
+      board_idx = ${board_idx}
+  </delete>
+  <delete id="deleteFkTask">
+    DELETE
+    FROM upload_task
+    WHERE
+      task_idx = ${task_idx}
+  </delete>
+</mapper>

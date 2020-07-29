@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SeriesBoard">
+  <select id="selectAll">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      series_board.* 
+    FROM 
+      series_board, member
+    WHERE
+      series_board.member_idx = member.idx
+  </select>
+  <select id="selectAllPage">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      series_board.*
+    FROM 
+      series_board, member
+    WHERE
+      series_board.member_idx = member.idx
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="selectLatest">
+    SELECT 
+      * 
+    FROM 
+      series_board
+    ORDER BY
+      idx DESC
+    LIMIT
+      0, 5
+  </select>
+  <select id="selectAllHit">
+    SELECT 
+      * 
+    FROM 
+      series_board
+    ORDER BY
+      hit DESC,
+      idx DESC
+    LIMIT
+      0, 5
+  </select>
+  <select id="selectAllPageClient">
+    SELECT 
+      *
+    FROM 
+      series_board
+    WHERE
+      1=1
+    <if test="query != ''">
+    AND title LIKE CONCAT('%', #{query}, '%')
+    OR contents LIKE CONCAT('%', #{query}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 9
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      series_board
+    WHERE
+      1=1
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+  </select>
+  <select id="countAllPageClient">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      series_board
+    WHERE
+      1=1
+    <if test="query != ''">
+    AND title LIKE CONCAT('%', #{query}, '%')
+    OR contents LIKE CONCAT('%', #{query}, '%')
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      series_board.* 
+    FROM 
+      series_board, member
+    WHERE
+      series_board.member_idx = member.idx
+    AND
+      series_board.idx = ${idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO series_board
+    (
+      member_idx, 
+      title,
+      thumbnail,
+      contents,
+      hit,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx}, 
+      #{title},
+      #{thumbnail},
+      #{contents},
+      0,
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      series_board 
+    SET
+      title = #{title}, 
+      contents = #{contents},
+      thumbnail = #{thumbnail}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOneHit">
+    UPDATE 
+      series_board 
+    SET
+      hit = hit+1
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM series_board
+    WHERE
+      idx = ${idx}
+  </delete>
+
+  <!-- series_post -->
+  <select id="selectFkAllPagePost">
+    SELECT 
+      series_board.*, COUNT(idx) AS post_count
+    FROM 
+      series_board, series_post
+    WHERE
+      series_board.idx = series_post.series_idx
+    <if test="query != ''">
+    AND (series_board.title LIKE CONCAT('%', #{query}, '%')
+    OR series_board.contents LIKE CONCAT('%', #{query}, '%'))
+    </if>
+    GROUP BY 
+      series_board.idx
+    ORDER BY series_board.idx DESC
+    LIMIT ${limit}, 9
+  </select>
+  <select id="selectFkTagSeries">
+    SELECT 
+      series_board.* 
+    FROM 
+      series_board, series_tag 
+    WHERE 
+      series_board.idx = series_tag.series_idx 
+    AND 
+      series_tag.tag = #{query}
+    ORDER BY 
+      series_board.idx DESC
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countFkTagSeries">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      series_board, series_tag 
+    WHERE 
+      series_board.idx = series_tag.series_idx 
+    AND 
+      series_tag.tag = #{query}
+  </select>
+
+  <select id="selectAlFkPost">
+    SELECT 
+      post_board.* 
+    FROM 
+      series_post, post_board
+    WHERE
+      series_post.post_idx = post_board.idx
+    AND
+      series_post.series_idx = ${series_idx}
+    ORDER BY 
+      series_post.odr
+  </select>
+
+  <insert id="insertFkPost">
+    INSERT INTO series_post
+    (
+      series_idx, 
+      post_idx,
+      odr
+    )
+    VALUES
+    (
+      ${series_idx}, 
+      ${post_idx}, 
+      ${odr}
+    )
+  </insert>
+
+  <delete id="deleteFkPost">
+    DELETE
+    FROM series_post
+    WHERE
+      series_idx = ${series_idx}
+  </delete>
+
+</mapper>

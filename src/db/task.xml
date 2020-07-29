@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Task">
+  <select id="selectAll">
+    SELECT 
+      member.name as name, 
+      member.thumbnail as thumbnail, 
+      task.* 
+    FROM 
+      task, member
+    WHERE
+      task.member_idx = member.idx
+    AND
+      project_idx = ${project_idx}
+  </select>
+  <select id="selectAllPage">
+    SELECT 
+      member.name as name, 
+      member.thumbnail as thumbnail, 
+      task.*
+    FROM 
+      task, member
+    WHERE
+      task.member_idx = member.idx
+    AND
+      project_idx = ${idx}
+    <if test="category != ''">
+    AND category = #{category}
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    <if test="now != '' AND complete == ''">
+    <![CDATA[
+    AND progress < 100
+    ]]>
+    </if>
+    <if test="now == '' AND complete != ''">
+    <![CDATA[
+    AND progress = 100
+    ]]>
+    </if>
+    <if test="join != ''">
+    AND member_idx = ${member_idx}
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countAllPage">
+    SELECT
+      COUNT(*) AS row 
+    FROM 
+      task, member
+    WHERE 
+      task.member_idx = member.idx
+    AND
+      project_idx = ${idx}
+    <if test="category != ''">
+    AND task.category = #{category}
+    </if>
+    <if test="contents != ''">
+    AND task.contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="title != ''">
+    AND task.title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="name != ''">
+    AND member.name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    <if test="now != '' AND complete == ''">
+    <![CDATA[
+    AND task.progress < 100
+    ]]>
+    </if>
+    <if test="now == '' AND complete != ''">
+    <![CDATA[
+    AND task.progress = 100
+    ]]>
+    </if>
+    <if test="join != ''">
+    AND task.member_idx = ${member_idx}
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as name, 
+      member.thumbnail as thumbnail, 
+      task.* 
+    FROM 
+      task, member
+    WHERE
+      task.member_idx = member.idx
+    AND
+      task.idx = ${idx}
+  </select>
+  <select id="selectCategory">
+    SELECT DISTINCT
+      category
+    FROM
+      task
+    WHERE
+      project_idx = ${idx}
+  </select>
+  <select id="selectProgress">
+   SELECT
+	    COUNT(*) AS row,
+	    SUM(progress) AS progress
+    FROM
+    	task
+    WHERE
+	    project_idx = ${idx};
+  </select>
+  <insert id="insertOne">
+  <![CDATA[
+    INSERT INTO task
+    (
+      project_idx,
+      member_idx, 
+      category, 
+      title, 
+      contents,
+      progress,
+      reg_date
+    )
+    VALUES
+    (
+      ${project_idx}, 
+      ${member_idx}, 
+      #{category}, 
+      #{title}, 
+      #{contents},
+      0,
+      NOW()
+    )
+  ]]>
+  </insert>
+  <update id="updateOne">
+  <![CDATA[
+    UPDATE 
+      task 
+    SET
+      title = #{title}, 
+      contents = #{contents},
+      category = #{category},
+      progress = ${progress}
+    WHERE
+      idx = ${idx}
+  ]]>
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM task
+    WHERE
+      idx = ${idx}
+  </delete>
+</mapper>

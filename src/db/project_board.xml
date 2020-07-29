@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProjectBoard">
+  <select id="selectAll">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      project_board.* 
+    FROM 
+      project_board, member
+    WHERE
+      project_board.member_idx = member.idx
+  </select>
+  <select id="selectAllPage">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      project_board.*
+    FROM 
+      project_board, member
+    WHERE
+      project_board.member_idx = member.idx
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="selectAllClient">
+  <![CDATA[
+     SELECT 
+      * 
+    FROM 
+      project_board
+    WHERE
+      start <= #{date}
+    ORDER BY idx desc
+  ]]>
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      project_board
+    WHERE
+      1=1
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+  </select>
+  <select id="countAllPageClient">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      project_board
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      project_board.* 
+    FROM 
+      project_board, member
+    WHERE
+      project_board.member_idx = member.idx
+    AND
+      project_board.idx = ${idx}
+  </select>
+  <select id="selectCategory">
+    SELECT DISTINCT
+      category
+    FROM
+      project_board
+  </select>
+  <insert id="insertOne">
+    INSERT INTO project_board
+    (
+      member_idx,
+      category,
+      title,
+      description, 
+      thumbnail,
+      contents,
+      hit,
+      start,
+      end,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx}, 
+      #{category}, 
+      #{title}, 
+      #{description}, 
+      #{thumbnail},
+      #{contents},
+      0,
+      #{start}, 
+      #{end}, 
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      project_board 
+    SET
+      category = #{category}, 
+      title = #{title}, 
+      description = #{description}, 
+      thumbnail = #{thumbnail},
+      contents = #{contents},
+      start = #{start}, 
+      end = #{end}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOneHit">
+    UPDATE 
+      project_board 
+    SET
+      hit = hit+1
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM project_board
+    WHERE
+      idx = ${idx}
+  </delete>
+</mapper>

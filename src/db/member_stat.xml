@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberStat">
+  <select id="selectBatch">
+  <![CDATA[
+			SELECT
+				DATE_FORMAT('20190627', '%Y%m%d') AS ymd, 
+				DATE_FORMAT('20190627', '%Y') AS year, 
+				DATE_FORMAT('20190627', '%m') AS month,
+				IFNULL(SUM(IF(gender = 0, 1, 0)), 0) AS man, 
+				IFNULL(SUM(IF(gender = 1, 1, 0)), 0) AS woman, 
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 10, 1, 0)), 0) AS uteens,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 10 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 20, 1, 0)), 0) AS teens,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 20 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 30, 1, 0)), 0) AS twenties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 30 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 40, 1, 0)), 0) AS thirties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 40 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 50, 1, 0)), 0) AS forties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 50 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 60, 1, 0)), 0) AS fifties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 60 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 70, 1, 0)), 0) AS sixties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 70 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 80, 1, 0)), 0) AS seventies,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 80 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 90, 1, 0)), 0) AS eighties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 90 AND (DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) < 100, 1, 0)), 0) AS nineties,
+				IFNULL(SUM(IF((DATE_FORMAT(NOW(),'%Y')-DATE_FORMAT(birth,'%Y')+1) >= 100, 1, 0)), 0) AS onineties,
+				IFNULL(SUM(IF(LEFT(zonecode,2) <= 9, 1, 0)), 0) AS seoul,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 10 AND LEFT(zonecode,2) <= 20, 1, 0)), 0) AS gyeonggi,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 21 AND LEFT(zonecode,2) <= 23, 1, 0)), 0) AS incheon,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 24 AND LEFT(zonecode,2) <= 26, 1, 0)), 0) AS gangwon,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 27 AND LEFT(zonecode,2) <= 29, 1, 0)), 0) AS chungbuk,
+				IFNULL(SUM(IF(LEFT(zonecode,2) = 30, 1, 0)), 0) AS sejong,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 31 AND LEFT(zonecode,2) <= 33, 1, 0)), 0) AS chungnam,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 34 AND LEFT(zonecode,2) <= 35, 1, 0)), 0) AS daejeon,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 36 AND LEFT(zonecode,2) <= 40, 1, 0)), 0) AS gyeongbuk,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 41 AND LEFT(zonecode,2) <= 43, 1, 0)), 0) AS daegu,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 44 AND LEFT(zonecode,2) <= 45, 1, 0)), 0) AS ulsan,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 46 AND LEFT(zonecode,2) <= 49, 1, 0)), 0) AS busan,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 50 AND LEFT(zonecode,2) <= 53, 1, 0)), 0) AS gyeongnam,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 54 AND LEFT(zonecode,2) <= 56, 1, 0)), 0) AS jeonbuk,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 57 AND LEFT(zonecode,2) <= 60, 1, 0)), 0) AS jeonnam,
+				IFNULL(SUM(IF(LEFT(zonecode,2) >= 61 AND LEFT(zonecode,2) <= 62, 1, 0)), 0) AS gwangju,
+				IFNULL(SUM(IF(LEFT(zonecode,2) = 63, 1, 0)), 0) AS jeju,
+				IFNULL((SELECT COUNT(*) FROM member WHERE role = 'USER'), 0) AS rcount
+			FROM member WHERE role = 'USER' AND division = '개인' AND withdraw = FALSE AND DATE_FORMAT(reg_date,'%Y%m%d') <= #{ymd}
+		]]>
+  </select>
+  <select id="selectMemberCount">
+    <![CDATA[
+			SELECT rcount FROM member_stat WHERE ymd >= DATE_SUB(#{ymd}, INTERVAL 16 DAY) AND ymd <= #{ymd}
+		]]>
+  </select>
+  <select id="selectMemberData">
+    <![CDATA[
+			SELECT * FROM member_stat ORDER BY ymd DESC LIMIT 1
+	  ]]>
+  </select>
+  <insert id="insertOne">
+    INSERT INTO member_stat
+    (
+      ymd, 
+      year, 
+      month, 
+      man,
+      woman,
+      uteens,
+      teens,
+      twenties,
+      thirties,
+      forties,
+      fifties,
+      sixties,
+      seventies,
+      eighties,
+      nineties,
+      onineties,
+      seoul,
+      gyeonggi,
+      incheon,
+      gangwon,
+      chungbuk,
+      sejong,
+      chungnam,
+      daejeon,
+      gyeongbuk,
+      daegu,
+      ulsan,
+      busan,
+      gyeongnam,
+      jeonbuk,
+      jeonnam,
+      gwangju,
+      jeju,
+      rcount,
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{year}, 
+      ${month}, 
+      ${man},
+      ${woman},
+      ${uteens},
+      ${teens},
+      ${twenties},
+      ${thirties},
+      ${forties},
+      ${fifties},
+      ${sixties},
+      ${seventies},
+      ${eighties},
+      ${nineties},
+      ${onineties},
+      ${seoul},
+      ${gyeonggi},
+      ${incheon},
+      ${gangwon},
+      ${chungbuk},
+      ${sejong},
+      ${chungnam},
+      ${daejeon},
+      ${gyeongbuk},
+      ${daegu},
+      ${ulsan},
+      ${busan},
+      ${gyeongnam},
+      ${jeonbuk},
+      ${jeonnam},
+      ${gwangju},
+      ${jeju},
+      ${rcount},
+      NOW()
+    )
+  </insert>
+  
+</mapper>

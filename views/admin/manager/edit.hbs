@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>관리자 정보 수정 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mglist'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">관리자 정보 수정</h2>
+          <p class="mg-b-0">관리자의 정보를 수정합니다. 권한 변경의 경우 신중히 진행해주세요.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/manager/list" class="nav-link">리스트</a>
+              <a href="javascript:void(0);" class="nav-link active">수정</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updateAdmin(); return false;">
+              <input name="idx" type="hidden" value="{{admin.idx}}">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  권한<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <select id="role" name="role" class="form-control wd-60p wd-md-20p wd-lg-15p"
+                    data-role="{{admin.role}}">
+                    <option value="MASTER_ADMIN">대표</option>
+                    <option value="MANAGER_ADMIN">매니저</option>
+                    <option value="MEMBER_ADMIN">직원</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  아이디<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="idInp" name="id" type="text"
+                    class="form-control d-inline wd-60p wd-md-20p wd-lg-15p mg-r-10" maxlength="50" readonly=""
+                    value="{{admin.id}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  이름<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="name" type="text" class="form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    maxlength="10" value="{{admin.name}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  직책
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="position" type="text" class="form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    maxlength="100" value="{{admin.position}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  연락처<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="phoneInpHdn" name="phone" type="hidden" value="{{admin.phone}}">
+                  <input name="phone1" type="text" class="form-control d-inline wd-25p wd-md-15p wd-lg-10p"
+                    autocomplete="off" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                    value="{{parsePhone admin.phone 0}}"><span class="mg-x-10">-</span>
+                  <input name="phone2" type="text" class="form-control d-inline wd-25p wd-md-15p wd-lg-10p"
+                    autocomplete="off" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                    value="{{parsePhone admin.phone 1}}"><span class="mg-x-10">-</span>
+                  <input name="phone3" type="text" class="form-control d-inline wd-25p wd-md-15p wd-lg-10p"
+                    autocomplete="off" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="4"
+                    value="{{parsePhone admin.phone 2}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  이메일<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="email" type="text" class="form-control d-inline wd-100p wd-md-30p wd-lg-25p"
+                    autocomplete="off" value="{{admin.email}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  활성화<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="activeInpHdn" name="active" type="hidden" value="{{admin.active}}">
+                  <div id="activeToggle" class="az-toggle mg-y-6
+                  {{#if admin.active}}
+                  on
+                  {{else}}
+                  off
+                  {{/if}}
+                  "><span></span></div>
+                </div>
+              </div>
+
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.cancle();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      checkedId: false,
+      updateAdmin: function () { // 관리자 정보 수정
+        // 유효성 검사
+        var form = $(event.target).serializeObject();
+        var validate = true;
+        var message = '';
+
+        var phone = form.phone1 + '-' + form.phone2 + '-' + form.phone3;
+
+        form.phone = phone;
+
+        if (CHECK.isNull(form.role)) {
+          validate = false;
+          message = '권한을 선택해주세요.';
+        } else if (CHECK.isNull(form.name)) {
+          validate = false;
+          message = '이름을 입력해주세요.';
+        } else if (form.phone == '--') {
+          validate = false;
+          message = '연락처를 입력해주세요.';
+        } else if (!CHECK.isCellPhone(form.phone)) {
+          validate = false;
+          message = '연락처 형식이 올바르지 않습니다.';
+        } else if (CHECK.isNull(form.email)) {
+          validate = false;
+          message = '이메일을 입력해주세요.';
+        } else if (!CHECK.isEmail(form.email)) {
+          validate = false;
+          message = '이메일 형식이 올바르지 않습니다.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        AJAX.put('/member/admin', form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', html: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                location.href = document.getElementById('historyHdn').value;
+              });
+          });
+
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '관리자 정보가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              history.back();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+        // 활성화 토글 버튼
+        $('#activeToggle').on('click', function () {
+          var _self = this;
+          var isActive = $(_self).hasClass('on');
+          if (isActive) {
+            Swal.fire({ type: 'warning', title: '계정 정지', html: '해당 관리자는 접속이 불가능한 상태로 변경됩니다.', confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                $(_self).removeClass('on');
+                $('#activeInpHdn').val(0);
+              });
+          } else {
+            $(_self).addClass('on');
+            $('#activeInpHdn').val(1);
+          }
+        });
+
+        // 권한 셀렉트 박스
+        var role = $('#role').attr('data-role');
+        $('#role').val(role);
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

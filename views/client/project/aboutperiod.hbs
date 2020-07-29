@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='project' fix='fix'}}
 
@@ -101,7 +101,23 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'projectDetail')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			toolTip: function () {
+				tippy('.icon img', {
+					placement: 'bottom',
+					theme: 'devhyun',
+					distance: 2
+				});
+			},
+			init: function () {
+				APP.toolTip();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

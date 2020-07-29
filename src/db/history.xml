@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="History">
+  <select id="selectAll">
+    SELECT * FROM history ORDER BY year DESC, month DESC, odr
+  </select>
+  <select id="selectOne">
+    SELECT * FROM history WHERE idx = ${idx}
+  </select>
+  <select id="countAll">
+    SELECT COUNT(*) AS row FROM history
+  </select>
+  <insert id="insertOne">
+    INSERT INTO history
+    (
+      contents, 
+      year, 
+      month, 
+      reg_date
+    )
+    VALUES
+    (
+      #{contents}, 
+      #{year},
+      #{month},
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      history 
+    SET
+      contents = #{contents},
+      year = #{year},
+      month = #{month}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOrder">
+    UPDATE 
+      history 
+    SET
+      odr = ${odr}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM history
+    WHERE
+      idx = ${idx}
+  </delete>
+</mapper>

@@ -19,7 +19,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='blog' fix='fix'}}
 
@@ -42,9 +42,9 @@
 					<h2>
 						{{series.title}}
 					</h2>
-					<div class="date">{{parseDate series.reg 'YYYY.MM.DD'}}
+					<div class="date">{{parseDate series.reg_date 'YYYY.MM.DD'}}
 						<div class="icon">
-							{{#isNewPost series.reg}}
+							{{#isNewPost series.reg_date}}
 							<img src="/images/new.png" alt="새로운" data-tippy-content="새로운">
 							{{/isNewPost}}
 							{{#isHotPost series.hit}}
@@ -75,20 +75,10 @@
 						</div>
 
 						<div class="post">
-							<h2 id="postList">관련 포스트</h2>
+							<h2 id="postList"></h2>
 							<ul>
 								{{#each post}}
-								<li>
-									<a class="thumb" href="/blog/post/{{idx}}">
-										<img src="{{thumbnail}}">
-										<div class="white-mask"></div>
-									</a>
-									<div class="description">
-										<span>{{parseDate reg 'YYYY.MM.DD'}}</span>
-										<h3><a href="/blog/post/{{idx}}">{{title}}</a></h3>
-										<p class="visual_pc">{{parseMarkdown contents 200}}</p>
-										<p class="visual_mobile">{{parseMarkdown contents 80}}</p>
-									</div>
+								<li>{{add @index 1}}. <a href="/blog/post/{{idx}}">{{title}}</a>
 								</li>
 								{{/each}}
 							</ul>
@@ -111,7 +101,49 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'seriesDetail')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			toolTip: function () {
+				tippy('.icon img', {
+					placement: 'bottom',
+					theme: 'devhyun',
+					distance: 2
+				});
+			},
+			aside: function () {
+				$('aside').stick_in_parent({ offset_top: 80 });
+				var tocs = $('#toc a').filter(function (i) {
+					return $(this).attr('href').indexOf('#') >= 1;
+				}).map(function (i, e) {
+					var item = $(e).attr('href');
+					return $(item)[0].offsetTop + 50;
+				}).toArray();
+
+				var scroll = _.throttle(function () {
+					var top = $(document).scrollTop();
+					for (var i = 0; i < tocs.length; i++) {
+						var item = tocs[i];
+						var item_next = tocs[i + 1] ? tocs[i + 1] : $(document).innerHeight();
+						if (top >= item && top < item_next) {
+							$('#toc a').removeClass('on');
+							$('#toc a').eq(i).addClass('on');
+							break;
+						}
+					}
+				}, 250);
+
+				$(document).scroll(scroll);
+
+			},
+			init: function () {
+				APP.aside();
+				APP.toolTip();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

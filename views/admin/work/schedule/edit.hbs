@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>일정 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='wkschedule'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">일정 수정</h2>
+          <p class="mg-b-0">등록된 일정을 수정합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/work/schedule" class="nav-link">리스트</a>
+              <a href="javascript:void(0);" class="nav-link active">수정</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updateSchedule(); return false;">
+              <input name="idx" type="hidden" value="{{schedule.idx}}">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  작성자
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-inline-block az-img-user online mg-r-5"><img src="{{schedule.thumbnail}}"
+                      alt="thumbnail">
+                  </div>
+                  <div class="d-inline-block pd-y-9">{{schedule.name}}</div>
+                </div>
+              </div>
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  제목<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="title" type="text" class="form-control d-inline wd-100p wd-md-60p wd-lg-40p mg-r-10"
+                    autocomplete="off" value="{{schedule.title}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  장소
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="location" type="text" class="form-control d-inline wd-100p wd-md-60p wd-lg-40p mg-r-10"
+                    autocomplete="off" value="{{schedule.location}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  시작일<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="start" name="start" type="text"
+                    class="air-datetimepicker form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    autocomplete="off" value="{{schedule.start}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  종료일<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input id="end" name="end" type="text"
+                    class="air-datetimepicker form-control d-inline wd-100p wd-md-20p wd-lg-15p mg-r-10"
+                    autocomplete="off" value="{{schedule.end}}">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  관계자
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <select id="members" class="select2 wd-100p wd-md-60p wd-lg-50p br-6" name="members" multiple>
+                    {{#each admins}}
+                    <option value="{{idx}}">{{name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  색상<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0 form-color-select">
+                  <select id="scBackgroundColor" class="color-select" name="color">
+                    <option value="#C0392B">POMEGRANATE</option>
+                    <option value="#2ECC71">EMERALD</option>
+                    <option value="#3498DB">PETER RIVER</option>
+                    <option value="#D35400">PUMPKIN</option>
+                    <option value="#16A085">GREEN SEA</option>
+                    <option value="#977BD5">LAVANDER</option>
+                    <option value="#34495E">WET ASPHALT</option>
+                    <option value="#D870A9">PINK ROSE</option>
+                    <option value="#8BC163">GRASS</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  설명
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <textarea name="description" rows="5" class="form-control d-inline wd-100p wd-md-60p wd-lg-50p"
+                    style="resize:none;">{{schedule.description}}</textarea>
+                </div>
+              </div>
+
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.cancle();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      updateSchedule: function () {
+
+        var form = $(event.target).serializeObject();
+
+        var validate = true;
+        var message = '';
+
+        if (form.title == '') {
+          validate = false;
+          message = '제목을 입력해주세요.';
+        } else if (form.start == '') {
+          validate = false;
+          message = '시작일을 선택해주세요.';
+        } else if (!form.start.match(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$/)) {
+          validate = false;
+          message = '시작일의 형태가 올바르지 않습니다.';
+        } else if (form.end == '') {
+          validate = false;
+          message = '종료일을 선택해주세요.';
+        } else if (!form.end.match(/^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1]) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])$/)) {
+          validate = false;
+          message = '종료일의 형태가 올바르지 않습니다.';
+        } else if (moment(form.start).isAfter(form.end)) {
+          validate = false;
+          message = '시작일과 종료일을 확인해주세요.';
+        } else if (form.color == '') {
+          validate = false;
+          message = '색상을 선택해주세요.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        AJAX.put('/schedule/' + form.idx, form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+              });
+          });
+
+        return false;
+      },
+      cancle: function () { // 뒤로가기 처리
+        Swal.fire({ title: '확인', html: '입력하신 정보가 반영되지 않습니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              $('#historyHdn').val() ? location.href = $('#historyHdn').val() : history.back();
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+        // 관계자
+        var members = {{{ members.data
+    }}};
+    $('#members').val(members).trigger('change');
+
+    // 데이트 피커
+    $('.air-datetimepicker').datepicker({
+      language: 'ko',
+      autoClose: false,
+      timepicker: true,
+      toggleSelected: false,
+      dateFormat: 'yyyy-mm-dd',
+      timeFormat: 'hh:ii'
+    });
+
+    var start = '{{schedule.start}}';
+    var end = '{{schedule.end}}';
+    $('#start').datepicker().data('datepicker').selectDate(moment(start).toDate());
+    $('#end').datepicker().data('datepicker').selectDate(moment(end).toDate());
+    // 컬러픽
+    var color = '{{ schedule.color }}';
+    $('#scBackgroundColor').val(color).trigger('change');
+    $('#scBackgroundColor').colorSelect();
+
+    // 셀렉트박스
+    $('.select2').select2();
+
+    // 쿼리스트링 데이터 초기화
+    var qstr = BROWSER.getQueryString();
+    if (qstr.start) {
+      var start = moment.unix(qstr.start / 1000).subtract(9, 'hour');
+
+    }
+
+    if (qstr.end) {
+      var end = moment.unix(qstr.end / 1000).subtract(9, 'hour').subtract(1, 'second');
+
+    }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

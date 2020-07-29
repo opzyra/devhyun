@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Banner">
+  <select id="selectAll">
+    SELECT 
+      * 
+    FROM 
+      banner
+    ORDER BY
+      odr
+  </select>
+  <select id="countAll">
+    SELECT COUNT(*) AS row FROM banner
+  </select>
+  <select id="selectOne">
+    SELECT * FROM banner WHERE idx = ${idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO banner
+    (
+      odr,
+      name, 
+      img, 
+      url,
+      target,
+      reg_date
+    )
+    VALUES
+    (
+      ${odr},
+      #{name}, 
+      #{img}, 
+      #{url},
+      #{target},
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      banner 
+    SET
+      name = #{name}, 
+      img = #{img}, 
+      url = #{url},
+      target = #{target}
+    WHERE
+      idx = ${idx}
+  </update>
+  <update id="updateOrder">
+    UPDATE 
+      banner 
+    SET
+      odr = ${odr}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM banner
+    WHERE
+      idx = ${idx}
+  </delete>
+</mapper>

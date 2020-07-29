@@ -1,0 +1,88 @@
+{{!-- 메뉴 영역 --}}
+<div class="az-sidebar az-sidebar-sticky az-sidebar-indigo-dark">
+  <div class="az-sidebar-loggedin">
+    <div class="az-img-user online"><img src="{{session.member.thumbnail}}" alt="thumbnail"></div>
+    <div class="media-body">
+      <h6>{{session.member.name}}</h6>
+      <span>{{session.member.position}}</span>
+    </div>
+  </div>
+  <div class="az-sidebar-body">
+    <ul class="nav">
+      <li class="nav-item">
+        <a href="/" class="nav-link"><i class="typcn typcn-home-outline"></i>홈페이지</a>
+      </li>
+      <li class="nav-item">
+        <a href="" class="nav-link with-sub"><i class="typcn typcn-input-checked"></i>업무관리</a>
+        <ul class="nav-sub">
+          <li id="wkschedule" class="nav-sub-item">
+            <a href="/admin/work/schedule" class="nav-sub-link">일정</a>
+          </li>
+          <li id="wkproject" class="nav-sub-item">
+            <a href="/admin/work/project" class="nav-sub-link">프로젝트</a>
+          </li>
+          <li id="wklecture" class="nav-sub-item">
+            <a href="/admin/work/lecture" class="nav-sub-link">노트</a>
+          </li>
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a href="" class="nav-link with-sub"><i class="typcn typcn-tabs-outline"></i>콘텐츠</a>
+        <ul class="nav-sub">
+          <li id="cthistory" class="nav-sub-item">
+            <a href="/admin/contents/history" class="nav-sub-link">타임라인</a>
+          </li>
+          <!--
+          <li id="ctproduct" class="nav-sub-item">
+            <a href="/admin/contents/product" class="nav-sub-link">포트폴리오</a>
+          </li>
+          -->
+        </ul>
+      </li>
+      <li class="nav-item">
+        <a href="" class="nav-link with-sub"><i class="typcn typcn-edit"></i>블로그</a>
+        <ul class="nav-sub">
+          <li id="bopost" class="nav-sub-item"><a href="/admin/board/post" class="nav-sub-link">포스트</a></li>
+          <li id="boseries" class="nav-sub-item"><a href="/admin/board/series" class="nav-sub-link">시리즈</a></li>
+        </ul>
+      </li>
+      {{!-- 웹 관리자, 대표 이용 가능 --}}
+      {{#or (eq session.member.role "SUPER_ADMIN") (eq session.member.role "MASTER_ADMIN")}}
+      <li class="nav-item">
+        <a href="" class="nav-link with-sub"><i class="typcn typcn-chart-bar-outline"></i>통계</a>
+        <ul class="nav-sub">
+          <li id="stvisit" class="nav-sub-item"><a href="/admin/stat/visit" class="nav-sub-link">방문자 통계</a></li>
+          <li id="stinflow" class="nav-sub-item"><a href="/admin/stat/inflow" class="nav-sub-link">유입 통계</a></li>
+        </ul>
+      </li>
+      {{/or}}
+      <li class="nav-item mg-b-10">
+        <a href="" class="nav-link with-sub"><i class="typcn typcn-cog-outline"></i>관리자</a>
+        <ul class="nav-sub">
+          {{!-- 웹 관리자 이용 가능 --}}
+          {{#eq session.member.role "SUPER_ADMIN"}}
+          <li id="mgregister" class="nav-sub-item"><a href="/admin/manager/register" class="nav-sub-link">관리자 등록</a>
+          </li>
+          <li id="mglist" class="nav-sub-item"><a href="/admin/manager/list" class="nav-sub-link">관리자 정보</a></li>
+          {{/eq}}
+          {{!-- 웹 관리자, 대표 이용 가능 --}}
+          {{#or (eq session.member.role "SUPER_ADMIN") (eq session.member.role "MASTER_ADMIN")}}
+          <li id="mgactlog" class="nav-sub-item"><a href="/admin/manager/actlog" class="nav-sub-link">관리자 활동 로그</a></li>
+          {{/or}}
+          <li id="mgrepwd" class="nav-sub-item"><a href="/admin/manager/repwd" class="nav-sub-link">비밀번호 변경</a></li>
+          <li id="mgthumbnail" class="nav-sub-item"><a href="/admin/manager/thumbnail" class="nav-sub-link">사진 변경</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <script>
+    (function () {
+      // 네비게이션 활성화
+      var active = document.getElementById('{{active}}');
+      var parent = active.parentNode.className.indexOf('nav-item') > -1 ? active.parentNode : active.parentNode.parentNode;
+      active.classList.add('active');
+      parent.classList.add('show', 'active');
+    })();
+  </script>
+</div>

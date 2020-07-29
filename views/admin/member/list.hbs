@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>회원 정보 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mblist'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">회원 정보</h2>
+          <p class="mg-b-0">등록된 회원의 목록입니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/member/list" class="nav-link active">리스트</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET" onsubmit="return APP.search();">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline ipn-sm mg-r-5 wd-30p wd-md-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="name">이름</option>
+                      <option value="id">아이디</option>
+                    </select>
+                    <input id="query" type="text" name="name"
+                      class="form-control d-inline ipn-sm wd-50p wd-md-20p mg-r-5" placeholder="검색어" autocomplete="off">
+                    <button class="btn-input ipn-sm btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <table class="az-table">
+              <thead>
+                <tr>
+                  <th class="wd-15p wd-md-5p">번호</th>
+                  <th class="wd-25p wd-md-10p">구분</th>
+                  <th class="d-none d-md-table-cell wd-10p">등급</th>
+                  <th class="d-none d-md-table-cell">아이디</th>
+                  <th>이름</th>
+                  <th class="d-none d-md-table-cell">이메일</th>
+                  <th class="d-none d-md-table-cell">연락처</th>
+                  <th class="d-none d-md-table-cell wd-10p">등록일</th>
+                  <th class="d-none d-md-table-cell wd-10p">계정상태</th>
+                  <th class="d-none d-md-table-cell wd-10p">상세정보</th>
+                  <th class="d-md-none wd-5p"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each memberList.items}}
+                <tr class="item">
+                  <td>{{mkIdx ../memberList.row ../memberList.page}}</td>
+                  <td>{{division}}</td>
+                  <td class="d-none d-md-table-cell">{{memberListGrade pay}}</td>
+                  <td class="d-none d-md-table-cell">{{id}}</td>
+                  <td>{{name}}</td>
+                  <td class="d-none d-md-table-cell">{{email}}</td>
+                  <td class="d-none d-md-table-cell">{{phone}}</td>
+                  <td class="d-none d-md-table-cell">{{fmtymd reg_date}}</td>
+                  <td class="d-none d-md-table-cell">{{isStatus}}</td>
+                  <td class="d-none d-md-table-cell">
+                    <a href="/admin/member/detail?idx={{idx}}"><i class="mdi mdi-magnify"></i></a>
+                  </td>
+                  <td class="d-md-none"></td>
+                </tr>
+                <tr class="sub">
+                  <td colspan="11" class="pd-0-f">
+                    <table class="table az-table-sub">
+                      <tbody>
+                        <tr>
+                          <td class="wd-40p">등급</td>
+                          <td>{{memberListGrade pay}}</td>
+                        </tr>
+                        <tr>
+                          <td>아이디</td>
+                          <td>{{id}}</td>
+                        </tr>
+                        <tr>
+                          <td>이메일</td>
+                          <td>{{email}}</td>
+                        </tr>
+                        <tr>
+                          <td>연락처</td>
+                          <td>{{phone}}</td>
+                        </tr>
+                        <tr>
+                          <td>등록일</td>
+                          <td>{{fmtymd reg_date}}</td>
+                        </tr>
+                        <tr>
+                          <td>활성화</td>
+                          <td>{{isActive}}</td>
+                        </tr>
+                        <tr>
+                          <td>관리</td>
+                          <td><a href="/admin/member/detail?idx={{idx}}" style="text-indent:0px;"><i
+                                class="mdi mdi-magnify"></i></a></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                {{/each}}
+                {{#equalsLength memberList.items 0}}
+                <tr class="item">
+                  <td class="item-none" colspan="11">데이터를 찾을 수 없습니다.</td>
+                </tr>
+                {{/equalsLength}}
+              </tbody>
+            </table>
+            <div class="row mg-t-20">
+              <div class="col-12 tx-center">
+                <ul id="page" class="pagination"></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      clearFilter: function () { // 전체 목록 조회
+        location.href = location.href.replace(/\?.+/, '');
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        var value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      init: function () { // 초기 스크립트 실행
+        // 페이징
+        var totalPages = parseInt('{{memberList.totalPage}}') || 1;
+        var startPage = parseInt('{{memberList.page}}') + 1 || 1;
+
+        $('#page').twbsPagination({
+          totalPages: totalPages,
+          startPage: totalPages >= startPage ? startPage : 1,
+          visiblePages: (function () {
+            return BROWSER.isMobile() ? 5 : 10
+          })(),
+          first: '',
+          last: '',
+          prev: '<span>이전</span>',
+          next: '<span>다음</span>',
+          onPageClick: function (event, page) {
+            if (startPage == page) return;
+            if (location.href.indexOf('page') == -1) {
+              var isQuery = location.href.indexOf('?') >= 0;
+              location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+            } else {
+              location.href = location.href.replace(/page=.+/g, 'page=' + page);
+            }
+
+          }
+        });
+
+        // 쿼리스트링 데이터 초기화
+        var qstr = BROWSER.getQueryString();
+        if (qstr.name) {
+          $('#query').attr('name', 'name').val(qstr.name); $('#category').val('name');
+        }
+
+        if (qstr.id) {
+          $('#query').attr('name', 'id').val(qstr.id); $('#category').val('id');
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

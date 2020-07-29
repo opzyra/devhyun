@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>비밀번호 변경 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='mgrepwd'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">비밀번호 변경</h2>
+          <p class="mg-b-0">비밀번호 변경을 통해 보안을 강화해주세요!</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-body ht-xl-100p">
+            <form method="POST" onsubmit="APP.updatePassword(); return false;">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp align-items-center mg-t-0-f">
+                <div class="form-title">
+                  현재 비밀번호<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  {{!-- 크롬 자동완성 방지 --}}
+                  <input type="text" name="off" style="display:none;">
+                  <input name="oldPassword" type="password" class="form-control wd-100p wd-md-30p wd-lg-25p">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  새 비밀번호<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="newPassword" type="password" class="form-control wd-100p wd-md-30p wd-lg-25p">
+                </div>
+              </div>
+
+              <div class="row form-warp align-items-center">
+                <div class="form-title">
+                  새 비밀번호 확인<span class="text-danger mg-l-3">*</span>
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <input name="comfirmPassword" type="password" class="form-control wd-100p wd-md-30p wd-lg-25p">
+                </div>
+              </div>
+              <div class="mg-t-10 tx-12"><span class="text-danger">*</span> 표시는 필수항목입니다.</div>
+
+              <div class="row mg-t-20">
+                <div class="col-12 text-right">
+                  <button type="button" class="btn btn-outline-dark btn-border pd-x-20 mg-r-5"
+                    onclick="APP.clearPassword();">취소</button>
+                  <button type="submit" class="btn btn-az-primary btn-border pd-x-20">저장</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      updatePassword: function () { // 비밀번호 변경
+        // 유효성 검사
+        var form = $(event.target).serializeObject();
+        var validate = true;
+        var message = '';
+
+        if (form.oldPassword == '') {
+          validate = false;
+          message = '현재 비밀번호를 입력해주세요.';
+        } else if (form.newPassword == '') {
+          validate = false;
+          message = '새 비밀번호를 입력해주세요.';
+        } else if (form.newPassword != form.comfirmPassword) {
+          validate = false;
+          message = '비밀번호 확인이 올바르지 않습니다.';
+        }
+
+        if (!validate) {
+          Swal.fire({
+            type: 'error',
+            title: '필드 누락',
+            text: message,
+            confirmButtonColor: '#5b47fb',
+            confirmButtonText: '확인',
+            heightAuto: false,
+          });
+          return false;
+        }
+
+        AJAX.put('/member/repwd', form)
+          .then(function (res) {
+            Swal.fire({ type: 'success', title: '완료', html: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+              .then(function () {
+                location.href = '/';
+              });
+          });
+
+      },
+      clearPassword: function () {
+        var _sform = event.target.form;
+        Swal.fire({ title: '확인', html: '입력하신 모든 내용이 초기화 됩니다.<br>진행 할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (res) {
+            if (res.value) {
+              $(_sform).each(function () {
+                this.reset();
+              });
+            }
+          });
+      },
+      init: function () { // 초기 스크립트 실행
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

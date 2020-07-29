@@ -1,78 +1,23 @@
 {{!-- 헤더 영역 --}}
-<header>
-  <section class="logo">
-    <a href="/admin">
-      <img class="lg" src="/images/logo.png" alt="logo" />
-      <img class="sm" src="/images/favicon.png" alt="logo" />
-    </a>
-  </section>
-  <section class="account">
-    <a class="member_dropdown mobile_member" href="javascript:;"><img src="{{session.member.thumbnail}}" /></a>
-    <div class="member_menu dropdown">
-      <a class="menu_item" href="/">홈페이지</a>
-      <a class="menu_item" href="javascript:;" onclick="COMMON.logout();">로그아웃</a>
+<div class="az-header az-header-dashboard-nine">
+  <div class="container-fluid">
+    <div class="az-header-left d-lg-none">
+      <a href="javascript:;" id="azSidebarToggle" class="az-header-menu-icon"><span></span></a>
     </div>
-  </section>
-  <section class="burger">
-    <button id="burger" type="button">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </section>
-  <section class="profile">
-    <img src="{{session.member.thumbnail}}" alt="thumbnail" />
-    <h3>{{session.member.name}}</h3>
-    <p>{{session.member.role_name}}</p>
-    <a href="/" class="btn">홈페이지 <i class="mdi mdi-arrow-right"></i></a>
-    <a href="javascript:;" onclick="COMMON.logout();" class="btn">로그아웃 <i class="mdi mdi-arrow-right"></i></a>
-  </section>
-  <nav class="lnb">
-    <ul>
-      <li class="{{#eq active 'dashboard'}}on{{/eq}}">
-        <a href="/admin">
-          <i class="mdi mdi-monitor"></i>
-          <span>대시보드</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'schedule'}}on{{/eq}}">
-        <a href="/admin/schedule">
-          <i class="mdi mdi-calendar"></i>
-          <span>스케줄</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'task'}}on{{/eq}}">
-        <a href="/admin/task">
-          <i class="mdi mdi-format-list-checkbox"></i>
-          <span>태스크</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'note'}}on{{/eq}}">
-        <a href="/admin/note">
-          <i class="mdi mdi-file-document-box-check-outline"></i>
-          <span>노트</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'blog'}}on{{/eq}}">
-        <a href="/admin/blog/post">
-          <i class="mdi mdi-lead-pencil"></i>
-          <span>블로그</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'member'}}on{{/eq}}">
-        <a href="/admin/member">
-          <i class="mdi mdi-account-supervisor-circle"></i>
-          <span>회원</span>
-        </a>
-      </li>
-      <li class="{{#eq active 'statistics'}}on{{/eq}}">
-        <a href="https://analytics.google.com/analytics/web/?hl=ko&pli=1#/report-home/a145435902w207175152p199928658"
-          target="_blank">
-          <i class="mdi mdi-finance"></i>
-          <span>통계</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <div id="overlay" class="overlay"></div>
-</header>
+    <div class="az-header-center tx-center tx-lg-left">
+      <a href="/admin/work/schedule">
+        <img src="/images/logo.png" class="wd-170 wd-md-200">
+      </a>
+    </div>
+    <div class="az-header-right">
+      <div class="az-header-message d-none d-md-block mg-r-15">
+        <a class="d-block text-center" href="javascript:;" onclick="window.print();"><i
+            class="mdi mdi-printer"></i><span class="tx-14 d-none d-md-block mg-t-5">PRINT</span></a>
+      </div>
+      <div class="az-header-message">
+        <a class="d-block text-center" href="javascript:;" onclick="COMMON.logout();"><i
+            class="typcn typcn-power mg-r-5"></i><span class="tx-14 d-none d-md-block">LOGOUT</span></a>
+      </div>
+    </div>
+  </div>
+</div>

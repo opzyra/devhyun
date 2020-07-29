@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>협력기업 - {{APP}}</title>
+
+  {{>ad-style}}
+
+</head>
+
+<body class="az-body az-body-sidebar az-body-dashboard-nine az-white">
+
+  {{>ad-hdn}}
+
+  <div id="progress"></div>
+
+  {{>ad-menu active='ctpartner'}}
+
+  <div class="az-content az-content-dashboard-nine">
+
+    {{>ad-header}}
+
+    <div class="az-content-header">
+      <div class="az-content-header-top">
+        <div>
+          <h2 class="az-content-title mg-b-5 mg-b-lg-8">협력기업</h2>
+          <p class="mg-b-0">회사의 비지니스 파트너를 관리합니다.</p>
+        </div>
+        <div class="az-dashboard-date">
+          <div class="nav-wrapper">
+            <nav class="nav az-nav-line">
+              <a href="/admin/contents/partner" class="nav-link active">리스트</a>
+              <a href="/admin/contents/partner/order" class="nav-link">순서</a>
+              <a href="/admin/contents/partner/create" class="nav-link">등록</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="az-content-body">
+
+      <div class="row">
+
+        <div class="col-12">
+          <div class="card card-body">
+            <form method="GET">
+              <div class="form-warp-first"></div>
+              <div class="row form-warp form-sm align-items-center mg-t-0-f">
+                <div class="form-title">
+                  검색
+                </div>
+                <div class="form-input mg-t-5 mg-md-t-0">
+                  <div class="d-flex">
+                    <select id="category" class="form-control d-inline ipn-sm mg-r-5 wd-30p wd-md-10p"
+                      onchange="APP.selectQuery()">
+                      <option value="name">회사명</option>
+                    </select>
+                    <input id="query" type="text" name="name"
+                      class="form-control d-inline ipn-sm wd-50p wd-md-20p mg-r-5" placeholder="검색어" autocomplete="off">
+                    <button class="btn-input ipn-sm btn-az-primary br-6"><i class="mdi mdi-magnify"></i></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card card-body pd-t-0 ht-xl-100p">
+
+            {{#each partnerList.items}}
+            <div class="bd pd-20 mg-b-20 pos-relative">
+              <div class="more tx-15-f">
+                <a href="/admin/contents/partner/edit?idx={{idx}}" class="mg-l-5"><i
+                    class="mdi mdi-square-edit-outline"></i></a>
+                <a href="javascript:void(0);" onclick="APP.buttonDeletePartner({{idx}})"><i
+                    class="mdi mdi-delete-empty"></i></a>
+              </div>
+              <div class="row">
+                <div class="col-12 col-md-3 col-lg-2 text-center">
+                  <img src="{{logo}}" alt="{{name}}" style="width:180px; height:60px" class="mg-b-10">
+                </div>
+                <div class="col-12 col-md-9 col-lg-10">
+                  <h5 class="tx-inverse">{{name}}</h5>
+                  {{#if url}}
+                  <p class="mg-b-0"><a href="{{url}}" target="_blank">{{url}}</a></p>
+                  {{else}}
+                  <p class="mg-b-0"><a href="javascript:void(0);" target="_blank">연결된 홈페이지가 없습니다.</a></p>
+                  {{/if}}
+                  <p class="mg-b-0">{{fmtymd reg_date}}</p>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <div class="text-center">
+              등록된 협력기업이 없습니다.
+            </div>
+            {{/each}}
+
+            <div class="row mg-t-20">
+              <div class="col-12 tx-center">
+                <ul id="page" class="pagination"></ul>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  {{>ad-script}}
+  <script>
+    window.APP = {
+      buttonDeletePartner: function (idx) { // 파트너 삭제
+        Swal.fire({ title: '확인', text: '선택하신 협력기업을 삭제할까요?', type: 'warning', confirmButtonColor: '#5b47fb', showCancelButton: true, confirmButtonText: '진행', cancelButtonText: '취소', reverseButtons: true })
+          .then(function (result) {
+            if (result.value) {
+              AJAX.delete('/partner/' + idx)
+                .then(function (res) {
+                  Swal.fire({ type: 'success', title: '완료', text: res.message, confirmButtonColor: '#5b47fb', confirmButtonText: '확인' })
+                    .then(function () { location.reload() });
+                });
+            }
+          });
+      },
+      selectQuery: function () { // 검색어 카테고리 선택
+        var value = event.target.value;
+        $('#query').attr('name', value);
+      },
+      init: function () { // 초기 스크립트 실행
+        // 페이징
+        var totalPages = parseInt('{{partnerList.totalPage}}') || 1;
+        var startPage = parseInt('{{partnerList.page}}') + 1 || 1;
+
+        $('#page').twbsPagination({
+          totalPages: totalPages,
+          startPage: totalPages >= startPage ? startPage : 1,
+          visiblePages: (function () {
+            return BROWSER.isMobile() ? 5 : 10
+          })(),
+          first: '',
+          last: '',
+          prev: '<span>이전</span>',
+          next: '<span>다음</span>',
+          onPageClick: function (event, page) {
+            if (startPage == page) return;
+            if (location.href.indexOf('page') == -1) {
+              var isQuery = location.href.indexOf('?') >= 0;
+              location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+            } else {
+              location.href = location.href.replace(/page=.+/g, 'page=' + page);
+            }
+
+          }
+        });
+
+        // 쿼리스트링 데이터 초기화
+        var qstr = BROWSER.getQueryString();
+        if (qstr.name) {
+          $('#query').attr('name', 'name').val(qstr.name); $('#category').val('name');
+        }
+
+      }
+    }
+
+    $(document).ready(function () {
+      APP.init();
+    });
+  </script>
+
+</body>
+
+</html>

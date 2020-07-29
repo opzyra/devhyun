@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="YmStat">
+  <select id="selectBatch">
+  <![CDATA[
+    SELECT 
+      #{ymd} AS ymd, 
+      DATE_FORMAT(#{ymd}, '%Y') AS year, 
+      DATE_FORMAT(#{ymd}, '%m') AS month, 
+      DATE_FORMAT(#{ymd}, '%d') AS day,
+      COUNT(sl.COUNT) AS rcount 
+    FROM 
+      (select ip, COUNT(*) as count FROM session_log WHERE reg_ymd = #{ymd} GROUP BY ip) AS sl
+  ]]>
+  </select>
+  <select id="selectYearData">
+  <![CDATA[
+    SELECT z.year AS 'YEAR', MAX(IF(z.month = '01', z.rcount, 0)) AS 'Z01', MAX(IF(z.MONTH = '02', z.rcount, 0)) AS 'Z02', MAX(IF(z.MONTH = '03', z.rcount, 0)) AS 'Z03', MAX(IF(z.month = '04', z.rcount, 0)) AS 'Z04', MAX(IF(z.month = '05', z.rcount, 0)) AS 'Z05', MAX(IF(z.month = '06', z.rcount, 0)) AS 'Z06', MAX(IF(z.MONTH = '07', z.rcount, 0)) AS 'Z07', MAX(IF(z.MONTH = '08', z.rcount, 0)) AS 'Z08', MAX(IF(z.MONTH = '09', z.rcount, 0)) AS 'Z09', MAX(IF(z.MONTH = '10', z.rcount, 0)) AS 'Z10', MAX(IF(z.MONTH = '11', z.rcount, 0)) AS 'Z11', MAX(IF(z.MONTH = '12', z.rcount, 0)) AS 'Z12' FROM
+			(SELECT ds.YEAR AS year, ds.MONTH AS month, SUM(IFNULL(vys.rcount,0)) AS rcount FROM ym_stat as vys RIGHT JOIN
+			(select DISTINCT DATE_FORMAT(ymd, '%Y') AS YEAR, DATE_FORMAT(ymd, '%m') AS month from 
+			(select adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) ymd from
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v
+			where ymd BETWEEN #{year} AND DATE_FORMAT(DATE_ADD(NOW(), INTERVAL 1 YEAR), '%Y')) AS ds
+			ON CONCAT(vys.YEAR,vys.MONTH) = CONCAT(ds.YEAR, ds.month)
+			GROUP BY ds.YEAR, ds.MONTH) z
+			GROUP BY z.year
+			ORDER BY z.year DESC
+  ]]>
+  </select>
+  <select id="selectMonthData">
+  <![CDATA[
+    SELECT IFNULL(vys.rcount,0) AS rcount FROM ym_stat as vys RIGHT JOIN
+			(select DISTINCT DATE_FORMAT(ymd, '%Y%m%d') AS ymd from 
+			(select adddate('1970-01-01',t4.i*10000 + t3.i*1000 + t2.i*100 + t1.i*10 + t0.i) ymd from
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t0,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t1,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t2,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t3,
+			 (select 0 i union select 1 union select 2 union select 3 union select 4 union select 5 union select 6 union select 7 union select 8 union select 9) t4) v
+			where ymd BETWEEN DATE_FORMAT(CONCAT(#{ym}, '-01'), '%Y-%m') AND DATE_FORMAT(DATE_ADD(CONCAT(#{ym}, '-01'), INTERVAL 1 MONTH), '%Y-%m')) AS ds
+			ON vys.ymd = ds.ymd
+			GROUP BY ds.ymd
+  ]]>
+  </select>
+  <select id="selectMinYear">
+    SELECT MIN(year) AS year FROM ym_stat;
+  </select>
+  <insert id="insertOne">
+    INSERT INTO ym_stat
+    (
+      ymd, 
+      year, 
+      month, 
+      day,
+      rcount,
+      reg_date
+    )
+    VALUES
+    (
+      #{ymd}, 
+      #{year},
+      #{month},
+      #{day},
+      ${rcount}, 
+      NOW()
+    )
+  </insert>
+  
+</mapper>

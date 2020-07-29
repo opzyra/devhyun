@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Lecture">
+  <select id="selectAll">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      lecture.* 
+    FROM 
+      lecture, member
+    WHERE
+      lecture.member_idx = member.idx
+  </select>
+  <select id="selectAllPage">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      lecture.*
+    FROM 
+      lecture, member
+    WHERE
+      lecture.member_idx = member.idx
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+    ORDER BY idx desc
+    LIMIT ${limit}, 20
+  </select>
+  <select id="countAllPage">
+    SELECT 
+      COUNT(*) AS row 
+    FROM 
+      lecture
+    WHERE
+      1=1
+    <if test="title != ''">
+    AND title LIKE CONCAT('%', #{title}, '%')
+    </if>
+    <if test="contents != ''">
+    AND contents LIKE CONCAT('%', #{contents}, '%')
+    </if>
+    <if test="name != ''">
+    AND name LIKE CONCAT('%', #{name}, '%')
+    </if>
+  </select>
+  <select id="selectOne">
+    SELECT 
+      member.name as member_name, 
+      member.thumbnail as member_thumbnail, 
+      lecture.* 
+    FROM 
+      lecture, member
+    WHERE
+      lecture.member_idx = member.idx
+    AND
+      lecture.idx = ${idx}
+  </select>
+  <insert id="insertOne">
+    INSERT INTO lecture
+    (
+      member_idx, 
+      title,
+      contents,
+      reg_date
+    )
+    VALUES
+    (
+      ${member_idx}, 
+      #{title},
+      #{contents},
+      NOW()
+    )
+  </insert>
+  <update id="updateOne">
+    UPDATE 
+      lecture 
+    SET
+      title = #{title}, 
+      contents = #{contents}
+    WHERE
+      idx = ${idx}
+  </update>
+  <delete id="deleteOne">
+    DELETE
+    FROM lecture
+    WHERE
+      idx = ${idx}
+  </delete>
+  
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SessionLog">
+  <insert id="insertOne">
+    INSERT INTO session_log
+    (
+      device, 
+      domain, 
+      id, 
+      ip, 
+      page, 
+      query, 
+      referer, 
+      reg_date, 
+      reg_ymd, 
+      reg_hh, 
+      reg_mm, 
+      reg_dow
+    )
+    VALUES
+    (
+      #{device}, 
+      #{domain}, 
+      #{id}, 
+      #{ip}, 
+      #{page}, 
+      #{query}, 
+      #{referer}, 
+      NOW(), 
+      DATE_FORMAT(NOW(), '%Y%m%d'), 
+      DATE_FORMAT(NOW(), '%H'), 
+      DATE_FORMAT(NOW(), '%i'), 
+      DATE_FORMAT(NOW(), '%w')
+    )
+  </insert>
+  <delete id="deleteYmd">
+    DELETE
+    FROM session_log
+    WHERE
+      reg_ymd = ${ymd}
+  </delete>
+</mapper>

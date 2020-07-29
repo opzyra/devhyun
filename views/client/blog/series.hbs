@@ -14,7 +14,7 @@
 
 <body>
 
-	{{>cl-common}}
+	{{>cl-loader}}
 
 	{{>cl-header active='blog' fix='fix'}}
 
@@ -41,11 +41,11 @@
 						<ul>
 							<li>
 								<h3>발행 포스트</h3>
-								<p>{{countPostTag.post_count}} <span>건</span></p>
+								<p>{{count.post_count}} <span>건</span></p>
 							</li>
 							<li>
 								<h3>관련 태그</h3>
-								<p>{{countPostTag.tag_count}} <span>개</span></p>
+								<p>{{count.tag_count}} <span>개</span></p>
 							</li>
 						</ul>
 					</div>
@@ -71,7 +71,7 @@
 				</div>
 			</section>
 
-			{{#isNotNull series}}
+			{{#isNotNull seriesList.items}}
 			<section class="series_list">
 				<div>
 					{{#if queryRow}}
@@ -83,14 +83,14 @@
 					</div>
 					{{/if}}
 					<ul>
-						{{#each series}}
+						{{#each seriesList.items}}
 						<li>
 							<a class="thumb" href="/blog/series/{{idx}}">
 								<img src="{{thumbnail}}">
 								<div class="white-mask"></div>
 							</a>
-							<div class="description">
-								<span>{{parseDate reg 'YYYY.MM.DD'}}</span>
+							<div class="contents">
+								<span>{{parseDate reg_date 'YYYY.MM.DD'}}</span>
 								<h3><a href="/blog/series/{{idx}}">{{title}}</a></h3>
 								<p class="visual_pc">{{parseMarkdown contents 200}}</p>
 								<p class="visual_mobile">{{parseMarkdown contents 80}}</p>
@@ -127,7 +127,63 @@
 
 	{{>cl-footer}}
 
-	{{>cl-script MODULE=(config 'client' 'series')}}
+	{{>cl-script}}
+
+	<script>
+		window.APP = {
+			pagination: function () {
+				var totalPages = parseInt('{{seriesList.totalPage}}') || 1;
+				var startPage = parseInt('{{seriesList.page}}') + 1 || 1;
+
+				$('#page').twbsPagination({
+					totalPages: totalPages,
+					startPage: totalPages >= startPage ? startPage : 1,
+					visiblePages: 5,
+					first: '처음페이지로 이동',
+					last: '마지막페이지로 이동',
+					prev: '이전페이지로 이동',
+					next: '다음페이지로 이동',
+					onPageClick: function (event, page) {
+						if (startPage == page) return;
+						if (location.href.indexOf('page') == -1) {
+							var isQuery = location.href.indexOf('?') >= 0;
+							location.href = location.href + (isQuery ? '&' : '?') + 'page=' + page;
+						} else {
+							location.href = location.href.replace(/page=.+/g, 'page=' + page);
+						}
+
+					}
+				});
+			},
+			query: function () {
+				var qstr = BROWSER.getQueryString();
+				if (qstr.query) {
+					$('#query').val(qstr.query);
+					$('#inQuery').text(qstr.query);
+					$('.search').addClass('focus');
+				}
+
+				$('.search input').focus(function () {
+					$('.search').addClass('focus');
+				});
+
+				$('.search input').blur(function (event) {
+					var value = event.target.value;
+					if (value == '') {
+						$('.search').removeClass('focus');
+					} else {
+						$('.search').addClass('focus');
+					}
+
+				});
+			},
+			init: function () {
+				APP.pagination();
+				APP.query();
+			}
+		}
+		$(document).ready(function () { APP.init() });
+	</script>
 
 </body>
 

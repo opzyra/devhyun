@@ -1,41 +1,34 @@
 {{!-- 스크립트 영역 --}}
+{{!-- 외부 라이브러리 --}}
 <script src="/lib/jquery/jquery.min.js"></script>
 <script src="/lib/jquery-ui/jquery-ui.js"></script>
+<script src="/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/lib/jquery/jquery.serializeObject.js"></script>
+<script src="/lib/jquery-progress/jquery.progress.js"></script>
 <script src="/lib/jquery-pagination/jquery.twbsPagination.min.js"></script>
-<script src="/lib/jquery-context-menu/jquery.contextMenu.min.js"></script>
-<script src="/lib/jquery-context-menu/jquery.ui.position.js"></script>
-<script src="/lib/sticky-kit/jquery.sticky-kit.min.js"></script>
-<script src="/lib/emoji-picker/jquery.emojis.js"></script>
-<script src="/lib/emoji-picker/jquery.emojipicker.js"></script>
+<script src="/lib/sweetalert2/sweetalert2.min.js"></script>
+<script src="/lib/moment/moment.js"></script>
+<script src="/lib/air-datepicker/datepicker.min.js"></script>
+<script src="/lib/air-datepicker/datepicker.ko.js"></script>
 <script src="/lib/chart.js/Chart.bundle.min.js"></script>
 <script src="/lib/chart.js/Chart.datalabels.min.js"></script>
 <script src="/lib/echart/echarts.min.js"></script>
 <script src="/lib/peity/jquery.peity.min.js"></script>
-<script src="/lib/remodal/remodal.js"></script>
-
-<script src="/lib/fxjs/fx.es5.min.js"></script>
-<script src="/lib/lodash/lodash.min.js"></script>
-<script src="/lib/nprogress/nprogress.js"></script>
-<script src="/lib/sweetalert2/sweetalert2.min.js"></script>
-<script src="/lib/moment/moment.js"></script>
-<script src="/lib/tippy/popper.min.js"></script>
-<script src="/lib/tippy/tippy.min.js"></script>
-<script src="/lib/bootstrap/js/bootstrap.min.js"></script>
-
+<script src="/lib/fullcalendar/fullcalendar.min.js"></script>
+<script src="/lib/fullcalendar/locale-all.js"></script>
 <script src="/lib/color-select/colorSelect.js"></script>
 <script src="/lib/select2/select2.min.js"></script>
+<script src="/lib/summernote/summernote.js"></script>
+<script src="/lib/summernote/lang/summernote-ko-KR.js"></script>
+<script src="/lib/asSpinner/jquery-asSpinner.min.js"></script>
 <script src="/lib/tagsinput/tagsinput.js"></script>
+<script src="/lib/tagsinput/tagsinput.js"></script>
+<script src="https://uicdn.toast.com/tui-editor/latest/tui-editor-Editor-full.js"></script>
+<script src="/lib/emoji-picker/twemoji.min.js"></script>
+<script src="/lib/emoji-picker/jquery.lsxemojipicker.js"></script>
 <script src="/lib/highlight/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 
-<script src="/lib/tui-editor/tui-editor-full.js"></script>
-<script src="/lib/tui-lib/tui-code-snippet.js"></script>
-<script src="/lib/tui-lib/tui-dom.js"></script>
-<script src="/lib/tui-lib/tui-time-picker.min.js"></script>
-<script src="/lib/tui-lib/tui-date-picker.min.js"></script>
-<script src="/lib/tui-lib/tui-context-menu.js"></script>
-<script src="/lib/tui-calendar/tui-calendar.js"></script>
-
-<script src="/js/module.js?v={{CACHE}}"></script>
-{{{store STATE}}}
-{{{MODULE}}}
+{{!-- 템플릿 라이브러리 --}}
+<script src="/js/admin.js"></script>
+<script src="/js/common.js"></script>

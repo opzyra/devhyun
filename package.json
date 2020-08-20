@@ -22,7 +22,7 @@
   "dependencies": {
     "@hapi/joi": "^16.1.8",
     "axios": "^0.19.2",
-    "bcrypt": "^3.0.8",
+    "bcrypt": "^5.0.0",
     "compose-middleware": "^5.0.1",
     "compression": "^1.7.4",
     "connect-redis": "^3.4.2",

@@ -1,18 +1,17 @@
 import session from 'express-session';
-import connectRedis from 'connect-redis';
+import connectMongo from 'connect-mongodb-session';
 import requestIp from 'request-ip';
 
-const RedisStore = connectRedis(session);
-const store = new RedisStore({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  prefix: 'session:',
-  db: parseInt(process.env.REDIS_DB),
+const MongoStore = connectMongo(session);
+const store = new MongoStore({
+  uri: process.env.MONGO_URI,
+  databaseName: process.env.MONGO_DBNAME,
+  collection: process.env.MONGO_COLLECTION,
 });
 
 const config = session({
   store,
-  name: 'sessionId',
+  name: 'connect.sid',
   secret: process.env.APP_SECRET || '#@XV5Ex!*m2Mwp',
   resave: false,
   saveUninitialized: true,
@@ -85,11 +84,13 @@ const isHtml = req => {
   let check = true;
 
   if (
-    contentType === 'application/json' ||
-    contentType === 'multipart/form-data'
+    contentType &&
+    (contentType.includes('application/json') ||
+      contentType.includes('multipart/form-data'))
   ) {
     check = false;
   }
+
   return check;
 };
 
@@ -111,22 +112,24 @@ const listener = () => {
       //중복 로그인 체크
       store.all((_, sessions) => {
         for (let i = 0; i < sessions.length; i++) {
-          let e = sessions[i];
+          let sid = sessions[i]._id;
+          let session = sessions[i].session;
           if (
-            !!e.member &&
-            e.member.id == member.id &&
-            e.id != req.session.id
+            !!session.member &&
+            session.member.id == member.id &&
+            sid != req.session.id
           ) {
             // eslint-disable-next-line no-unused-vars
-            store.destroy(e.id, error => {});
+            store.destroy(sid, error => {});
           }
         }
       });
 
       // 로그인 플랫폼 처리
-      // eslint-disable-next-line no-unused-vars
-      const [platform, ...rest] = member.id.split('_');
-      member.platform = platform;
+      if (member.social !== 'NONE') {
+        const [platform] = member.id.split('_');
+        member.platform = platform;
+      }
     }
 
     // 클라이언트 IP 주입

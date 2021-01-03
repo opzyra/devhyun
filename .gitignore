@@ -5,7 +5,7 @@ npm-debug.log*
 
 # dotenv environment variables file
 .env
-
+.env.dev
 # Uploads
 uploads
 

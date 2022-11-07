@@ -90,6 +90,6 @@
     "sequelize-test-helpers": "^1.2.2",
     "sinon": "^9.0.1",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   }
 }

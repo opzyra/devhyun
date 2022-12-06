@@ -50,7 +50,7 @@
     "nodemon": "^1.19.4",
     "pify": "^4.0.1",
     "prettier": "^1.19.1",
-    "qs": "^6.9.3",
+    "qs": "^6.9.7",
     "random-string": "^0.2.0",
     "remove-markdown": "^0.3.0",
     "request-ip": "^2.1.3",
